@@ -91,7 +91,7 @@ class Item
 	}
 
 	public function CreateLessons($lessons, $lc, $general) {
-		$sql="INSERT INTO `lessons` (`item_id`, `rupitem_id`, `group_id`) VALUES ".str_repeat('(?,?,?),', $lc-1)."(?,?,?)";
+		$sql="INSERT INTO `lessons` (`item_id`, `rupitem_id`, `group_id`, `sem_num`) VALUES ".str_repeat('(?,?,?,?),', $lc-1)."(?,?,?,?)";
 		$res=$this->pdo->prepare($sql);
 		$res->execute($lessons);
 

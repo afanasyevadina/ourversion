@@ -10,8 +10,8 @@ $warnings=[];
 $gs=[];
 foreach($items as $item) { 
 	if($item['sem'.$_REQUEST['sem']]>0) {
-		$next=$sf->GetNext($item['item_id']);
-		$gone=$sf->GetGone($item['item_id']);
+		$next=$sf->GetNext($item['item_id'], $_REQUEST['sem']);
+		$gone=$sf->GetGone($item['item_id'], $_REQUEST['sem']);
 		$warning=$sf->CheckNext($item, $next);
 		$color=$warning?'#F9E5D7':'#D9DFFC';
 		if($warning) {

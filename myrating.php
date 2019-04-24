@@ -11,9 +11,9 @@
 	<script src="js/schedule.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			Load('rating/forstudent.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#rating');
+			Load('journal/forstudent.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#rating');
 			$('.filter').change(function(){
-				Load('rating/forstudent.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#rating');
+				Load('journal/forstudent.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#rating');
 			});
 		});
 	</script>
@@ -35,8 +35,15 @@
 				<option>1</option>
 				<option>2</option>
 			</select>
-			<div id="rating">
-			</div>
+			<table border="1" id="rating" class="journal">
+				<thead>
+					<thead>
+						<th>Предмет</th>
+						<th>Средний балл</th>
+						<th>Экзамен</th>
+					</thead>
+				</thead>
+			</table>
 		</div>
 	</div>
 	<footer></footer>

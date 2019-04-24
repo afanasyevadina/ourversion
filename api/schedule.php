@@ -11,15 +11,15 @@ class Schedule
 		$this->pdo=$pdo;
 	}
 
-	public function GetNext($item) {
-		$res=$this->pdo->prepare("SELECT * FROM `lessons` INNER JOIN `rupitems` ON `lessons`.`rupitem_id`=`rupitems`.`rupitem_id` WHERE `lessons`.`item_id`=? AND `lessons`.`was`=0 LIMIT 1");
-		$res->execute(array($item));
+	public function GetNext($item, $sem) {
+		$res=$this->pdo->prepare("SELECT * FROM `lessons` INNER JOIN `rupitems` ON `lessons`.`rupitem_id`=`rupitems`.`rupitem_id` WHERE `lessons`.`item_id`=? AND `lessons`.`was`=0 AND `lessons`.`sem_num`=? LIMIT 1");
+		$res->execute(array($item, $sem));
 		return $res->fetch();
 	}
 
-	public function GetGone($item) {
-		$res=$this->pdo->prepare("SELECT COUNT(*) FROM `lessons` WHERE `item_id`=? AND `was`=1");
-		$res->execute(array($item));
+	public function GetGone($item, $sem) {
+		$res=$this->pdo->prepare("SELECT COUNT(*) FROM `lessons` WHERE `item_id`=? AND `was`=1 AND `sem_num`=?");
+		$res->execute(array($item, $sem));
 		return $res->fetchColumn();
 	}
 

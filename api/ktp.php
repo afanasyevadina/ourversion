@@ -49,7 +49,7 @@ class Ktp
 	}
 
 	public function GetGeneralItems($general) {
-		$ktpres=$this->pdo->prepare("SELECT `ktps`.`item_id`, `ktps`.`ktp_id`, `items`.`teacher_id`, `items`.`kurs_num`, `subjects`.`divide`, `items`.`group_id` FROM `ktps` INNER JOIN `items` ON `items`.`item_id`=`ktps`.`item_id` INNER JOIN `subjects` ON `subjects`.`subject_id`=`items`.`subject_id` WHERE `items`.`general_id`=?");
+		$ktpres=$this->pdo->prepare("SELECT `ktps`.`item_id`, `ktps`.`ktp_id`, `items`.`teacher_id`, `items`.`kurs_num`, `subjects`.`divide`, `items`.`group_id`, `items`.`sem1`, `items`.`sem2` FROM `ktps` INNER JOIN `items` ON `items`.`item_id`=`ktps`.`item_id` INNER JOIN `subjects` ON `subjects`.`subject_id`=`items`.`subject_id` WHERE `items`.`general_id`=?");
 		$ktpres->execute(array($general));
 		return $ktpres->fetchAll();
 	}

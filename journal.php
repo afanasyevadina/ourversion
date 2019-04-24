@@ -3,7 +3,7 @@ require_once('facecontrol.php');
 if($user['account_type']!='teacher') {
 	//header('Location: /');
 }
-$itemres=$pdo->prepare("SELECT `items`.`group_id`, `items`.`teacher_id`, `items`.`item_id` FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` AND `ktps`.`ktp_id`=?");
+$itemres=$pdo->prepare("SELECT `items`.`group_id`, `items`.`teacher_id`, `items`.`item_id`, `subjects`.`subject_name` FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` AND `ktps`.`ktp_id`=?");
 $itemres->execute(array($_GET['id']));
 $item=$itemres->fetch();
 $students=$pdo->prepare("SELECT * FROM `students` WHERE `students`.`group_id`=?");
@@ -24,10 +24,9 @@ $lessons=$lessonres->fetchAll();
 </head>
 <body>
 	<?php require_once('layout.php'); ?>
-	<div class="container">
-		
+	<div class="container">		
 		<div class="main">
-			<h2>Журнал</h2>
+			<h2>Журнал <?=$item['subject_name']?></h2>
 			<div class="links">
 				<a href="#" class="save" id="savejournal">Сохранить</a>
 			</div>
