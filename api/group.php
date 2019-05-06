@@ -11,13 +11,20 @@ class Group
 		$this->pdo=$pdo;
 	}
 
-	private function GetShortName($fname, $sname, $tname) {
-		return $fname." ".mb_substr($sname, 0, 2).".".mb_substr($tname, 0, 2).".";
+	public function GetShortName($fname, $sname, $tname) {
+		return trim($fname)." ".mb_substr(trim($sname), 0, 1).".".mb_substr(trim($tname), 0, 1).".";
 	}
 
 	public function Insert($data) {
 		$res=$this->pdo->prepare("INSERT INTO `groups` (`group_name`, `specialization_id`, `base`, `s1`, `s2`, `s3`, `s4`, `s5`, `s6`, `s7`, `s8`, `lps`, `year`, `count`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		$res->execute($data);
+	}
+
+	public function Upload($data, $count) {
+		$sql="INSERT INTO `students` (`student_fname`, `student_sname`, `student_tname`, `student_name`, `group_id`) VALUES ".str_repeat("(?,?,?,?,?),", $count-1)."(?,?,?,?,?)";
+		$res=$this->pdo->prepare($sql);
+		$res->execute($data);
+		return $res;
 	}
 
 	public function InsertSpecialization($name, $code, $courses) {
@@ -151,5 +158,22 @@ class Group
 		$res=$this->pdo->prepare("SELECT `students`.`student_name`, `students`.`student_id`, `groups`.`group_name` FROM `students` INNER JOIN `groups` ON `students`.`group_id`=`groups`.`group_id` WHERE `students`.`group_id` = ?");
 		$res->execute(array($group));
 		return $res->fetchAll();
+	}
+
+	public function CurrentKurs() {
+		$year=date('Y');
+		$month=date('n');
+		$day=date('d');
+		return=[];
+		if(intval($month)>=9) {
+			$return[]=$year.'-'.($year+1);
+		} else {
+			$return[]=($year-1).'-'.$year;
+		}
+		if($month>=9||($month==1&&$day<14)) {
+			$return[]=1;
+		} else {
+			$return[]=2;
+		}
 	}
 }

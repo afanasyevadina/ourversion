@@ -49,8 +49,34 @@ $groups=$gf->GetGroups();
 			</div>
 			<input type="submit" name="submit" value="Сохранить">
 			<a id="deletestudent" class="delete" href="">Удалить</a>
-		</form>
+		</form>	
 	</div>
+
+		<div id="uploadform">
+		<form action="students/uploadstudents.php" method="post" enctype="multipart/form-data" class="uploadform">
+			<img src="img/close.png" class="cancelnew" alt="close">
+	        <div>
+	        	<div>
+	        		<label>Группа: </label>
+	        		<select name="group">
+					<?php foreach($groups as $group) { ?>
+						<option value="<?=$group['group_id']?>">
+							<?=$group['group_name'] ?></option>
+					<?php } ?>
+					</select>
+	        	</div>
+	            <div>
+	                <input type="file" name="upload" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+	            </div>
+	        </div>
+	        <div>
+	            <div>
+	                <input type="submit" value="Отправить"/>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+
 	<div class="container">		
 		<div class="main">
 			<h2>Студенты</h2>
@@ -61,6 +87,7 @@ $groups=$gf->GetGroups();
 			</select>
 			<div class="links">
 				<a href="#" id="new">Добавить</a>
+				<a href="#" id="upload">Загрузить</a>
 				<form action="accounts/getlogin.php" method="POST" id="loginform">
 					<input type="hidden" name="type" value="student">
 					<input type="submit" class="generate" value="Сгенерировать данные для входа" style="display: none;">				

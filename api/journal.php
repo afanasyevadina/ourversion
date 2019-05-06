@@ -20,6 +20,7 @@ public class Journal
 	}
 
 	public function GetRating($student, $item) {
+		
 		$avgres=$this->pdo->prepare("SELECT AVG(`rating_value`) FROM `ratings` INNER JOIN `lessons` ON `ratings`.`lesson_id`=`lessons`.`lesson_id` WHERE `ratings`.`student_id`=? AND `lessons`.`item_id`=?");
 		$avgres->execute(array($student, $item));
 		$avg=$avgres->fetchColumn();
