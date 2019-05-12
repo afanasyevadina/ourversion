@@ -39,9 +39,12 @@ class Schedule
 		return $res->fetchAll();
 	}
 
-	public function MainToday($data) {
+	public function MainToday($group, $date) {
+		$kurs=$this->CurrentKurs($date)['kurs'];
+		$sem=$this->CurrentKurs($date)['sem'];
+		$weekday=date('N', strtotime($date));
 		$res=$this->pdo->prepare("SELECT `items`.`item_id`, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks` FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `schedule_items`.`day_of_week`=?");
-		$res->execute($data);
+		$res->execute(array($group, $kurs, $sem, $weekday));
 		return $res->fetchAll();
 	}
 
@@ -80,5 +83,24 @@ class Schedule
 		$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`,`teachers`.`teacher_name`, `groups`.`group_name`, `items`.`item_id`, `items`.`teacher_id`, `lessons`.`lesson_date`, `lessons`.`lesson_num` FROM `lessons` INNER JOIN `items` ON `lessons`.`item_id`=`items`.`item_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `lessons`.`group_id`=? AND `lessons`.`lesson_date`=?");
 		$res->execute(array($group, $date));
 		return $res->fetchAll();
+	}
+
+	public function CurrentKurs($date) {
+		$config=json_decode(file_get_contents('../config.json'), true);
+		$year=date('Y', strtotime($date));
+		$month=date('n', strtotime($date));
+		$day=date('d', strtotime($date));
+		$return=[];
+		if(intval($month)>=$config['start1_month']) {
+			$return['kurs']=$year.'-'.($year+1);
+		} else {
+			$return['kurs']=($year-1).'-'.$year;
+		}
+		if(($month>=$config['start1_month']&&$day>=$config['start1_day'])||($month==$config['start2_month']&&$day<=$config['start2_day'])) {
+			$return['sem']=1;
+		} else {
+			$return['sem']=2;
+		}
+		return $return;
 	}
 }

@@ -184,6 +184,7 @@ function Modal(text) {
 				dataType: 'html',
 				data: 'data='+JSON.stringify(res)+'&group='+$('#groups').val()+'&date='+$('#date').val(),
 				success: function(response) {
+					console.log(response);
 					$('#success').css('display', 'block');
 					setTimeout(function(){
 						$('#success').css('display', 'none');

@@ -21,11 +21,11 @@ $groups=$gf->GetGroups();
 	<script type="text/javascript">
 		$(document).ready(function() {
 			document.getElementById("date").valueAsDate = new Date();
-			Load('schedule/loadsubjects.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#subjects_list');
-			Load('schedule/loadchanges.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&date='+$('#date').val(), '.schedule_table');
+			Load('schedule/loadsubjects.php?group='+$('#groups').val()+'&date='+$('#date').val(), '#subjects_list');
+			Load('schedule/loadchanges.php?group='+$('#groups').val()+'&date='+$('#date').val(), '.schedule_table');
 			$('.filter').change(function(){
-				Load('schedule/loadsubjects.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#subjects_list');
-				Load('schedule/loadchanges.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&date='+$('#date').val(), '.schedule_table');
+				Load('schedule/loadsubjects.php?group='+$('#groups').val()+'&date='+$('#date').val(), '#subjects_list');
+				Load('schedule/loadchanges.php?group='+$('#groups').val()+'&date='+$('#date').val(), '.schedule_table');
 			});
 		});
 	</script>
@@ -41,17 +41,6 @@ $groups=$gf->GetGroups();
 				<?php foreach($groups as $group) { ?>
 					<option value="<?=$group['group_id']?>"><?=$group['group_name']?></option>
 				<?php } ?>
-			</select>
-			<select class="filter" id="courses">
-				<option>2019-2020</option>
-				<option>2018-2019</option>
-				<option>2017-2018</option>
-				<option>2016-2017</option>
-				<option>2015-2016</option>
-			</select>
-			<select class="filter" id="sems">
-				<option>1</option>
-				<option>2</option>
 			</select>
 			<input type="date" id="date" class="filter">
 			<div class="links">

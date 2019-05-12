@@ -2,7 +2,7 @@
 /**
  * 
  */
-public class Journal
+class Journal
 {
 	private $pdo;
 	
@@ -14,6 +14,7 @@ public class Journal
 	public function StudentSubjects($student) {
 		$gres=$this->pdo->prepare("SELECT `group_id` FROM `students` WHERE `student_id`=?");
 		$gres->execute(array($student));
+		$group=$gres->fetchColumn();
 		$res=$this->pdo->prepare("SELECT `item_id`, `subject_name` FROM `items` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `items`.`group_id`=?");
 		$res->execute(array($group));
 		return $res->fetchAll();
@@ -41,4 +42,11 @@ public class Journal
 		$res=$this->pdo->prepare("SELECT `ktps`.`ktp_id`, `subjects`.`subject_name`, `groups`.`group_name`, `teachers`.`teacher_name`, `items`.`kurs_num`, `groups`.`year`, `groups`.`base` FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id` WHERE `items`.`teacher_id`=? AND `items`.`kurs_num`=?");
 		$res->execute(array($teacher, $kurs));
 	}
+
+	public function GetLast($student) {
+		$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`, `ratings`.`rating_value`, `lessons`.`lesson_date` FROM `ratings` INNER JOIN `lessons` ON `ratings`.`lesson_id`=`lessons`.`lesson_id` INNER JOIN `items` ON `items`.`item_id`=`lessons`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `ratings`.`student_id`=? AND `lessons`.`lesson_date`>= CURDATE() - INTERVAL 7 DAY");
+		$res->execute(array($student));
+		return $res->fetchAll();
+	}
 }
+?>

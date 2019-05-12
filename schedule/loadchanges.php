@@ -2,10 +2,9 @@
 require_once('../connect.php');
 require_once('../api/schedule.php');
 $sf=new Schedule($pdo);
-$date=date('N', strtotime($_REQUEST['date']));
 $week=date('W', strtotime($_REQUEST['date']));
 $changes=$sf->LessonsToday($_REQUEST['group'], $_REQUEST['date']);
-$items=$sf->MainToday(array($_REQUEST['group'], $_REQUEST['kurs'], $_REQUEST['sem'], $date));
+$items=$sf->MainToday($_REQUEST['group'], $_REQUEST['date']);
 $days=['Понедельник','Вторник','Среда','Четверг','Пятница', 'Суббота'];
 $chindex=0;
 $index=0;

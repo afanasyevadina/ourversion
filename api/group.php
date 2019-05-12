@@ -159,21 +159,4 @@ class Group
 		$res->execute(array($group));
 		return $res->fetchAll();
 	}
-
-	public function CurrentKurs() {
-		$year=date('Y');
-		$month=date('n');
-		$day=date('d');
-		return=[];
-		if(intval($month)>=9) {
-			$return[]=$year.'-'.($year+1);
-		} else {
-			$return[]=($year-1).'-'.$year;
-		}
-		if($month>=9||($month==1&&$day<14)) {
-			$return[]=1;
-		} else {
-			$return[]=2;
-		}
-	}
 }

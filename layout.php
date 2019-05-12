@@ -63,6 +63,9 @@ require_once('facecontrol.php');
 			</div>				
 			<div class="menuitem">
 				<a href="changes.php">Изменения в расписании</a>
+			</div>				
+			<div class="menuitem">
+				<a href="settings.php">Настройки</a>
 			</div>	
 			<?php } 
 			if($user['account_type']=='student') { ?>	

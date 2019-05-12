@@ -1,5 +1,16 @@
 <?php
 require_once('facecontrol.php');
+switch ($user['account_type']) {
+	case 'student':
+		require_once('student_index.php');
+		exit;
+		break;
+	
+	case 'student':
+		require_once('teacher_index.php');
+		exit;
+		break;
+}
 ?>
 <!DOCTYPE html>
 <html>
