@@ -1,7 +1,7 @@
 <?php
 require_once('../connect.php');
 require_once('../api/schedule.php');
-$sf=new Schedule($pdo);
+$sf=new Schedule($pdo, '../config.json');
 $week=date('W', strtotime($_REQUEST['date']));
 $changes=$sf->LessonsToday($_REQUEST['group'], $_REQUEST['date']);
 $items=$sf->MainToday($_REQUEST['group'], $_REQUEST['date']);

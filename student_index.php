@@ -1,8 +1,11 @@
 <?php
 require_once('facecontrol.php');
 require_once('api/journal.php');
+require_once('api/schedule.php');
 $jf=new Journal($pdo);
-$subjects=$jf->StudentSubjects($user['person_id']);
+$sf=new Schedule($pdo, 'config.json');
+$data=$sf->CurrentKurs(date('Y'),date('m'),date('d'));
+$subjects=$jf->StudentSubjects($user['person_id'], $data['kurs'], $data['sem']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,7 +39,9 @@ $subjects=$jf->StudentSubjects($user['person_id']);
 					<?php foreach ($subjects as $key => $subject) {
 						$rat=$jf->GetRating($student, $subject['item_id']); ?>
 						<div class="rating_item">
-							<div class="gistogram" style="height: <?=$rat['avg']*20?>%"></div>
+							<div class="gistogram">
+								<div class="level" style="height: <?=$rat['avg']*20?>%"></div>
+							</div>
 							<div class="legend"><?=$subject['subject_name']?></div>
 						</div>
 					<?php } ?>

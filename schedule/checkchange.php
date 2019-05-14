@@ -2,7 +2,7 @@
 require_once('../connect.php');
 require_once('../api/schedule.php');
 require_once('../api/group.php');
-$sf=new Schedule($pdo);
+$sf=new Schedule($pdo, '../config.json');
 $gf=new Group($pdo);
 
 //////////////////////////

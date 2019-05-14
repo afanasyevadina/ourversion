@@ -1,7 +1,7 @@
 <?php
 require_once('../connect.php');
 require_once('../api/schedule.php');
-$sf=new Schedule($pdo);
+$sf=new Schedule($pdo, '../config.json');
 $items=$sf->GetMain($_REQUEST['group'], $_REQUEST['kurs'], $_REQUEST['sem']);
 $index=0;
 $days=['Понедельник','Вторник','Среда','Четверг','Пятница', 'Суббота'];

@@ -19,7 +19,7 @@ class Item
 	}
 
 	public function GetGroupItems($group, $kurs) {
-		$items=$this->pdo->prepare("SELECT * FROM `items` INNER JOIN `subjects` ON `subjects`.`subject_id`=`items`.`subject_id` INNER JOIN `groups` ON `groups`.`group_id`=`items`.`group_id` LEFT JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `items`.`group_id`=? AND `kurs_num`=? GROUP BY `general_id`, `subgroup`");
+		$items=$this->pdo->prepare("SELECT * FROM `items` INNER JOIN `subjects` ON `subjects`.`subject_id`=`items`.`subject_id` INNER JOIN `groups` ON `groups`.`group_id`=`items`.`group_id` LEFT JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `items`.`group_id`=? AND `kurs_num`=? ORDER BY `general_id`, `subgroup`");
 		$items->execute(array($group, $kurs));
 		return $items->fetchAll();
 	}

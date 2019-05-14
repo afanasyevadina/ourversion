@@ -2,7 +2,7 @@
 require_once('../facecontrol.php');
 require_once('../api/group.php');
 require_once('../api/schedule.php');
-$sf=new Schedule($pdo);
+$sf=new Schedule($pdo, '../config.json');
 $teacher=$user['person_id'];
 $items=$sf->TeacherSchedule($teacher, $_REQUEST['kurs'], $_REQUEST['sem']);
 $index=0;

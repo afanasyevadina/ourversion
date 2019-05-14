@@ -5,10 +5,13 @@
 class Schedule
 {
 	private $pdo;
+
+	public $config;
 	
-	function __construct($pdo)
+	function __construct($pdo, $config_path)
 	{
 		$this->pdo=$pdo;
+		$this->config=json_decode(file_get_contents($config_path), true);
 	}
 
 	public function GetNext($item, $sem) {
@@ -40,8 +43,8 @@ class Schedule
 	}
 
 	public function MainToday($group, $date) {
-		$kurs=$this->CurrentKurs($date)['kurs'];
-		$sem=$this->CurrentKurs($date)['sem'];
+		$kurs=$this->CurrentKurs(date('Y', strtotime($date)),date('n', strtotime($date)),date('d', strtotime($date)))['kurs'];
+		$sem=$this->CurrentKurs(date('Y', strtotime($date)),date('n', strtotime($date)),date('d', strtotime($date)))['sem'];
 		$weekday=date('N', strtotime($date));
 		$res=$this->pdo->prepare("SELECT `items`.`item_id`, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks` FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `schedule_items`.`day_of_week`=?");
 		$res->execute(array($group, $kurs, $sem, $weekday));
@@ -85,18 +88,14 @@ class Schedule
 		return $res->fetchAll();
 	}
 
-	public function CurrentKurs($date) {
-		$config=json_decode(file_get_contents('../config.json'), true);
-		$year=date('Y', strtotime($date));
-		$month=date('n', strtotime($date));
-		$day=date('d', strtotime($date));
+	public function CurrentKurs($year, $month, $day) {
 		$return=[];
-		if(intval($month)>=$config['start1_month']) {
+		if(intval($month)>=$this->config['start1_month']) {
 			$return['kurs']=$year.'-'.($year+1);
 		} else {
 			$return['kurs']=($year-1).'-'.$year;
 		}
-		if(($month>=$config['start1_month']&&$day>=$config['start1_day'])||($month==$config['start2_month']&&$day<=$config['start2_day'])) {
+		if(($month>=$this->config['start1_month']&&$day>=$this->config['start1_day'])||($month==$this->config['start2_month']&&$day<=$this->config['start2_day'])) {
 			$return['sem']=1;
 		} else {
 			$return['sem']=2;

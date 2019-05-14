@@ -626,3 +626,24 @@ form.settings > div {
 form.settings input, form.settings select {
 	margin: 0 7px;
 }
+.rating_wrap {
+	overflow-x: auto;
+	width: calc(100% - 100px);
+	border: 1px solid #333;
+	margin: 20px auto;
+	display: flex;
+	padding: 20px;
+}
+.rating_item {
+	margin: 0 20px;
+	display: flex;
+	flex-direction: column;
+}
+.rating_item .gistogram {
+	height: 200px;
+	width: 50px;
+	background: #535;
+}
+.rating_item .legend {
+	padding: 20px 0;
+}

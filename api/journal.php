@@ -11,12 +11,16 @@ class Journal
 		$this->pdo=$pdo;
 	}
 
-	public function StudentSubjects($student) {
+	public function StudentSubjects($student, $kurs, $sem) {
 		$gres=$this->pdo->prepare("SELECT `group_id` FROM `students` WHERE `student_id`=?");
 		$gres->execute(array($student));
 		$group=$gres->fetchColumn();
-		$res=$this->pdo->prepare("SELECT `item_id`, `subject_name` FROM `items` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `items`.`group_id`=?");
-		$res->execute(array($group));
+		if($sem==1) {
+			$res=$this->pdo->prepare("SELECT `item_id`, `subject_name` FROM `items` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `items`.`sem1`>0");
+		} else {
+			$res=$this->pdo->prepare("SELECT `item_id`, `subject_name` FROM `items` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `items`.`sem2`>0");
+		}
+		$res->execute(array($group, $kurs));
 		return $res->fetchAll();
 	}
 
