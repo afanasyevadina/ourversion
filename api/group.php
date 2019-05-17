@@ -21,7 +21,7 @@ class Group
 	}
 
 	public function Upload($data, $count) {
-		$sql="INSERT INTO `students` (`student_fname`, `student_sname`, `student_tname`, `student_name`, `group_id`) VALUES ".str_repeat("(?,?,?,?,?),", $count-1)."(?,?,?,?,?)";
+		$sql="INSERT INTO `students` (`student_fname`, `student_sname`, `student_tname`, `student_name`, `group_id`, `subgroup`) VALUES ".str_repeat("(?,?,?,?,?,?),", $count-1)."(?,?,?,?,?,?)";
 		$res=$this->pdo->prepare($sql);
 		$res->execute($data);
 		return $res;
@@ -32,10 +32,10 @@ class Group
 		$res->execute(array($name,$code,$courses));
 	}
 
-	public function InsertStudent($fname, $sname, $tname, $group) {
+	public function InsertStudent($fname, $sname, $tname, $group, $subgroup) {
 		$short=$this->GetShortName($fname, $sname, $tname);
-		$res=$this->pdo->prepare("INSERT INTO `students` (`student_name`, `student_fname`, `student_sname`, `student_tname`, `group_id`) VALUES (?,?,?,?,?)");
-		$res->execute(array($short, $fname, $sname, $tname, $group));
+		$res=$this->pdo->prepare("INSERT INTO `students` (`student_name`, `student_fname`, `student_sname`, `student_tname`, `group_id`, `subgroup`) VALUES (?,?,?,?,?,?)");
+		$res->execute(array($short, $fname, $sname, $tname, $group, $subgroup));
 	}
 
 	public function InsertTeacher($fname, $sname, $tname, $cmk) {
@@ -108,10 +108,10 @@ class Group
 		$res->execute(array($name, $code, $courses,  $id));
 	}
 
-	public function UpdateStudent($fname, $sname, $tname, $group, $id) {
+	public function UpdateStudent($fname, $sname, $tname, $group, $subgroup, $id) {
 		$short=$this->GetShortName($fname, $sname, $tname);
-		$res=$this->pdo->prepare("UPDATE `students` SET `student_name`=?, `student_fname`=?, `student_sname`=?, `student_tname`=?, `group_id`=? WHERE `student_id`=?");
-		$res->execute(array($short, $fname, $sname, $tname, $group, $id));
+		$res=$this->pdo->prepare("UPDATE `students` SET `student_name`=?, `student_fname`=?, `student_sname`=?, `student_tname`=?, `group_id`=?, `subgroup`=? WHERE `student_id`=?");
+		$res->execute(array($short, $fname, $sname, $tname, $group, $subgroup, $id));
 	}
 
 	public function UpdateTeacher($fname, $sname, $tname, $cmk, $id) {
@@ -123,6 +123,11 @@ class Group
 	public function Delete($group) {
 		$res=$this->pdo->prepare("DELETE FROM `groups` WHERE `group_id`=?");
 		$res->execute(array($group));
+	}
+
+	public function DeleteStudent($student) {
+		$res=$this->pdo->prepare("DELETE FROM `students` WHERE `student_id`=?");
+		$res->execute(array($student));
 	}
 
 	public function DeleteSpecialization($spec) {
@@ -154,9 +159,14 @@ class Group
 		return $res->fetchAll();
 	}
 
-	public function GetStudents($group) {
-		$res=$this->pdo->prepare("SELECT `students`.`student_name`, `students`.`student_id`, `groups`.`group_name` FROM `students` INNER JOIN `groups` ON `students`.`group_id`=`groups`.`group_id` WHERE `students`.`group_id` = ?");
-		$res->execute(array($group));
+	public function GetStudents($group, $subgroup=0) {
+		if(!$subgroup) {
+			$res=$this->pdo->prepare("SELECT `students`.`student_name`, `students`.`student_id`, `groups`.`group_name` FROM `students` INNER JOIN `groups` ON `students`.`group_id`=`groups`.`group_id` WHERE `students`.`group_id` = ? ORDER BY `students`.`student_fname`, `students`.`student_sname`, `students`.`student_tname`");
+			$res->execute(array($group));
+		} else {
+			$res=$this->pdo->prepare("SELECT `students`.`student_name`, `students`.`student_id`, `groups`.`group_name` FROM `students` INNER JOIN `groups` ON `students`.`group_id`=`groups`.`group_id` WHERE `students`.`group_id` = ? AND `subgroup`=? ORDER BY `students`.`student_fname`, `students`.`student_sname`, `students`.`student_tname`");
+			$res->execute(array($group, $subgroup));
+		}
 		return $res->fetchAll();
 	}
 }

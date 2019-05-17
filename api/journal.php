@@ -16,9 +16,9 @@ class Journal
 		$gres->execute(array($student));
 		$group=$gres->fetchColumn();
 		if($sem==1) {
-			$res=$this->pdo->prepare("SELECT `item_id`, `subject_name` FROM `items` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `items`.`sem1`>0");
+			$res=$this->pdo->prepare("SELECT `item_id`, `subject_name`, `items`.`general_id` FROM `items` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `items`.`sem1`>0 ORDER BY `items`.`theory` DESC");
 		} else {
-			$res=$this->pdo->prepare("SELECT `item_id`, `subject_name` FROM `items` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `items`.`sem2`>0");
+			$res=$this->pdo->prepare("SELECT `item_id`, `subject_name`, `items`.`general_id` FROM `items` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `items`.`sem2`>0 ORDER BY `items`.`general_id`, `items`.`theory` DESC");
 		}
 		$res->execute(array($group, $kurs));
 		return $res->fetchAll();

@@ -47,6 +47,12 @@ $groups=$gf->GetGroups();
 					<?php } ?>
 				</select>
 			</div>
+			<div class="subgroup">
+				<label><input type="radio" name="subgroup" id="subgroup1" value="1">1 подгруппа</label>
+			</div>
+			<div class="subgroup">
+				<label><input type="radio" name="subgroup" id="subgroup2" value="2">2 подгруппа</label>
+			</div>
 			<input type="submit" name="submit" value="Сохранить">
 			<a id="deletestudent" class="delete" href="">Удалить</a>
 		</form>	
@@ -85,6 +91,11 @@ $groups=$gf->GetGroups();
 					<option value="<?=$group['group_id']?>"><?=$group['group_name']?></option>
 				<?php } ?>
 			</select>
+			<select id="subgroupselect">
+				<option value="0">Все</option>
+				<option value="1">1 подгруппа</option>
+				<option value="2">2 подгруппа</option>
+			</select>
 			<div class="links">
 				<a href="#" id="new">Добавить</a>
 				<a href="#" id="upload">Загрузить</a>
@@ -101,6 +112,7 @@ $groups=$gf->GetGroups();
 								<input type="checkbox">Выбрать все
 							</label>
 						</th>
+						<th>№</th>
 						<th>Имя</th>
 						<th>Группа</th>
 						<th></th>
@@ -113,7 +125,22 @@ $groups=$gf->GetGroups();
 	</div>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			Load('students/getstudents.php?group='+$('#group').val(), '#students tbody');			
+			$.ajax({
+				url: 'students/getstudents.php',
+				method: 'POST',
+				data: 'group='+$('#stdgroupselect').val()+'&subgroup=0',
+				dataType: 'html',
+				success: function(result) {
+					if(!result.split('endcount')[0]) {
+						$('.subgroup').hide();
+						$('#subgroupselect').hide();
+					} else {
+						$('.subgroup').show();
+						$('#subgroupselect').show();
+					}
+					$('#students tbody').html(result.split('endcount')[1]);
+				}
+			});
 		});
 	</script>
 </body>

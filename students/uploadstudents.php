@@ -14,13 +14,17 @@ if(!empty($_FILES)) {
     $list = $objPHPExcel->getActiveSheet()->toArray(); // выгружаем данные из объекта в массив
     $output=array();
     $count=0;
+    $divide=intval(count($list)/2);
+    $i=0;
     
     foreach ($list as $row) {
         $filtered=array_filter($row);
         if($filtered) {
+            $i++;
             $row=array_slice($row, 0, 3);
             $row[]=$sf->GetShortName($row[0], $row[1], $row[2]);
             $row[]=$_POST['group'];
+            $row[]=$i<$divide ? 1 : 2;
             $output=array_merge($output,array_values($row));   
             $count++;         
         }

@@ -21,6 +21,7 @@ function close() {
 	$('#teacherform').trigger('reset');
 	$('#subjectform').trigger('reset');
 	$('#specform').trigger('reset');
+	$('#studentform').trigger('reset');
 }
 $(document).ready(function(){
 	$('#new').click(function(e){
@@ -63,7 +64,23 @@ $(document).ready(function(){
 		dataType: 'html',
 		success: function(response) {
 			close();
-			Load('students/getstudents.php?group='+$('#group').val(), '#students tbody');
+			$.ajax({
+				url: 'students/getstudents.php',
+				method: 'POST',
+				data: 'group='+$('#stdgroupselect').val()+'&subgroup='+$('#subgroupselect').val(),
+				dataType: 'html',
+				success: function(result) {
+					if(!result.split('endcount')[0]) {
+						$('.subgroup').hide();
+						$('#subgroupselect').hide();
+						$('#subgroupselect').val(0);
+					} else {
+						$('.subgroup').show();
+						$('#subgroupselect').show();
+					}
+					$('#students tbody').html(result.split('endcount')[1]);
+				}
+			});
 		}
 	});
 	$('#subjectform').ajaxForm({
@@ -152,6 +169,10 @@ $(document).ready(function(){
 				$('#sname').val(result.student_sname);
 				$('#tname').val(result.student_tname);
 				$('#group').val(result.group_id);
+				$('#subgroup1').removeAttr('checked');
+				$('#subgroup2').removeAttr('checked');
+				if(result.subgroup=='1') { $('#subgroup1').attr('checked', 'checked'); }
+				if(result.subgroup=='2') { $('#subgroup2').attr('checked', 'checked'); }
 				$('#studentform').attr('action', 'students/editstudent.php');
 				$('#deletestudent').css('display', 'flex');
 				$('#deletestudent').attr('href', 'students/deletestudent.php?id='+result.student_id);
@@ -361,7 +382,34 @@ $(document).ready(function(){
 		});
 	});
 	$('#stdgroupselect').change(function(){
-		Load('students/getstudents.php?group='+$(this).val(), '#students tbody');
+		$.ajax({
+			url: 'students/getstudents.php',
+			method: 'POST',
+			data: 'group='+$(this).val()+'&subgroup=0',
+			dataType: 'html',
+			success: function(result) {
+				if(!result.split('endcount')[0]) {
+					$('.subgroup').hide();
+					$('#subgroupselect').hide();
+				} else {
+					$('.subgroup').show();
+					$('#subgroupselect').show();
+				}
+				$('#students tbody').html(result.split('endcount')[1]);
+			}
+		});
+	});
+
+	$('#subgroupselect').change(function(){
+		$.ajax({
+			url: 'students/getstudents.php',
+			method: 'POST',
+			data: 'group='+$('#stdgroupselect').val()+'&subgroup='+$(this).val(),
+			dataType: 'html',
+			success: function(result) {
+				$('#students tbody').html(result.split('endcount')[1]);
+			}
+		});
 	});
 
 	$('table').on('change', 'th input[type=checkbox]', function(){

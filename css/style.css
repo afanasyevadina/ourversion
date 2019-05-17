@@ -626,8 +626,24 @@ form.settings > div {
 form.settings input, form.settings select {
 	margin: 0 7px;
 }
+.rating_section {
+	display: flex;
+}
+.rating_section .arrow {
+	width: 50px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+.rating_section .arrow img {
+	width: 100%;
+}
+.rating_section .to_right img {
+	transform: rotate(180deg);
+}
 .rating_wrap {
-	overflow-x: auto;
+	overflow-x: hidden;
+	transition: 0.5s;
 	width: calc(100% - 100px);
 	border: 1px solid #333;
 	margin: 20px auto;
@@ -646,4 +662,11 @@ form.settings input, form.settings select {
 }
 .rating_item .legend {
 	padding: 20px 0;
+	width: 180px;
+}
+table.full td:not(.list_box) {
+	width: 50px;
+}
+table.full .sortable {
+	width: 100%;
 }
