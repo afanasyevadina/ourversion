@@ -72,7 +72,7 @@ for($i=1;$i<=6; $i++) { ?>
 					</ul>
 				<?php } ?>
 			</td>
-			<td contenteditable="true"></td>
+			<td class="cab_num"><?=$items[$index]['cab_num']?></td>
 		</tr>
 	<?php } ?>
 	</tbody> <?php

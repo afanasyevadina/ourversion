@@ -44,7 +44,7 @@ z-index: 100;
 	position: absolute;
 	width: 250px;
 	top: 50px;
-	bottom: 0;
+	min-height: calc(100% - 50px);
 	background-color: #394A8C;	
 	transition: 0.5s;
 	z-index: 99;
@@ -153,7 +153,7 @@ input, select {
 	display: flex;
 	padding: 0 10px;
 }
-#new, #upload, #downloadrup, .generate, .download, .save {
+#new, #upload, #downloadrup, .generate, .download, .save, #newcab {
 	display: flex;
 	align-items: center;
 	text-decoration: none;
@@ -162,7 +162,7 @@ input, select {
 	background-position: center left;
 	padding: 10px 30px;
 }
-#new {
+#new, #newcab {
 	background-image: url('../img/add.png');
 }
 #upload {
@@ -185,7 +185,7 @@ table {
 	border-color: #ddd;	
 	margin-bottom: 30px;
 }
-table:not(.journal) {
+table:not(.journal, #cabinets) {
 	min-width: 100%;
 }
 table.rup {
@@ -309,7 +309,7 @@ p.center {
 	resize: vertical;
 	font-family: Arial, sans-serif;
 }
-.additem_up, .deleteitem_up, th.addpart, .addtopic, .deletepart, .deletetopic {
+.additem_up, .deleteitem_up, th.addpart, .addtopic, .deletepart, .deletetopic, .deletecab {
 	cursor: pointer;
 	background-color: #fff;
 }
@@ -533,10 +533,14 @@ ul, li {
 	background-color: #D9DFFC;
 	padding: 10px 30px 10px 10px;
 	position: relative;
+	width: 500px;
+}
+.sortable {
+	background-color: #FCF7D9;
 }
 .sortable li {
 	background-color: #FCF7D9;
-	/*width: calc(100% - 8px) !important;*/
+	width: auto !important;
 	height: 35px !important;
 }
 #droppable {
@@ -590,7 +594,7 @@ li i {
 	margin: 0 20px;
 }
 .table_c {
-	max-height: calc(100% - 200px);
+	/*max-height: calc(100% - 200px);*/
 	overflow-y: auto;
 	margin-left: 20px;
 }
@@ -657,7 +661,9 @@ form.settings input, form.settings select {
 }
 .rating_item .gistogram {
 	height: 200px;
-	width: 50px;
+	width: 50px;	
+}
+.rating_item .gistogram .level {
 	background: #535;
 }
 .rating_item .legend {
@@ -669,4 +675,15 @@ table.full td:not(.list_box) {
 }
 table.full .sortable {
 	width: 100%;
+}
+#cabs_list {
+	position: fixed;
+	top: 50px;
+	right: 0;
+	width: 150px;
+	background-color: #fff;
+	box-shadow: 0 0 4px #666;
+	height: calc(100% - 50px);
+	z-index: 45;
+	display: none;
 }

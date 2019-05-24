@@ -254,7 +254,23 @@ $(document).ready(function(){
 			dataType: 'html',
 			method: 'GET',
 			success: function(response) {
-				Load('students/getstudents.php', '#students tbody');
+				$.ajax({
+				url: 'students/getstudents.php',
+				method: 'POST',
+				data: 'group='+$('#stdgroupselect').val()+'&subgroup='+$('#subgroupselect').val(),
+				dataType: 'html',
+				success: function(result) {
+					if(!result.split('endcount')[0]) {
+						$('.subgroup').hide();
+						$('#subgroupselect').hide();
+						$('#subgroupselect').val(0);
+					} else {
+						$('.subgroup').show();
+						$('#subgroupselect').show();
+					}
+					$('#students tbody').html(result.split('endcount')[1]);
+				}
+			});
 				close();
 			},
 			error: function() {

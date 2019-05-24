@@ -1,5 +1,8 @@
 <?php
 require_once('facecontrol.php');
+require_once('api/schedule.php');
+$sf=new Schedule($pdo, 'config.json');
+$cabs=$sf->GetCabinets();
 $config=json_decode(file_get_contents('config.json'), true);
 ?>
 <!DOCTYPE html>
@@ -10,6 +13,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<script src="js/jquery.form.min.js"></script>
+	<script src="js/script.js"></script>
 </head>
 <body>
 	<?php require_once('layout.php'); ?>
@@ -17,10 +21,10 @@ $config=json_decode(file_get_contents('config.json'), true);
 		
 		<div class="main">
 			<h2>Настройки</h2>
-			<div class="success">
+			<div class="success" id="set_success">
 				<h3>Изменения сохранены.</h3>
 			</div>
-			<div class="error">
+			<div class="error" id="set_error">
 				<h3>Ошибка! Изменения не сохранены.</h3>
 			</div>
 			<form action="api/config.php" method="POST" class="settings">
@@ -125,24 +129,163 @@ $config=json_decode(file_get_contents('config.json'), true);
 				</div>
 				<input type="submit" value="Сохранить">
 			</form>
+			<div id="fon"></div>
+			<div id="add">
+				<form action="specializations/savespecialization.php" method="post" id="specform" class="addform wide">
+					<img src="img/close.png" class="cancelnew" alt="close">
+					<input type="hidden" name="id" id="id">
+					<div>
+						<label for="name">Название: </label>
+					</div>
+					<div>
+						<input type="text" name="name" id="name" autocomplete="off">
+					</div>
+					<div>
+						<label for="code">Шифр: </label>
+					</div>
+					<div>
+						<input type="text" name="code" id="code" autocomplete="off">
+					</div>
+					<div>
+						<label for="courses">Количество курсов: </label>
+					</div>
+					<div>
+						<input type="number" name="courses" value="4" min="1" max="5" id="courses">
+					</div>
+
+					<input type="submit" name="submit" value="Сохранить">
+					<a id="deletespec" class="delete" href="">Удалить</a>
+				</form>
+			</div>
+			<br>
+			<hr>
+			<h2>Специальности</h2>
+			<div class="links">
+				<a href="#" id="new">Добавить</a>
+			</div>
+			<table id="specializations" border="1">
+				<thead id="headgroup">
+					<tr>
+						<th>Название</th>
+						<th>Шифр</th>
+						<th>Количество курсов</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<br>
+			<hr>
+			<h2>Кабинеты</h2>
+			<div class="success" id="cab_success">
+				<h3>Изменения сохранены.</h3>
+			</div>
+			<div class="error" id="cab_error">
+				<h3>Ошибка! Изменения не сохранены.</h3>
+			</div>
+			<div class="links">
+				<a href="#" id="newcab">Добавить</a>
+				<a href="#" id="savecab" class="save">Сохранить</a>
+			</div>
+			<table id="cabinets" border="1">
+				<thead id="headgroup">
+					<tr>
+						<th>Название</th>
+						<th>Заблокирован</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($cabs as $cab) { ?>
+						<tr>
+							<td class="cab_name" contenteditable="true"><?=$cab['cabinet_name']?></td>
+							<td>
+								<label class="check_label">
+									<input type="checkbox" <?=$cab['locked'] ? 'checked' : ''?>>
+								</label>
+							</td>
+							<td class="deletecab" data-id="<?=$cab['cabinet_id']?>"><img src="img/trash.svg"></td>
+						</tr>
+					<?php } ?>
+				</tbody>
+			</table>
 		</div>
 	</div>
 	<footer></footer>
 	<script type="text/javascript">
+		Load('specializations/getspecializations.php', '#specializations tbody');
 		$('form').ajaxForm({
 			dataType: 'html',
 			success: function(response) {
-				$('.success').show();
+				$('#set_success').show();
 				setTimeout(function(){
-					$('.success').hide();
+					$('#set_success').hide();
 				},2000);
 			},
-			error: function(response) {
-				$('.error').show();
+			error: function() {
+				$('#set_error').show();
 				setTimeout(function(){
-					$('.error').hide();
+					$('#set_error').hide();
 				},2000);
 			}
+		});
+
+		$('#newcab').click(function(e) {
+			e.preventDefault();
+			$('#cabinets tbody')
+			.append("<tr><td class='cab_name' contenteditable='true'></td>"+
+				"<td><label class='check_label'><input type='checkbox'></label></td>"+
+				"<td class='deletecab'><img src='img/trash.svg'></td></tr>");
+		});
+
+		$('#savecab').click(function(e) {
+			e.preventDefault();
+			var res=[];
+			$('#cabinets tbody').find('tr.edited').each(function(){
+				var temp=[];
+				temp.push($(this).find('td.cab_name').html());
+				temp.push($(this).find('input').prop('checked') ? 1 :0);
+				res.push(temp);
+				$.ajax({
+					url: 'schedule/savecabinet.php',
+					method: 'POST',
+					dataType: 'html',
+					data: 'data='+JSON.stringify(res),
+					success: function(response) {
+						$('#cabinets tr').removeClass('edited');
+						$('#cab_success').show();
+						setTimeout(function(){
+							$('#cab_success').hide();
+						},2000);
+					},
+					error: function() {
+						$('#cab_error').show();
+						setTimeout(function(){
+							$('#cab_error').hide();
+						},2000);
+					}
+				});
+			});
+		});
+
+		$('#cabinets tbody').on('click', '.deletecab', function(){
+			if(!!$(this).data('id')) {
+				$.ajax({
+					url: 'schedule/deletecabinet.php',
+					method: 'POST',
+					dataType: 'html',
+					data: 'id='+$(this).data('id')
+				});
+			}
+			$(this).parent().remove();
+		});
+
+		$('#cabinets tbody').on('input', 'td.cab_name', function() {
+			$(this).parent().addClass('edited');
+		});
+		$('#cabinets tbody').on('change', 'input', function() {
+			$(this).parent().parent().addClass('edited');
 		});
 	</script>
 </body>

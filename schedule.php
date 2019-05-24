@@ -32,8 +32,8 @@ if($user['account_type']!='dispetcher') {
 <body>
 	<?php require_once('layout.php'); ?>
 	<div class="modal"></div>
-	<div class="container">
-		
+	<div id="cabs_list"></div>
+	<div class="container">		
 		<div class="main">
 			<h2>Расписание</h2>
 			<select class="filter" id="groups">

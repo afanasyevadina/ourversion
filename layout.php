@@ -26,9 +26,6 @@ require_once('facecontrol.php');
 			<?php
 			if($user['account_type']=='admin') { ?>
 			<div class="menuitem">
-				<a href="specializations.php">Специальности</a>
-			</div>
-			<div class="menuitem">
 				<a href="groups.php">Группы</a>
 			</div>		
 			<div class="menuitem">

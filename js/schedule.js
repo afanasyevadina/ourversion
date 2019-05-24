@@ -88,7 +88,8 @@ function Modal(text) {
 						}
 					}					
 				}	
-				$('.sortable[data-day='+ui.item.data('day')+'][data-num='+ui.item.data('num')+']').each(function(){			
+				$('.sortable[data-day='+ui.item.data('day')+'][data-num='+ui.item.data('num')+']').each(function(){	
+				console.log(ui.item.data('num'));
 					if($(this).find('li').length<1) {
 						$(this).append('<li class="empty ui-sortable-handle"></li>');
 					}
@@ -119,12 +120,15 @@ function Modal(text) {
 			if($(this).parent().find($('.separator')).length==0) {
 				$(this).parent().find('.list_box').append('<div class="separator"></div>');
 				let ul=$(this).parent().find('.sortable').clone();
-				let li=ul.find('li').clone();
+				let li=ul.find('li').first().clone();
 				if(!li.hasClass('empty')) {
 					li.addClass('empty');
+					li.removeAttr('data-teacher');
+					li.removeAttr('data-id');
 					li.html('');
 				}
-				$(this).parent().find('.list_box').append(ul.html(li));
+				ul.html(li);
+				$(this).parent().find('.list_box').append(ul);
 				Update();
 			}	
 			else {
@@ -198,4 +202,15 @@ function Modal(text) {
 				}
 			});
 		});
-	} );
+
+		$('table').on('click', '.cab_num', function(){
+			console.log('schedule/main_cabinets.php?day='
+				+$(this).parent().find('.sortable').data('day')
+				+'&num='+$(this).parent().find('.sortable').data('num'));
+			Load('schedule/main_cabinets.php?day='
+				+$(this).parent().find('.sortable').data('day')
+				+'&num='+$(this).parent().find('.sortable').data('num'),
+				 '#cabs_list');
+			$('#cabs_list').show();
+		});
+	});

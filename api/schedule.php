@@ -102,4 +102,26 @@ class Schedule
 		}
 		return $return;
 	}
+
+	public function SaveCabinet($cab) {
+		$res=$this->pdo->prepare("INSERT INTO `cabinets` (`cabinet_name`, `locked`) VALUES (?,?) ON DUPLICATE KEY UPDATE `cabinet_name`=VALUES(cabinet_name), `locked`=VALUES(locked)");
+		$res->execute($cab);
+	}
+
+	public function DeleteCabinet($cab) {
+		$res=$this->pdo->prepare("DELETE FROM `cabinets` WHERE `cabinet_id`=?");
+		$res->execute(array($cab));
+	}
+
+	public function GetCabinets($name='') {
+		$res=$this->pdo->prepare("SELECT * FROM `cabinets` WHERE `cabinet_name` LIKE ?");
+		$res->execute(array('%'.$name.'%'));
+		return $res->fetchAll();
+	}
+
+	public function IsEmptyMain($cab, $day, $num) {
+		$res=$this->pdo->prepare("SELECT * FROM `schedule_items` WHERE `cab_num`=? AND `day_of_week`=? AND `num_of_lesson`=?");
+		$res->execute(array($cab, $day, $num));
+		return !$res->fetch();
+	}
 }

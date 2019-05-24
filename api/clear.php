@@ -108,7 +108,7 @@ class Clear
 
     public function ResetAll() {
         $this->ResetPlans();
-        $this->pdo->query("SET FOREIGN_KEY_CHECKS=1");
+        $this->pdo->query("SET FOREIGN_KEY_CHECKS=0");
         $this->pdo->query("TRUNCATE TABLE `cmks`");
         $this->pdo->query("TRUNCATE TABLE `groups`");
         $this->pdo->query("TRUNCATE TABLE `specializations`");
@@ -117,15 +117,18 @@ class Clear
         $this->pdo->query("TRUNCATE TABLE `teachers`");
         $this->pdo->query("TRUNCATE TABLE `types`");
         $this->pdo->query("TRUNCATE TABLE `users`");
+        $this->pdo->query("SET FOREIGN_KEY_CHECKS=1");
     }
 
     public function ResetPlans() {
         $this->ResetItems();
+        $this->pdo->query("SET FOREIGN_KEY_CHECKS=0");
         $this->pdo->query("TRUNCATE TABLE `general`");
+        $this->pdo->query("SET FOREIGN_KEY_CHECKS=1");
     }
 
     public function ResetItems() {
-        $this->pdo->query("SET FOREIGN_KEY_CHECKS=1");
+        $this->pdo->query("SET FOREIGN_KEY_CHECKS=0");
         $this->pdo->query("TRUNCATE TABLE `items`");
         $this->pdo->query("TRUNCATE TABLE `ktpitems`");
         $this->pdo->query("TRUNCATE TABLE `ktps`");
@@ -135,5 +138,6 @@ class Clear
         $this->pdo->query("TRUNCATE TABLE `rupitems`");
         $this->pdo->query("TRUNCATE TABLE `ruprograms`");
         $this->pdo->query("TRUNCATE TABLE `schedule_items`");
+        $this->pdo->query("SET FOREIGN_KEY_CHECKS=1");
     }
 }
