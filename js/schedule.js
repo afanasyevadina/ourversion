@@ -204,13 +204,21 @@ function Modal(text) {
 		});
 
 		$('table').on('click', '.cab_num', function(){
-			console.log('schedule/main_cabinets.php?day='
-				+$(this).parent().find('.sortable').data('day')
-				+'&num='+$(this).parent().find('.sortable').data('num'));
+			$('.cab_num').removeClass('current');
+			$(this).addClass('current');
 			Load('schedule/main_cabinets.php?day='
 				+$(this).parent().find('.sortable').data('day')
 				+'&num='+$(this).parent().find('.sortable').data('num'),
 				 '#cabs_list');
 			$('#cabs_list').show();
+		});
+
+		$(document).mouseup(function (e){ // событие клика по веб-документу
+			var div = $("#cabs_list"); // тут указываем ID элемента
+			if (!div.is(e.target) // если клик был не по нашему блоку
+			    && div.has(e.target).length === 0) { // и не по его дочерним элементам
+				$("#cabs_list").hide();
+				$('.cab_num').removeClass('current');
+			}
 		});
 	});

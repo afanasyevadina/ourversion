@@ -104,7 +104,7 @@ class Schedule
 	}
 
 	public function SaveCabinet($cab) {
-		$res=$this->pdo->prepare("INSERT INTO `cabinets` (`cabinet_name`, `locked`) VALUES (?,?) ON DUPLICATE KEY UPDATE `cabinet_name`=VALUES(cabinet_name), `locked`=VALUES(locked)");
+		$res=$this->pdo->prepare("INSERT INTO `cabinets` (`cabinet_name`, `cab_description`, `locked`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `cabinet_name`=VALUES(cabinet_name), `cab_description`=VALUES(cab_description), `locked`=VALUES(locked)");
 		$res->execute($cab);
 	}
 
@@ -114,7 +114,7 @@ class Schedule
 	}
 
 	public function GetCabinets($name='') {
-		$res=$this->pdo->prepare("SELECT * FROM `cabinets` WHERE `cabinet_name` LIKE ?");
+		$res=$this->pdo->prepare("SELECT * FROM `cabinets` WHERE `cabinet_name` LIKE ? ORDER BY `cabinet_name`");
 		$res->execute(array('%'.$name.'%'));
 		return $res->fetchAll();
 	}

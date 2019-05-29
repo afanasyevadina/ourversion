@@ -192,6 +192,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 				<thead id="headgroup">
 					<tr>
 						<th>Название</th>
+						<th>Описание</th>
 						<th>Заблокирован</th>
 						<th></th>
 					</tr>
@@ -200,6 +201,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 					<?php foreach ($cabs as $cab) { ?>
 						<tr>
 							<td class="cab_name" contenteditable="true"><?=$cab['cabinet_name']?></td>
+							<td class="cab_desc" contenteditable="true"><?=$cab['cab_description']?></td>
 							<td>
 								<label class="check_label">
 									<input type="checkbox" <?=$cab['locked'] ? 'checked' : ''?>>
@@ -245,6 +247,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 			$('#cabinets tbody').find('tr.edited').each(function(){
 				var temp=[];
 				temp.push($(this).find('td.cab_name').html());
+				temp.push($(this).find('td.cab_desc').html());
 				temp.push($(this).find('input').prop('checked') ? 1 :0);
 				res.push(temp);
 				$.ajax({
@@ -281,7 +284,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 			$(this).parent().remove();
 		});
 
-		$('#cabinets tbody').on('input', 'td.cab_name', function() {
+		$('#cabinets tbody').on('input', 'td.cab_name, td.cab_desc', function() {
 			$(this).parent().addClass('edited');
 		});
 		$('#cabinets tbody').on('change', 'input', function() {

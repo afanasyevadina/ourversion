@@ -185,7 +185,7 @@ table {
 	border-color: #ddd;	
 	margin-bottom: 30px;
 }
-table:not(.journal, #cabinets) {
+table:not(.journal):not(#cabinets) {
 	min-width: 100%;
 }
 table.rup {
@@ -680,10 +680,20 @@ table.full .sortable {
 	position: fixed;
 	top: 50px;
 	right: 0;
-	width: 150px;
+	width: 200px;
+	padding: 10px;
 	background-color: #fff;
 	box-shadow: 0 0 4px #666;
 	height: calc(100% - 50px);
 	z-index: 45;
 	display: none;
+}
+#cabs_list .cabinet {
+	cursor: pointer;
+}
+#cabs_list .cabinet:hover {
+	text-decoration: underline;
+}
+.cab_num {
+	cursor: pointer;
 }
