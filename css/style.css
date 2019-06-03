@@ -598,10 +598,6 @@ li i {
 	overflow-y: auto;
 	margin-left: 20px;
 }
-.inner_lesson {
-	/*background-color: #FCF7D9 !important;
-	width: calc(100% - 8px) !important;*/
-}
 .subgroup {
 	user-select: none;
 }
@@ -694,6 +690,19 @@ table.full .sortable {
 #cabs_list .cabinet:hover {
 	text-decoration: underline;
 }
+.inner_lesson {
+	display: flex;
+	justify-content: space-between;
+}
 .cab_num {
+	height: 100%;
+	width: 40px;
+	margin-right: -50px; 
 	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.cab_cell {
+	width: 40px;
 }

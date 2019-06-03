@@ -24,7 +24,8 @@ $index=0;
 					<?php 
 					while ($changes[$chindex]['lesson_num']==$j) { ?>
 						<li data-id="<?=$changes[$chindex]['item_id']?>" data-num="<?=$j?>" data-teacher="<?=$changes[$chindex]['teacher_id']?>" class="inner_lesson">
-						<?=$changes[$chindex]['subject_name']?> <?=$changes[$chindex]['teacher_name']?>							
+						<?=$changes[$chindex]['subject_name']?> <?=$changes[$chindex]['teacher_name']?>		
+							<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>								
 						</li>
 						<?php 
 						$chindex++;
@@ -35,7 +36,8 @@ $index=0;
 						while($items[$index]['num_of_lesson']==$j) {
 							if(!$items[$index]['weeks']||$items[$index]['weeks']==$week%2+1) { ?>
 								<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-teacher="<?=$items[$index]['teacher_id']?>">
-									<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>							
+									<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>	
+									<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>									
 								</li>
 							<?php 
 								$count++;
@@ -49,7 +51,7 @@ $index=0;
 					<?php } ?>
 				</ul>
 			</td>
-			<td contenteditable="true">25</td>
+			<td class="cab_cell"></td>
 		</tr>
 	<?php } ?>
 	</tbody>

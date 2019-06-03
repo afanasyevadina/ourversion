@@ -11,8 +11,8 @@ foreach($items as $item) {
 	}
 	if(($item['sem'.$_REQUEST['sem']]>0)&&
 	($item['theory']>0||!in_array($item['general_id'], $gs))) {
-		$divide=$item['theory']==0 ? 'half' : '';
-		$subgroup=$item['subgroup']&&$divide ? $item['subgroup'].' подгруппа' : '';
+		$divide=!$item['theory']&&$item['subgroup']!=0 ? 'half' : '';
+		$subgroup=$divide ? $item['subgroup'].' подгруппа' : '';
 		?>
 		<li data-teacher="<?=$item['teacher_id']?>" data-id="<?=$item['item_id']?>" class="sub_item <?=$divide?>"><?=$item['subject_name'].' '.$subgroup.' '.$item['teacher_name']?><span><?=$item['sem'.$_REQUEST['sem']]?></span></li>
 	<?php

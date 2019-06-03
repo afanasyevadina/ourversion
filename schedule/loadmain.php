@@ -26,7 +26,8 @@ for($i=1;$i<=6; $i++) { ?>
 						$count=0;
 						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i&&$items[$index]['weeks']==1) { ?>
 						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson">
-							<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>							
+							<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>	
+							<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>						
 						</li>
 						<?php 
 							$index++; 
@@ -42,7 +43,8 @@ for($i=1;$i<=6; $i++) { ?>
 						$count=0;
 						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i&&$items[$index]['weeks']==2) { ?>
 						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson">
-							<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>							
+							<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>	
+							<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>										
 						</li>
 						<?php 
 							$index++; 
@@ -60,7 +62,8 @@ for($i=1;$i<=6; $i++) { ?>
 						$count=0; 
 						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i) { ?>
 						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson">
-							<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>							
+							<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>	
+							<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>										
 						</li>
 						<?php 
 							$index++; 
@@ -72,7 +75,7 @@ for($i=1;$i<=6; $i++) { ?>
 					</ul>
 				<?php } ?>
 			</td>
-			<td class="cab_num"><?=$items[$index]['cab_num']?></td>
+			<td class="cab_cell"></td>
 		</tr>
 	<?php } ?>
 	</tbody> <?php

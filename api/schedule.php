@@ -26,12 +26,14 @@ class Schedule
 		return $res->fetchColumn();
 	}
 
+	//theory or practice
 	public function CheckNext($item, $next) {
 		return intval($item['theory'])>0&&intval($next['item_practice']>0)&&$item['divide'];
 	}
 
+	//what is by main schedule
 	public function GetMain($group, $kurs, $sem) {
-		$res=$this->pdo->prepare("SELECT `schedule_items`.`item_id`, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `items`.`theory`, `items`.`totalkurs`, `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `items`.`sem1`, `items`.`sem2`, `schedule_items`.`weeks` FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? ORDER BY `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks`");
+		$res=$this->pdo->prepare("SELECT `schedule_items`.`item_id`, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `items`.`theory`, `items`.`totalkurs`, `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `items`.`sem1`, `items`.`sem2`, `schedule_items`.`weeks`, `cabinets`.`cabinet_name` FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` INNER JOIN `cabinets` ON `cabinets`.`cabinet_id`=`schedule_items`.`cab_num` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? ORDER BY `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks`");
 		$res->execute(array($group, $kurs, $sem));
 		return $res->fetchAll();
 	}
@@ -42,11 +44,12 @@ class Schedule
 		return $res->fetchAll();
 	}
 
+	//what will be in current day by main schedule
 	public function MainToday($group, $date) {
 		$kurs=$this->CurrentKurs(date('Y', strtotime($date)),date('n', strtotime($date)),date('d', strtotime($date)))['kurs'];
 		$sem=$this->CurrentKurs(date('Y', strtotime($date)),date('n', strtotime($date)),date('d', strtotime($date)))['sem'];
 		$weekday=date('N', strtotime($date));
-		$res=$this->pdo->prepare("SELECT `items`.`item_id`, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks` FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `schedule_items`.`day_of_week`=?");
+		$res=$this->pdo->prepare("SELECT `items`.`item_id`, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks`, `cabinets`.`cabinet_name`  FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` INNER JOIN `cabinets` ON `cabinets`.`cabinet_id`=`schedule_items`.`cab_num` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `schedule_items`.`day_of_week`=?");
 		$res->execute(array($group, $kurs, $sem, $weekday));
 		return $res->fetchAll();
 	}
@@ -70,24 +73,26 @@ class Schedule
 			$count++;
 		}
 		if($count) {
-			$query="INSERT INTO `schedule_items` (`num_of_lesson`, `day_of_week`, `item_id`, `sem_num`, `group_id`, `weeks`) VALUES ".str_repeat("(?,?,?,?,?,?), ", $count-1)."(?,?,?,?,?,?)";
+			$query="INSERT INTO `schedule_items` (`num_of_lesson`, `day_of_week`, `cab_num`, `item_id`, `sem_num`, `group_id`, `weeks`) VALUES ".str_repeat("(?,?,?,?,?,?,?), ", $count-1)."(?,?,?,?,?,?,?)";
 			$res=$this->pdo->prepare($query);
 			$res->execute($ready);
 		}		
 	}
 
 	public function MatchMain($data) {
-		$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`,`teachers`.`teacher_name`, `groups`.`group_name` FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `schedule_items`.`day_of_week`=? AND `schedule_items`.`num_of_lesson`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `items`.`teacher_id`=?");
+		$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`,`teachers`.`teacher_name`, `groups`.`group_name` FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `schedule_items`.`day_of_week`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `schedule_items`.`num_of_lesson`=? AND `items`.`teacher_id`=?");
 		$res->execute(array_values($data));
 		return $res->fetch();
 	}
 
+	//what have been set to certain day
 	public function LessonsToday($group, $date) {
 		$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`,`teachers`.`teacher_name`, `groups`.`group_name`, `items`.`item_id`, `items`.`teacher_id`, `lessons`.`lesson_date`, `lessons`.`lesson_num` FROM `lessons` INNER JOIN `items` ON `lessons`.`item_id`=`items`.`item_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `lessons`.`group_id`=? AND `lessons`.`lesson_date`=?");
 		$res->execute(array($group, $date));
 		return $res->fetchAll();
 	}
 
+	//number of academic year and semestr
 	public function CurrentKurs($year, $month, $day) {
 		$return=[];
 		if(intval($month)>=$this->config['start1_month']) {
@@ -103,6 +108,7 @@ class Schedule
 		return $return;
 	}
 
+	//sets cabinet to main schedule
 	public function SaveCabinet($cab) {
 		$res=$this->pdo->prepare("INSERT INTO `cabinets` (`cabinet_name`, `cab_description`, `locked`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `cabinet_name`=VALUES(cabinet_name), `cab_description`=VALUES(cab_description), `locked`=VALUES(locked)");
 		$res->execute($cab);
