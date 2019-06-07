@@ -14,7 +14,7 @@ foreach($items as $item) {
 		$divide=!$item['theory']&&$item['subgroup']!=0 ? 'half' : '';
 		$subgroup=$divide ? $item['subgroup'].' подгруппа' : '';
 		?>
-		<li data-teacher="<?=$item['teacher_id']?>" data-id="<?=$item['item_id']?>" class="sub_item <?=$divide?>"><?=$item['subject_name'].' '.$subgroup.' '.$item['teacher_name']?><span><?=$item['sem'.$_REQUEST['sem']]?></span></li>
+		<li data-teacher="<?=$item['teacher_id']?>" data-id="<?=$item['item_id']?>" class="sub_item <?=$divide?>"><?=$item['subject_name'].' '.$subgroup.' '.$item['teacher_name']?> <i>(<?=$item['sem'.$_REQUEST['sem']]?>)</i></li>
 	<?php
 		}
 	 } ?>

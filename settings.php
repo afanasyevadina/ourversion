@@ -237,6 +237,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 			e.preventDefault();
 			$('#cabinets tbody')
 			.append("<tr><td class='cab_name' contenteditable='true'></td>"+
+				"<td class='cab_desc' contenteditable='true'></td>"+
 				"<td><label class='check_label'><input type='checkbox'></label></td>"+
 				"<td class='deletecab'><img src='img/trash.svg'></td></tr>");
 		});

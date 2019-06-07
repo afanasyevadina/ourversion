@@ -25,7 +25,7 @@ for($i=1;$i<=6; $i++) { ?>
 						<?php 
 						$count=0;
 						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i&&$items[$index]['weeks']==1) { ?>
-						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson">
+						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson" data-s_item="<?=$items[$index]['sch_id']?>">
 							<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>	
 							<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>						
 						</li>
@@ -42,7 +42,7 @@ for($i=1;$i<=6; $i++) { ?>
 						<?php 
 						$count=0;
 						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i&&$items[$index]['weeks']==2) { ?>
-						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson">
+						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson" data-s_item="<?=$items[$index]['sch_id']?>">
 							<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>	
 							<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>										
 						</li>
@@ -61,7 +61,7 @@ for($i=1;$i<=6; $i++) { ?>
 						<?php 
 						$count=0; 
 						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i) { ?>
-						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson">
+						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson" data-s_item="<?=$items[$index]['sch_id']?>">
 							<?=$items[$index]['subject_name']?> <?=$items[$index]['teacher_name']?>	
 							<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>										
 						</li>

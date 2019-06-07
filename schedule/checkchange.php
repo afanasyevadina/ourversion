@@ -19,8 +19,8 @@ foreach($groups as $group) {
 		}
 	}
 	if(!$flag) {
-		$kurs=$sf->CurrentKurs(date('Y', strtotime($data[0])),date('m', strtotime($data[0])),date('d', strtotime($data[0])));
-		$intersection=$sf->MatchMain(array(date('N', strtotime($data[0])), $kurs['kurs'], $kurs['sem'], $data[1], $data[2]));
+		$kurs=$sf->CurrentKurs(date('Y', strtotime($data['date'])),date('m', strtotime($data['date'])),date('d', strtotime($data['date'])));
+		$intersection=$sf->MatchMain(array(date('N', strtotime($data['date'])), $kurs['kurs'], $kurs['sem'], $data['num'], $data['teacher']));
 		if($intersection) {
 			echo 'Наложение у '.$intersection['teacher_name'].', предмет '.$intersection['subject_name'].', группа '.$intersection['group_name'];
 		}

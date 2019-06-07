@@ -1,3 +1,4 @@
+var toDelete=[];
 function Modal(text) {
 		$('.modal').html(text);
 		$('.modal').show();
@@ -38,25 +39,25 @@ function Modal(text) {
 
 	function Update() {
 		//removing count of gone lessons
-		$('table').find('span').remove();
+		$('table').find('i').remove();
 		$( ".sortable" ).sortable({
 			revert: true,
 			connectWith: ".sortable",
 			receive: function(e,ui){
 				//let's suppose that i try set some item to this place in schedule...
-				var res=[];
+				var res={};
 				//get the day which schedule is setted to
 				if($('table').hasClass('changes')) {
-					res.push($('#date').val());
+					res['date']=$('#date').val();
 				}
 				else {
-					res.push($(this).data('day'));
-					res.push($('#courses').val()); //num of course
-					res.push($('#sems').val()); //num of sem
+					res['date']=$(this).data('day');
+					res['course']=$('#courses').val(); //num of course
+					res['sem']=$('#sems').val(); //num of sem
 				}
 
-				res.push($(this).data('num')); //num of lesson
-				res.push(ui.item.data('teacher')); //who teaches this subject
+				res['num']=$(this).data('num'); //num of lesson
+				res['teacher']=ui.item.data('teacher'); //who teaches this subject
 				
 				const $this=$(this);
 				var url=$('table').hasClass('changes')?'schedule/checkchange.php':'schedule/checkmain.php'; //where should i send data to?
@@ -131,6 +132,7 @@ function Modal(text) {
 	      	if(!ui.draggable.hasClass('empty')&&ui.draggable.is('table li')) {
 	      		$('.sortable[data-num='+ui.draggable.data('num')+'][data-day='+ui.draggable.data('day')+']')
 	      		.append('<li class="empty ui-sortable-handle"></li>');
+	      		toDelete.push(ui.draggable.data('s_item'));
 	      		ui.draggable.remove();
 	      		Numerate();
 	      	}	        
@@ -143,7 +145,9 @@ function Modal(text) {
 		Numerate();		
 
 		$('table').on('click', '.divide', function(){
+			//if there isn't an separator
 			if($(this).parent().find($('.separator')).length==0) {
+				//add line
 				$(this).parent().find('.list_box').append('<div class="separator"></div>');
 				let ul=$(this).parent().find('.sortable').clone();
 				let li=ul.find('li').first().clone();
@@ -154,10 +158,12 @@ function Modal(text) {
 					li.html('');
 				}
 				ul.html(li);
+				//append empty listbox after line
 				$(this).parent().find('.list_box').append(ul);
 				Update();
 			}	
 			else {
+				//delete line and items after it
 				$(this).parent().find('.separator').nextAll().remove();
 				$(this).parent().find('.separator').remove();
 			}	
@@ -168,21 +174,22 @@ function Modal(text) {
 			let res=[];
 			$('.sortable li').not('.empty').each(function(i)
 			{
-				let temp=[];
-				temp.push($(this).data('num'));
-				temp.push($(this).data('day'));
-				temp.push($(this).data('cab'));
-				temp.push($(this).data('id'));
-				temp.push($('#sems').val());
-				temp.push($('#groups').val());
-				temp.push($(this).parent().data('week'));
+				let temp={};
+				temp['num']=$(this).data('num');
+				temp['day']=$(this).data('day');
+				temp['cab']=$(this).data('cab');
+				temp['id']=$(this).data('id');
+				temp['course']=$('#courses').val();
+				temp['sem']=$('#sems').val();
+				temp['group']=$('#groups').val();
+				temp['week']=$(this).parent().data('week');
 				res.push(temp);
 			});
 			$.ajax({
 				url: 'schedule/saveschedule.php',
 				method: 'POST',
 				dataType: 'html',
-				data: 'data='+JSON.stringify(res)+'&group='+$('#groups').val(),
+				data: 'data='+JSON.stringify(res)+'&group='+$('#groups').val()+'&delete='+JSON.stringify(toDelete),
 				success: function(response) {
 					console.log(response);
 					$('#success').css('display', 'block');
@@ -204,9 +211,10 @@ function Modal(text) {
 			$('.sortable li').not('.empty').each(function(i)
 			{
 				let temp=[];
-				temp.push($('#date').val());
-				temp.push($(this).data('num'));
-				temp.push($(this).data('id'));
+				temp['date']=$('#date').val();
+				temp['num']=$(this).data('num');
+				temp['cab']=$(this).data('cab');
+				temp['id']=$(this).data('id');
 				res.push(temp);
 			});
 			$.ajax({
@@ -231,8 +239,11 @@ function Modal(text) {
 		});
 
 		$('table').on('click', '.cab_num', function(){
+			//setting the current cell which we're working with...
 			$('.cab_num').removeClass('current');
 			$(this).addClass('current');
+
+			//loading available cabinets...
 			Load('schedule/main_cabinets.php?day='
 				+$(this).parent().find('.sortable').data('day')
 				+'&num='+$(this).parent().find('.sortable').data('num'),
@@ -250,7 +261,10 @@ function Modal(text) {
 		});
 
 		$('#cabs_list').on('click', '.cabinet', function(){
+			//setting data to item
 			$('.cab_num.current').parent().attr('data-cab', $(this).data('id'));
+
+			//showing name of cabinet
 			$('.cab_num.current').html($(this).data('name'));
 			$("#cabs_list").hide();
 		});
