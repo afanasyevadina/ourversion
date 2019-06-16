@@ -53,6 +53,7 @@ $list=$gf->GetGroups();
 				</select>
 			</div>
 			<div class="links">
+				<a href="templates/up.xlsx" class="download">Скачать шаблон</a>
 				<a id="upload" href="#">Загрузить из файла</a>
 				<a href="" id="downloadup" class="download">Скачать</a>
 			    <a href="" id="generaterup" class="generate">Сгенерить РУПы</a>

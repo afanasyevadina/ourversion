@@ -33,6 +33,8 @@ $groups=$gf->GetGroups();
 <body>
 	<?php require_once('layout.php'); ?>
 	<div class="modal"></div>
+	<div id="teachers_list"></div>
+	<div id="cabs_list"></div>
 	<div class="container">
 		
 		<div class="main">
@@ -62,8 +64,8 @@ $groups=$gf->GetGroups();
 					<li>5</li>
 					<li>6</li>
 				</ul>
-				<div class="table_c changes">
-					<table border="1" class="schedule_table">		
+				<div class="table_c">
+					<table border="1" class="schedule_table changes">		
 					</table>
 				</div>
 			</div>

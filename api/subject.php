@@ -12,7 +12,7 @@ class Subject
 	}
 
 	public function GetSubjects() {
-		$res=$this->pdo->query("SELECT * FROM `subjects` LEFT JOIN `types` ON `subjects`.`type_id`=`types`.`type_id`");
+		$res=$this->pdo->query("SELECT * FROM `subjects` LEFT JOIN `types` ON `subjects`.`type_id`=`types`.`type_id` ORDER BY `subjects`.`type_id`");
 		return $res->fetchAll();
 	}
 
@@ -22,7 +22,7 @@ class Subject
 	}
 
 	public function GetType($id) {
-		$res=$pdo->prepare("SELECT `short_name` FROM `types` WHERE `type_id`=?");
+		$res=$this->pdo->prepare("SELECT `short_name` FROM `types` WHERE `type_id`=?");
 		$res->execute(array($id));
 		return $res->fetch();
 	}
@@ -56,7 +56,7 @@ class Subject
 	}
 
 	public function Insert($name, $index, $pck, $div) {
-		$res=$pdo->prepare("INSERT INTO `subjects` (`subject_name`, `subject_index`, `type_id`, `divide`) VALUES (?,?,?,?)");
+		$res=$this->pdo->prepare("INSERT INTO `subjects` (`subject_name`, `subject_index`, `type_id`, `divide`) VALUES (?,?,?,?)");
 		$res->execute(array($name, $index, $pck, $div));
 	}
 

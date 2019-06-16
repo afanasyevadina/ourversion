@@ -1,12 +1,5 @@
 <?php
 require_once('facecontrol.php');
-require_once('../api/journal.php');
-require_once('../api/group.php');
-$jf=new Journal($pdo);
-$gf=new Group($pdo);
-if($user['account_type']=='teacher') {
-	$items=$jf->GetJournals($user['person_id'], $_REQUEST['kurs']);
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,14 +23,15 @@ if($user['account_type']=='teacher') {
 				<option>2016-2017</option>
 				<option>2015-2016</option>
 			</select>
-			<?php
-			foreach ($items as $item) {
-				$d=$gf->GetName($item);
-				?>
-				<p><a class="listitem" href="journal.php?id=<?=$item['ktp_id']?>"><?=$item['subject_name']?> <?=$d?>, <?=$item['teacher_name']?></p>
-			<?php } ?>
+			<div id="journals"></div>
 		</div>
 	</div>
 	<footer></footer>
+	<script type="text/javascript">
+		Load('journal/getjournal.php?kurs='+$('#courses').val(), '#journals');
+		$('#courses').change(function() {
+			Load('journal/getjournal.php?kurs='+$('#courses').val(), '#journals');
+		});
+	</script>
 </body>
 </html>

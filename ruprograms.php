@@ -25,7 +25,7 @@ $groups=$gf->GetGroups();
 					<option value="<?=$group['group_id']?>"><?=$group['group_name']?></option>
 				<?php } ?>
 			</select>
-			<input type="text" id="search" placeholder="Поиск..." class="filterpr">
+			<input type="text" id="search" placeholder="Поиск..." class="filterpr" autocomplete="off">
 			<div id="ruprograms"></div>			
 		</div>
 	</div>

@@ -12,6 +12,7 @@ if(!empty($_FILES)) {
     $objReader = PHPExcel_IOFactory::createReader( $file_type );
     $objPHPExcel = $objReader->load( $filename ); // загружаем данные файла в объект
     $list = $objPHPExcel->getActiveSheet()->toArray(); // выгружаем данные из объекта в массив
+    array_shift($list);
     $output=array();
     $count=0;
 

@@ -98,6 +98,7 @@ $groups=$gf->GetGroups();
 			</select>
 			<div class="links">
 				<a href="#" id="new">Добавить</a>
+				<a href="templates/students.xlsx" class="download">Скачать шаблон</a>
 				<a href="#" id="upload">Загрузить</a>
 				<form action="accounts/getlogin.php" method="POST" id="loginform">
 					<input type="hidden" name="type" value="student">

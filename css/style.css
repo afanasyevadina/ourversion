@@ -524,6 +524,7 @@ ul, li {
 .draggable li, .sortable li {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	margin: 2px 0;
 	padding-left: 10px;
 	font-family: 'Gothic', sans-serif;
@@ -672,7 +673,7 @@ table.full td:not(.list_box) {
 table.full .sortable {
 	width: 100%;
 }
-#cabs_list {
+#cabs_list, #teachers_list {
 	position: fixed;
 	top: 50px;
 	right: 0;
@@ -683,11 +684,12 @@ table.full .sortable {
 	height: calc(100% - 50px);
 	z-index: 45;
 	display: none;
+	overflow: auto;
 }
-#cabs_list .cabinet {
+#cabs_list .cabinet, #teachers_list .teacher {
 	cursor: pointer;
 }
-#cabs_list .cabinet:hover {
+#cabs_list .cabinet:hover, #teachers_list .teacher:hover {
 	text-decoration: underline;
 }
 .inner_lesson {
@@ -701,8 +703,10 @@ table.full .sortable {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
-	justify-content: center;
 }
 .cab_cell {
-	width: 40px;
+	width: 45px;
+}
+.sortable li i.teacher {
+	cursor: pointer;
 }

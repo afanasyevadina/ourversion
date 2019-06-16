@@ -1,7 +1,7 @@
 <?php
 require_once('../connect.php');
 require_once('../api/group.php');
-require_once('../api/subjects.php');
+require_once('../api/subject.php');
 require_once('../api/general.php');
 $gf=new Group($pdo);
 $sf=new Subject($pdo);
@@ -9,7 +9,7 @@ $genf=new General($pdo);
 if(!empty($_POST)) {
 	$id=substr($_POST['id'], 4);
 	$lastid=$genf->AddItem($_POST['group']);
-	$subjects=$gf->GetByType($id);	
+	$subjects=$sf->GetByType($id);	
 	$type_name=$sf->GetType($id)['short_name'];
 	?>
 	<tr id="<?=$lastid?>" data-part="<?=$id?>">

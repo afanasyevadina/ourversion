@@ -14,11 +14,11 @@ $totalyear=0; $hourxp=0; $res=0;
 foreach($items as $item) { 
 	$d=$gf->GetName($item);
 	$totalrup+=intval($item['totalrup']);
-	$theoryrup+=intval($item['theorypd']);
+	$theoryrup+=intval($item['theoryrup']);
 	$theory+=intval($item['theory']);
 	$lpr+=intval($item['lpr']);
 	$totalkurs+=intval($item['totalkurs']);
-	$lprrup+=intval($item['lprpd']);
+	$lprrup+=intval($item['lprrup']);
 	$totalyear+=intval($item['totalyear']);
 	$hourxp+=intval($item['hourxp']);
 	$res+=intval($item['totalyear'])-intval($item['hourxp']);

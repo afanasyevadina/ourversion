@@ -4,10 +4,12 @@ require_once('../api/ktp.php');
 require_once('../api/clear.php');
 require_once('../api/item.php');
 require_once('../api/group.php');
+require_once('../api/ruprogram.php');
 $ktpf=new Ktp($pdo);
 $it=new Item($pdo);
 $gf=new Group($pdo);
 $clear=new Clear($pdo);
+$rf=new Ruprogram($pdo);
 $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
 //если были данные, надо удалить
 $items=$clear->ClearProgram($_GET['id']);
@@ -83,7 +85,7 @@ foreach($items as $item) {
 if($count) {
 	$ktpf->InsertItems($ready, $count);
 
-	$ktps=$ktpf->GetGeneralItems($general_id);
+	$ktps=$ktpf->GetGeneralItems($rf->GetProgram($_GET['id'])['general_id']);
 	$students=$gf->GetStudentIds($group);
 	$scount=count($students);
 
@@ -121,7 +123,7 @@ if($count) {
 		}*/
 	}
 	if($lc) {
-		$ktpf->CreateLessons($lessons, $lc, $general_id);
+		$it->CreateLessons($lessons, $lc, $rf->GetProgram($_GET['id'])['general_id'], $students);
 	}
 	
 	//все вставилось, расходимся

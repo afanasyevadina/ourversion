@@ -37,9 +37,17 @@ function Modal(text) {
 		});
 	}
 
+	function FillEmpty() {
+		$('.sortable').each(function() {
+			if($(this).find('li').length<1) {
+				$(this).append('<li class="empty ui-sortable-handle"></li>');
+			}
+		});
+	}
+
 	function Update() {
 		//removing count of gone lessons
-		$('table').find('i').remove();
+		$('table').find('i.hours').remove();
 		$( ".sortable" ).sortable({
 			revert: true,
 			connectWith: ".sortable",
@@ -108,12 +116,14 @@ function Modal(text) {
 				}	
 
 				//don't forget where are you from
-				$('.sortable[data-day='+ui.item.data('day')+'][data-num='+ui.item.data('num')+']').each(function(){	
+				/*$('.sortable[data-day='+ui.item.data('day')+'][data-num='+ui.item.data('num')+']').each(function(){	
 				console.log(ui.item.data('num'));
 					if($(this).find('li').length<1) { //fill empty space left after you
 						$(this).append('<li class="empty ui-sortable-handle"></li>');
 					}
-				});		
+				});		*/
+
+				FillEmpty();
 
 				$(this).find('.empty').last().remove(); //now you aren't just an empty place
 
@@ -121,8 +131,10 @@ function Modal(text) {
 
 				//if i moved the item from list, i need to add a *cell* for cabinet number
 				if(!ui.item.hasClass('inner_lesson')) {
-					$(this).find('li[data-id='+ui.item.data('id')+']').append('<div class="cab_num"></div>');
+					$(this).find('li[data-id='+ui.item.data('id')+']').append('<div class="cab_num">'+ui.item.data('c_name')+'</div>');
+					$(this).find('li[data-id='+ui.item.data('id')+']').attr('data-cab', ui.item.data('cab'));
 				}
+				$(this).find('li[data-id='+ui.item.data('id')+']').addClass('edited');
 				Update();
 				Numerate();
 			}
@@ -172,7 +184,7 @@ function Modal(text) {
 
 		$('#saverasp').click(function(){
 			let res=[];
-			$('.sortable li').not('.empty').each(function(i)
+			$('.sortable li.edited').not('.empty').each(function(i)
 			{
 				let temp={};
 				temp['num']=$(this).data('num');
@@ -192,6 +204,7 @@ function Modal(text) {
 				data: 'data='+JSON.stringify(res)+'&group='+$('#groups').val()+'&delete='+JSON.stringify(toDelete),
 				success: function(response) {
 					console.log(response);
+					$('.edited').removeClass('edited');
 					$('#success').css('display', 'block');
 					setTimeout(function(){
 						$('#success').css('display', 'none');
@@ -210,10 +223,11 @@ function Modal(text) {
 			let res=[];
 			$('.sortable li').not('.empty').each(function(i)
 			{
-				let temp=[];
+				let temp={};
 				temp['date']=$('#date').val();
 				temp['num']=$(this).data('num');
 				temp['cab']=$(this).data('cab');
+				temp['teacher']=$(this).data('teacher');
 				temp['id']=$(this).data('id');
 				res.push(temp);
 			});
@@ -238,16 +252,36 @@ function Modal(text) {
 			});
 		});
 
+		$('table').on('click', '.teacher', function(){
+			//setting the current cell which we're working with...
+			$('.teacher').removeClass('current');
+			$(this).addClass('current');
+
+			//loading available cabinets...
+			Load('schedule/loadteachers.php?date='
+				+$('#date').val()
+				+'&num='+$(this).parent().data('num'),
+				 '#teachers_list');
+			$('#teachers_list').show();
+		});
+
 		$('table').on('click', '.cab_num', function(){
 			//setting the current cell which we're working with...
 			$('.cab_num').removeClass('current');
 			$(this).addClass('current');
 
 			//loading available cabinets...
-			Load('schedule/main_cabinets.php?day='
-				+$(this).parent().find('.sortable').data('day')
-				+'&num='+$(this).parent().find('.sortable').data('num'),
+			if($('table').hasClass('changes')) {
+				Load('schedule/cabinets_today.php?date='
+				+$('#date').val()
+				+'&num='+$(this).parent().data('num'),
 				 '#cabs_list');
+			} else {
+				Load('schedule/main_cabinets.php?day='
+				+$(this).parent().data('day')
+				+'&num='+$(this).parent().data('num'),
+				 '#cabs_list');
+			}
 			$('#cabs_list').show();
 		});
 
@@ -260,12 +294,32 @@ function Modal(text) {
 			}
 		});
 
+		$(document).mouseup(function (e){ // событие клика по веб-документу
+			var div = $("#teachers_list"); // тут указываем ID элемента
+			if (!div.is(e.target) // если клик был не по нашему блоку
+			    && div.has(e.target).length === 0) { // и не по его дочерним элементам
+				$("#teachers_list").hide();
+				$('.teacher').removeClass('current');
+			}
+		});
+
 		$('#cabs_list').on('click', '.cabinet', function(){
 			//setting data to item
 			$('.cab_num.current').parent().attr('data-cab', $(this).data('id'));
+			$('.cab_num.current').parent().addClass('edited');
 
 			//showing name of cabinet
 			$('.cab_num.current').html($(this).data('name'));
 			$("#cabs_list").hide();
+		});
+
+		$('#teachers_list').on('click', '.teacher', function(){
+			//setting data to item
+			$('.teacher.current').parent().attr('data-teacher', $(this).data('id'));
+			$('.teacher.current').parent().addClass('edited');
+
+			//showing name of cabinet
+			$('.teacher.current').html($(this).data('name'));
+			$("#teachers_list").hide();
 		});
 	});

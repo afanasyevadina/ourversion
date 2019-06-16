@@ -64,12 +64,6 @@ if($user['account_type']!='dispetcher') {
 			</div>
 			<div class="container sch_c">
 				<ul id="subjects_list" class="draggable">
-					<li>1</li>
-					<li>2</li>
-					<li>3</li>
-					<li>4</li>
-					<li>5</li>
-					<li>6</li>
 				</ul>
 				<div class="table_c">
 					<table border="1" class="schedule_table">		

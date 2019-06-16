@@ -109,12 +109,18 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 					</tr>
 				</thead>
 				<?php foreach ($items as $key => $item) { 
-					$d=$gf->GetName($item);
+					$current=substr($item['kurs_num'], 0, 4);
+					if($items[0]['base']==9) {
+						$kurs=intval($current)-intval($item['year'])+1; 
+					}
+					else {
+						$kurs=intval($current)-intval($item['year'])+2;
+					}
 					?>
 					<tr>
 						<td><?=$item['kurs_num']?></td>
 						<td><?=$roman[$kurs]?></td>
-						<td><?=$d?></td>
+						<td><?=$gf->GetName($item)?></td>
 					</tr>
 				<?php } ?>
 			</table>
@@ -318,9 +324,11 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 			    }
 			    lpr+=l1;
 			    lpr+=l2;
+			    lpr+=p1;
+			    lpr+=p2;
 			});
 			if($('#vsegolpr').html()==lpr||$('#vsegolpr').html()==''&&lpr==0) {
-				$('#vsegolpr').css('background-color', '#fff');	
+				$('#vsegolpr').css('background-color', '#B0EBCC');	
 			} 
 			else {
 				$('#vsegolpr').css('background-color', '#ECB7B7');

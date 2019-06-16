@@ -8,7 +8,7 @@ $data=$sf->CurrentKurs(date('Y'),date('m'),date('d'));
 $subjects=$jf->StudentSubjects($user['person_id'], $data['kurs'], $data['sem']);
 $was=[];
 foreach ($subjects as $subject) {
-	$rat=$jf->GetRating($student, $subject['item_id']);
+	$rat=$jf->GetRating($user['person_id'], $subject['item_id']);
 	$was[$subject['general_id']]['subject_name']=$subject['subject_name'];
 	$temp=$was[$subject['general_id']]['rat'];
 	if($temp) {

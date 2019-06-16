@@ -4,7 +4,7 @@ require_once('../api/item.php');
 require_once('../api/schedule.php');
 $it=new Item($pdo);
 $sf=new Schedule($pdo, '../config.json');
-$date=$sf->CurrentKurs(date('Y', strtotime($_REQUEST['date'])),date('n', strtotime($_REQUEST['date'])),date('d', strtotime($_REQUEST['date'])));
+$date=$sf->CurrentKurs($_REQUEST['date']);
 $items=$it->GetGroupItems($_REQUEST['group'], $date['kurs']);
 $was=[];
 $warnings=[];
@@ -24,8 +24,13 @@ foreach($items as $item) {
 		$divide=$item['theory']==0||$warning ? 'half' : '';
 		$subgroup=$item['subgroup']&&$divide ? $item['subgroup'].' подгруппа' : '';
 		if(in_array($item['general_id'], $warnings)||(!$warning&&$item['theory']>0)||!in_array($item['general_id'], $gs)) {
+			$cab = $sf->MainCabinet($item['item_id']);
 			?>
-			<li data-teacher="<?=$item['teacher_id']?>" data-id="<?=$item['item_id']?>" style="background-color:<?=$color?>" class="sub_item <?=$divide?>"><?=$item['subject_name'].' '.$subgroup?> <i><?=$item['teacher_name']?></i><span><?=$gone?>/<?=$item['sem'.$date['sem']]?></span></li>
+			<li data-teacher="<?=$item['teacher_id']?>" data-id="<?=$item['item_id']?>" style="background-color:<?=$color?>" class="sub_item <?=$divide?>" data-cab="<?=$cab['cabinet_id']?>" data-c_name="<?=$cab['cabinet_name']?>">
+				<?=$item['subject_name'].' '.$subgroup?> 
+				<i class="teacher"><?=$item['teacher_name']?></i>
+				<i class="hours">(<?=$gone?>/<?=$item['sem'.$date['sem']]?>)</i>
+			</li>
 	<?php }
 	}
 } ?>

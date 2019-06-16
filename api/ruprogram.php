@@ -11,6 +11,8 @@ class Ruprogram
 		$this->pdo=$pdo;
 	}
 
+	
+
 	public function Insert($general) {
 		$rupres=$this->pdo->prepare("INSERT INTO `ruprograms` (`general_id`) VALUES (?)");
 		$rupres->execute(array($general));
@@ -47,7 +49,7 @@ class Ruprogram
 	}
 
 	public function GetItems($general) {
-		$subjectres=$this->pdo->prepare("SELECT * FROM `items` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `specializations` ON `specializations`.`specialization_id`=`groups`.`specialization_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` LEFT JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `general_id`=? ORDER BY `totalkurs` DESC");
+		$subjectres=$this->pdo->prepare("SELECT * FROM `items` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `specializations` ON `specializations`.`specialization_id`=`groups`.`specialization_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` LEFT JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `general_id`=? ORDER BY `kurs_num`");
 		$subjectres->execute(array($general));
 
 		//это чтобы было красиво и правильно

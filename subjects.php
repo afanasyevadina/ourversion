@@ -71,6 +71,7 @@ $pcks=$gf->GetTypes();
 			<h2>Предметы</h2>
 			<div class="links">
 				<a href="#" id="new">Добавить</a>
+				<a href="templates/subjects.xlsx" class="download">Скачать шаблон</a>
 				<a href="#" id="upload">Загрузить</a>
 			</div>
 			<table id="subjects" border="1">
