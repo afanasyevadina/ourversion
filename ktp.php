@@ -48,7 +48,7 @@ foreach ($topicsarr as $key => $topic) {
 			<div class="links">
 				<a href="#" id="saveprogram" class="save">Сохранить КТП</a>
 				<a href="ktps/downloadktp.php?id=<?=$_GET['id']?>" class="download">Скачать КТП</a>
-				<a href="journal/generatejournal.php?id=<?=$_GET['id']?>" class="generate">Сгенерить журнал</a>
+				<!--<a href="journal/generatejournal.php?id=<?=$_GET['id']?>" class="generate">Сгенерить журнал</a>-->
 			</div>
 			<div id="mainsuccess" class="success">
 				<h3>Изменения сохранены.</h3>
@@ -158,7 +158,7 @@ foreach ($topicsarr as $key => $topic) {
 						<?php foreach($part as $topic) { ?>
 							<tr class="item" id="<?=$topic['ktpitem_id']?>">
 								<td class="itemnum"><?=$topic['ktpitem_num']?></td>
-								<td><?=$topic['ripitem_name']?></td>
+								<td><?=$topic['rupitem_name']?></td>
 								<td><?=$topic['item_theory']==0?'':$topic['item_theory']?></td>
 								<td><?=$topic['item_practice']==0?'':$topic['item_practice']?></td>
 								<td class="time-td" contenteditable="true"><?=$topic['time']?></td>

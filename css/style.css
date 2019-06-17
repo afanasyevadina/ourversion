@@ -595,7 +595,7 @@ li i {
 	margin: 0 20px;
 }
 .table_c {
-	/*max-height: calc(100% - 200px);*/
+	max-height: calc(100% - 200px);
 	overflow-y: auto;
 	margin-left: 20px;
 }

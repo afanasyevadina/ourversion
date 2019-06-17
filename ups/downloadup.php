@@ -219,6 +219,7 @@ foreach ($setBold as $key => $value) {
 $objPHPExcel->getActiveSheet()->getStyle('A1:R5')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->getStyle('A1:R5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 $objPHPExcel->getActiveSheet()->getStyle('A1:R5')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
 $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel); 
 $file=$group['group_name'].' План УП.xls';
 $objWriter->save($file);

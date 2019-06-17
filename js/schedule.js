@@ -131,7 +131,8 @@ function Modal(text) {
 
 				//if i moved the item from list, i need to add a *cell* for cabinet number
 				if(!ui.item.hasClass('inner_lesson')) {
-					$(this).find('li[data-id='+ui.item.data('id')+']').append('<div class="cab_num">'+ui.item.data('c_name')+'</div>');
+					let cab = !! ui.item.data('c_name') ? ui.item.data('c_name') : '';
+					$(this).find('li[data-id='+ui.item.data('id')+']').append('<div class="cab_num">'+cab+'</div>');
 					$(this).find('li[data-id='+ui.item.data('id')+']').attr('data-cab', ui.item.data('cab'));
 				}
 				$(this).find('li[data-id='+ui.item.data('id')+']').addClass('edited');
@@ -189,7 +190,7 @@ function Modal(text) {
 				let temp={};
 				temp['num']=$(this).data('num');
 				temp['day']=$(this).data('day');
-				temp['cab']=$(this).data('cab');
+				temp['cab']=!!$(this).data('cab') ? $(this).data('cab') : '';
 				temp['id']=$(this).data('id');
 				temp['course']=$('#courses').val();
 				temp['sem']=$('#sems').val();

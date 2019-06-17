@@ -142,6 +142,8 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:AA2')->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':AA'.$rowCount)->getFont()->setBold(true);
 $objPHPExcel->getActiveSheet()->getStyle('A1:AA2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 $objPHPExcel->getActiveSheet()->getStyle('A1:AA2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
 $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel); 
 $file=$group.' ('.$kurs.') РУП.xls';
 $objWriter->save($file);

@@ -1,7 +1,9 @@
 <?php
 require_once('../connect.php');
 require_once('../api/schedule.php');
+require_once('../api/item.php');
 $sf=new Schedule($pdo, '../config.json');
+$it=new Item($pdo);
 $items=$sf->GetMain($_REQUEST['group'], $_REQUEST['kurs'], $_REQUEST['sem']);
 $index=0;
 $days=['Понедельник','Вторник','Среда','Четверг','Пятница', 'Суббота'];
@@ -24,9 +26,11 @@ for($i=1;$i<=6; $i++) { ?>
 					<ul class="sortable" data-num="<?=$j?>" data-day="<?=$i?>" data-week="1">
 						<?php 
 						$count=0;
-						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i&&$items[$index]['weeks']==1) { ?>
-						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson" data-s_item="<?=$items[$index]['sch_id']?>" data-cab="<?=$items[$index]['cabinet_id']?>">
-							<?=$items[$index]['subject_name']?> 
+						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i&&$items[$index]['weeks']==1) {
+						$divide = $it->Divide($itemss[$index][$index]);
+						$subgroup=$divide ? $item['subgroup'].' подгруппа' : ''; ?>
+						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson <?=$divide?>" data-s_item="<?=$items[$index]['sch_id']?>" data-cab="<?=$items[$index]['cabinet_id']?>">
+							<?=$items[$index]['subject_name'].' '.$subgroup?> 
 							<i><?=$items[$index]['teacher_name']?></i>
 							<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>						
 						</li>
@@ -42,9 +46,11 @@ for($i=1;$i<=6; $i++) { ?>
 					<ul class="sortable" data-num="<?=$j?>" data-day="<?=$i?>" data-week="2">
 						<?php 
 						$count=0;
-						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i&&$items[$index]['weeks']==2) { ?>
-						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson" data-s_item="<?=$items[$index]['sch_id']?>" data-cab="<?=$items[$index]['cabinet_id']?>">
-							<?=$items[$index]['subject_name']?> 
+						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i&&$items[$index]['weeks']==2) {
+						$divide = $it->Divide($items[$index]);
+						$subgroup=$divide ? $items[$index]['subgroup'].' подгруппа' : ''; ?>
+						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson <?=$divide?>" data-s_item="<?=$items[$index]['sch_id']?>" data-cab="<?=$items[$index]['cabinet_id']?>">
+							<?=$items[$index]['subject_name'].' '.$subgroup?> 
 							<i><?=$items[$index]['teacher_name']?></i>
 							<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>										
 						</li>
@@ -62,9 +68,11 @@ for($i=1;$i<=6; $i++) { ?>
 					<ul class="sortable" data-num="<?=$j?>" data-day="<?=$i?>">
 						<?php 
 						$count=0; 
-						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i) { ?>
-						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson" data-s_item="<?=$items[$index]['sch_id']?>" data-cab="<?=$items[$index]['cabinet_id']?>">
-							<?=$items[$index]['subject_name']?> 
+						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i) {
+						$divide = $it->Divide($items[$index]);
+						$subgroup=$divide ? $items[$index]['subgroup'].' подгруппа' : ''; ?>
+						<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-day="<?=$i?>" data-teacher="<?=$items[$index]['teacher_id']?>" class="inner_lesson <?=$divide?>" data-s_item="<?=$items[$index]['sch_id']?>" data-cab="<?=$items[$index]['cabinet_id']?>">
+							<?=$items[$index]['subject_name'].' '.$subgroup?> 
 							<i><?=$items[$index]['teacher_name']?></i>	
 							<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>										
 						</li>

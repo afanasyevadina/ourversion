@@ -91,10 +91,6 @@ $phpWord->setDefaultFontName('Times New Roman');
       $textRun->addText("Курс, группа, специальность ");
       $textRun->addText($roman[$kurs]."курс, гр.".$d." ".$item['code'].' "'.$item['specialization_name'].'"');
       $textRun->addTextBreak(1);
-      $textRun->addText("Рабочая программа разработана на основании типовой программы по дисциплине ");
-      $textRun->addText('"'.$items[0]['subject_name'].'"', $underline);
-      $textRun->addText(" регистрационный №4209 от \"24\" августа 2015 г.");
-      $section->addTextBreak(2);
 
       $table=$section->addTable(array('unit' => 'pct',
       'width' => 100 * 50));
@@ -184,7 +180,7 @@ $phpWord->setDefaultFontName('Times New Roman');
             foreach($part as $topic) {
                   $table->addRow();
                   $table->addCell(2000)->addText($num);
-                  $table->addCell(2000)->addText($topic['ripitem_name']);
+                  $table->addCell(2000)->addText($topic['rupitem_name']);
                   $table->addCell(2000)->addText($topic['item_theory']==0?'':$topic['item_theory']);
                   $table->addCell(2000)->addText($topic['item_practice']==0?'':$topic['item_practice']);
                   $table->addCell(2000)->addText($topic['time']);

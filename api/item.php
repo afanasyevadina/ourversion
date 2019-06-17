@@ -112,4 +112,9 @@ class Item
 			$res->execute($ratings);
 		}
 	}
+
+	public function Divide($item) {
+		$divide=!$item['theory']&&$item['subgroup']!=0 ? 'half' : '';
+		return $divide;
+	}
 }
