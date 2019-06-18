@@ -33,7 +33,7 @@ class Schedule
 
 	//what is by main schedule
 	public function GetMain($group, $kurs, $sem) {
-		$res=$this->pdo->prepare("SELECT `schedule_items`.*, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `items`.`theory`, `items`.`totalkurs`, `items`.`sem1`, `items`.`sem2`, `items`.`subgroup`, `cabinets`.* FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` LEFT JOIN `cabinets` ON `cabinets`.`cabinet_id`=`schedule_items`.`cab_num` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? ORDER BY `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks`");
+		$res=$this->pdo->prepare("SELECT `schedule_items`.*, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `items`.`theory`, `items`.`totalkurs`, `items`.`sem1`, `items`.`sem2`, `cabinets`.* FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` LEFT JOIN `cabinets` ON `cabinets`.`cabinet_id`=`schedule_items`.`cab_num` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? ORDER BY `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks`");
 		$res->execute(array($group, $kurs, $sem));
 		return $res->fetchAll();
 	}
@@ -74,14 +74,14 @@ class Schedule
 			$count++;
 		}
 		if($count) {
-			$query="INSERT INTO `schedule_items` (`num_of_lesson`, `day_of_week`, `cab_num`, `item_id`, `kurs_num`, `sem_num`, `group_id`, `weeks`) VALUES ".str_repeat("(?,?,?,?,?,?,?,?), ", $count-1)."(?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `num_of_lesson`=VALUES(num_of_lesson), `day_of_week`=VALUES(day_of_week), `cab_num`=VALUES(cab_num), `item_id`=VALUES(item_id), `sem_num`=VALUES(`sem_num`), `group_id`=VALUES(group_id), `weeks`=VALUES(`weeks`)";
+			$query="INSERT INTO `schedule_items` (`num_of_lesson`, `day_of_week`, `cab_num`, `item_id`, `kurs_num`, `sem_num`, `group_id`, `weeks`, `subgroup`) VALUES ".str_repeat("(?,?,?,?,?,?,?,?,?), ", $count-1)."(?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `num_of_lesson`=VALUES(num_of_lesson), `day_of_week`=VALUES(day_of_week), `cab_num`=VALUES(cab_num), `item_id`=VALUES(item_id), `sem_num`=VALUES(`sem_num`), `group_id`=VALUES(group_id), `weeks`=VALUES(`weeks`), `subgroup`=VALUES(subgroup)";
 			$res=$this->pdo->prepare($query);
 			$res->execute($ready);
 		}		
 	}
 
 	public function MatchMain($data) {
-		$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`,`teachers`.`teacher_name`, `groups`.`group_name` FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `schedule_items`.`day_of_week`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `schedule_items`.`num_of_lesson`=? AND `items`.`teacher_id`=?");
+		$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`,`teachers`.`teacher_name`, `groups`.`group_name` FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `schedule_items`.`day_of_week`=? AND `schedule_items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `schedule_items`.`num_of_lesson`=? AND `items`.`teacher_id`=?");
 		$res->execute(array_values($data));
 		return $res->fetch();
 	}

@@ -13,7 +13,7 @@ foreach($items as $item) {
 	($item['theory']>0||!in_array($item['general_id'], $gs))) {
 		$divide = $it->Divide($item);
 		$subgroup=$divide ? $item['subgroup'].' подгруппа' : '';	?>
-		<li data-teacher="<?=$item['teacher_id']?>" data-id="<?=$item['item_id']?>" class="sub_item <?=$divide?>">
+		<li data-teacher="<?=$item['teacher_id']?>" data-id="<?=$item['item_id']?>" class="sub_item" data-subgroup="<?=$divide?>">
 			<?=$item['subject_name'].' '.$subgroup?>
 			<i><?=$item['teacher_name']?></i> 
 			<i class="hours">(<?=$item['sem'.$_REQUEST['sem']]?>)</i>

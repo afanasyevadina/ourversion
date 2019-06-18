@@ -114,7 +114,7 @@ class Item
 	}
 
 	public function Divide($item) {
-		$divide=!$item['theory']&&$item['subgroup']!=0 ? 'half' : '';
+		$divide=!$item['theory']&&$item['subgroup']!=0 ? $item['subgroup'] : 0;
 		return $divide;
 	}
 }

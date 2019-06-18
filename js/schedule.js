@@ -97,31 +97,21 @@ function Modal(text) {
 					//if there is an item with the same teacher, remove it
 					if($(this).find('li[data-teacher='+ui.item.data('teacher')+']').length>1) {
 						$(this).find('li[data-teacher='+ui.item.data('teacher')+']').first().remove();
-					}
+					} 
 
 					//if i moved here an item with full group and here are more than 2 items, remove it
-					if(!ui.item.hasClass('half')&&$(this).find('li').not('.empty').length>2) {
+					if(!ui.item.data('subgroup')&&$(this).find('li').not('.empty').length>2) {
 						$(this).find('li[data-num]').remove();
 					}
-					if($(this).find('li').not('.empty').length>1&& //other ways where there are no place for you, go away
-						($(this).find('li').length>2||
-						$(this).find('li').not('.half').length>1)) {
+					if($(this).find('li[data-subgroup=0]').length>0) {
 						$(this).find('li[data-num]').first().remove();
 					}
-					if($(this).find('li.half').length>=1) { //there is some place, but only for subgroup, not for you
-						if(!ui.item.hasClass('half')) {
+					if($(this).find('li[data-subgroup=1]').length>=1||$(this).find('li[data-subgroup=2]').length>=1) { //there is some place, but only for subgroup, not for you
+						if(!ui.item.data('subgroup')) {
 							$(this).find('li[data-num]').first().remove();
 						}
 					}					
-				}	
-
-				//don't forget where are you from
-				/*$('.sortable[data-day='+ui.item.data('day')+'][data-num='+ui.item.data('num')+']').each(function(){	
-				console.log(ui.item.data('num'));
-					if($(this).find('li').length<1) { //fill empty space left after you
-						$(this).append('<li class="empty ui-sortable-handle"></li>');
-					}
-				});		*/
+				}
 
 				FillEmpty();
 
@@ -142,9 +132,8 @@ function Modal(text) {
 		});
 		$( "#droppable" ).droppable({
 	      drop: function( event, ui ) {
+	      	FillEmpty();
 	      	if(!ui.draggable.hasClass('empty')&&ui.draggable.is('table li')) {
-	      		$('.sortable[data-num='+ui.draggable.data('num')+'][data-day='+ui.draggable.data('day')+']')
-	      		.append('<li class="empty ui-sortable-handle"></li>');
 	      		toDelete.push(ui.draggable.data('s_item'));
 	      		ui.draggable.remove();
 	      		Numerate();
@@ -196,6 +185,7 @@ function Modal(text) {
 				temp['sem']=$('#sems').val();
 				temp['group']=$('#groups').val();
 				temp['week']=$(this).parent().data('week');
+				temp['subgroup']=$(this).data('subgroup');
 				res.push(temp);
 			});
 			$.ajax({
