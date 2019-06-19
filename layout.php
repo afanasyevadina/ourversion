@@ -9,7 +9,7 @@ require_once('facecontrol.php');
 		</label>
 		<div>
 			<div class="lang">
-				<a href="#">RU </a><a href="#">KZ</a>
+				<!--<a href="#">RU </a><a href="#">KZ</a>-->
 			</div>
 			<div class="separator"></div>
 			<div class="auth">

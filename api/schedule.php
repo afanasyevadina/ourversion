@@ -114,7 +114,7 @@ class Schedule
 
 	//sets cabinet to main schedule
 	public function SaveCabinet($cab) {
-		$res=$this->pdo->prepare("INSERT INTO `cabinets` (`cabinet_name`, `cab_description`, `locked`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `cabinet_name`=VALUES(cabinet_name), `cab_description`=VALUES(cab_description), `locked`=VALUES(locked)");
+		$res=$this->pdo->prepare("INSERT INTO `cabinets` (`cabinet_name`, `cab_description`, `cab_places`, `locked`) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE `cabinet_name`=VALUES(cabinet_name), `cab_description`=VALUES(cab_description), `locked`=VALUES(locked), `cab_places`=VALUES(cab_places)");
 		$res->execute($cab);
 	}
 

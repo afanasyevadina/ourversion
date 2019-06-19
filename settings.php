@@ -193,6 +193,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 					<tr>
 						<th>Название</th>
 						<th>Описание</th>
+						<th>Вместимость</th>
 						<th>Заблокирован</th>
 						<th></th>
 					</tr>
@@ -202,6 +203,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 						<tr>
 							<td class="cab_name" contenteditable="true"><?=$cab['cabinet_name']?></td>
 							<td class="cab_desc" contenteditable="true"><?=$cab['cab_description']?></td>
+							<td class="cab_places" contenteditable="true"><?=$cab['cab_places']?></td>
 							<td>
 								<label class="check_label">
 									<input type="checkbox" <?=$cab['locked'] ? 'checked' : ''?>>
@@ -238,6 +240,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 			$('#cabinets tbody')
 			.append("<tr><td class='cab_name' contenteditable='true'></td>"+
 				"<td class='cab_desc' contenteditable='true'></td>"+
+				"<td class='cab_places' contenteditable='true'></td>"+
 				"<td><label class='check_label'><input type='checkbox'></label></td>"+
 				"<td class='deletecab'><img src='img/trash.svg'></td></tr>");
 		});
@@ -249,6 +252,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 				var temp=[];
 				temp.push($(this).find('td.cab_name').html());
 				temp.push($(this).find('td.cab_desc').html());
+				temp.push($(this).find('td.cab_places').html());
 				temp.push($(this).find('input').prop('checked') ? 1 :0);
 				res.push(temp);
 				$.ajax({
@@ -285,7 +289,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 			$(this).parent().remove();
 		});
 
-		$('#cabinets tbody').on('input', 'td.cab_name, td.cab_desc', function() {
+		$('#cabinets tbody').on('input', 'td.cab_name, td.cab_desc, td.cab_places', function() {
 			$(this).parent().addClass('edited');
 		});
 		$('#cabinets tbody').on('change', 'input', function() {

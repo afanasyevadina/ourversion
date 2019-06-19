@@ -7,7 +7,7 @@ $teachers=$gf->GetTeachers();
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Нагрузка бедного преподавателя</title>
+	<title>Нагрузка преподавателя</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script src="js/jquery-3.3.1.min.js"></script>
@@ -24,7 +24,7 @@ $teachers=$gf->GetTeachers();
 	<?php require_once('layout.php'); ?>
 	<div class="container">
 		<div class="main">
-			<h2>Нагрузка бедного преподавателя</h2>
+			<h2>Нагрузка преподавателя</h2>
 			<div class="options">
 				<select id="teacherselect">
 					<?php foreach($teachers as $teacher) { ?>}
