@@ -6,7 +6,7 @@ require_once('../api/item.php');
 $sf=new Schedule($pdo, '../config.json');
 //$teacher=$user['person_id'];
 $it=new Item($pdo);
-$items=$sf->TeacherSchedule($_REQUEST['teacher'], $_REQUEST['kurs'], $_REQUEST['sem']);
+$items=$sf->GetMain($_REQUEST['group'], $_REQUEST['kurs'], $_REQUEST['sem']);
 $index=0;
 $days=['Понедельник','Вторник','Среда','Четверг','Пятница', 'Суббота'];
 for($i=1;$i<=6; $i++) { ?>

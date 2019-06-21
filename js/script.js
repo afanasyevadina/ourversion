@@ -196,6 +196,7 @@ $(document).ready(function(){
 				$('#subjectname').val(result.subject_name);
 				$('#subjectindex').val(result.subject_index);
 				$('#pck').val(result.type_id);
+				$('#cmk').val(result.cmk_id);
 				if(result.divide==1) { $('#divide').attr('checked', 'checked'); }
 				else { $('#divide').removeAttr('checked'); }
 				$('#subjectform').attr('action', 'subjects/editsubject.php');

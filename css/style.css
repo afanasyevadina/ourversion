@@ -698,15 +698,34 @@ table.full .sortable {
 }
 .cab_num {
 	height: 100%;
-	width: 40px;
-	margin-right: -50px; 
+	width: 70px;
+	margin-right: -80px; 
 	cursor: pointer;
 	display: flex;
+	justify-content: center;
 	align-items: center;
 }
 .cab_cell {
-	width: 45px;
+	width: 70px;
 }
 .sortable li i.teacher {
 	cursor: pointer;
+}
+td.teacherinput {
+	position: relative;
+}
+.optgroup {
+	color: #555;
+}
+.teacherinput .teachers {
+	position: absolute;
+	z-index: 8;
+    background: #fff;
+    width: calc(100% - 32px);
+    padding: 10px;
+    border: 1px solid #aaa;
+    cursor: pointer;
+}
+#schedule table.day {
+	min-width: 500px;
 }

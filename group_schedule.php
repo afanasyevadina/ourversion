@@ -2,12 +2,12 @@
 require_once('facecontrol.php');
 require_once('api/group.php');
 $gf=new Group($pdo);
-$teachers=$gf->GetTeachers();
+$groups=$gf->GetGroups();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Расписание преподавателя</title>
+	<title>Расписание группы</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script src="js/jquery-3.3.1.min.js"></script>
@@ -17,9 +17,9 @@ $teachers=$gf->GetTeachers();
 	<script src="js/schedule.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			Load('schedule/forteacher.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&teacher='+$('#teacher').val(), '#schedule');
+			Load('schedule/forgroup.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&group='+$('#group').val(), '#schedule');
 			$('.filter').change(function(){
-				Load('schedule/forteacher.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&teacher='+$('#teacher').val(), '#schedule');
+				Load('schedule/forgroup.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&group='+$('#group').val(), '#schedule');
 			});
 		});
 	</script>
@@ -30,12 +30,12 @@ $teachers=$gf->GetTeachers();
 		
 		<div class="main">
 			<h2>Расписание преподавателя</h2>
-			<?php if($user['account_type'] == 'teacher') { ?>
-				<input type="hidden" id="teacher" value="<?=$user['person_id']?>">				
+			<?php if($user['account_type'] == 'student') { ?>
+				<input type="hidden" id="group" value="<?=$gf->AboutStudent($user['person_id'])['group_id']?>">				
 			<?php } else { ?>
-				<select class="filter" id="teacher">
-					<?php foreach ($teachers as $teacher) { ?>
-						<option value="<?=$teacher['teacher_id']?>"><?=$teacher['teacher_name']?></option>
+				<select class="filter" id="group">
+					<?php foreach ($groups as $group) { ?>
+						<option value="<?=$group['group_id']?>"><?=$group['group_name']?></option>
 					<?php } ?>
 				</select>
 			<?php } ?>

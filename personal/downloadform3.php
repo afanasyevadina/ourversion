@@ -3,6 +3,8 @@ require_once('../connect.php');
 require_once('../vendor/autoload.php');
 require_once('../api/item.php');
 require_once('../api/teacher.php');
+require_once('../api/schedule.php');
+$sf=new Schedule($pdo, '../config.json');
 $it=new Item($pdo);
 $tf=new Teacher($pdo);
 $objPHPExcel = new PHPExcel(); 
@@ -11,6 +13,18 @@ $kurs=(isset($_GET['kurs']))?$_GET['kurs']:'2018-2019';
 $cols=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 	   'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
 	   'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ'];
+$months=[
+	10 => '09',
+	11 => '10',
+	12 => '11',
+	13 => '12',
+	14 => '01',
+	15 => '02',
+	16 => '03',
+	17 => '04',
+	18 => '05',
+	19 => '06',
+];
 $styleArray = array(
      'borders' => array(
       'allborders' => array(
@@ -34,7 +48,7 @@ foreach($teachers as $teacher) {
 	$objPHPExcel->getActiveSheet()->setCellValue('A5', 'Годовой учет часов, данных преподавателем в '.$kurs.' учебном году');
 	$objPHPExcel->getActiveSheet()->setCellValue('A6', 'ФИО преподавателя: '.$teacher['teacher_name']);
 	$objPHPExcel->getActiveSheet()->setCellValue('A8', 'Группы');
-	$objPHPExcel->getActiveSheet()->setCellValue('A9', "Предмет/\nМесяцы");
+	$objPHPExcel->getActiveSheet()->setCellValue('A9', "Предмет/Месяцы");
 	$objPHPExcel->getActiveSheet()->setCellValue('A10', 'Сентябрь');
 	$objPHPExcel->getActiveSheet()->setCellValue('A11', 'Октябрь');
 	$objPHPExcel->getActiveSheet()->setCellValue('A12', 'Ноябрь');
@@ -61,20 +75,53 @@ foreach($teachers as $teacher) {
 		$objPHPExcel->getActiveSheet()->setCellValue('AJ'.$i, '=SUM(B'.$i.':AI'.$i.')');
 	}
 	$items=$it->GetTeacherItems($teacher['teacher_id'], $kurs);
-	$i=1;
-	foreach($items as $item) {
+	$lessons = $sf->TeacherLessons($teacher['teacher_id'], $kurs);
+	/*echo "<pre>";
+	echo $teacher['teacher_name'];
+	print_r($items);
+	print_r($lessons);
+	echo "</pre>";
+	continue;*/
+	$i=0;
+	foreach($items as $item) {		
+		$temp=[];
+		foreach($lessons as $key => $lesson) {
+			if($lesson['item_id'] == $item['item_id']) {
+				$temp[] = $lesson;
+				unset($lessons[$key]);
+			}
+		}
+		$pos=0;
 		$i++;
 		$objPHPExcel->getActiveSheet()->setCellValue($cols[$i].'8', $item['group_name']);
 		$objPHPExcel->getActiveSheet()->setCellValue($cols[$i].'9', $item['subject_name']);
-		$objPHPExcel->getActiveSheet()->setCellValue($cols[$i].'27', '=SUM('.$cols[$i].'10:'.$cols[$i].'25)');
+		for($j=10;$j<=19;$j++) {
+			$hours_per_month = 0;
+			while ($pos<count($temp)) {
+				if(date('m', strtotime($temp[$pos]['lesson_date'])) == $months[$j]) {
+					$hours_per_month += max($temp[$pos]['item_theory'], $temp[$pos]['item_practice']);
+				}
+				$pos++;		
+			};
+			$objPHPExcel->getActiveSheet()->setCellValue($cols[$i].$j, $hours_per_month);
+		}
+		$objPHPExcel->getActiveSheet()->setCellValue($cols[$i].'20', $item['consul']);
+		$objPHPExcel->getActiveSheet()->setCellValue($cols[$i].'21', $item['examens']);
+		$objPHPExcel->getActiveSheet()->setCellValue($cols[$i].'26', '=SUM('.$cols[$i].'10:'.$cols[$i].'25)');
 		$objPHPExcel->getActiveSheet()->setCellValue($cols[$i].'27', $item['totalkurs']);
+		$objPHPExcel->getActiveSheet()->setCellValue($cols[$i].'28', '='.$cols[$i].'27-'.$cols[$i].'26');
+		$objPHPExcel->getActiveSheet()->setCellValue($cols[$i].'30', '='.$cols[$i].'26+'.$cols[$i].'29');
 	}
 	$objPHPExcel->getActiveSheet()->getStyle('A8:AJ30')->applyFromArray($styleArray);
 	$objPHPExcel->getActiveSheet()->getStyle('B8:AI9')->getAlignment()->setTextRotation(90);
-	$objPHPExcel->getActiveSheet()->mergeCells('A2:F2');
-	$objPHPExcel->getActiveSheet()->mergeCells('A3:F3');
-	$objPHPExcel->getActiveSheet()->mergeCells('A5:F5');
-	$objPHPExcel->getActiveSheet()->mergeCells('A6:F6');
+	$objPHPExcel->getActiveSheet()->mergeCells('A2:AJ2');
+	$objPHPExcel->getActiveSheet()->mergeCells('A3:AJ3');
+	$objPHPExcel->getActiveSheet()->mergeCells('A5:AJ5');
+	$objPHPExcel->getActiveSheet()->mergeCells('A6:AJ6');
+	$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+	$objPHPExcel->getActiveSheet()->getRowDimension('8')->setRowHeight(50);
+	$objPHPExcel->getActiveSheet()->getRowDimension('9')->setRowHeight(200);
+	$objPHPExcel->getActiveSheet()->getStyle('A8:AJ9')->getAlignment()->setWrapText(true);
 }
 $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel); 
 $file='Form3.xls';

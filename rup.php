@@ -3,7 +3,12 @@ require_once('facecontrol.php');
 require_once('api/group.php');
 $gf=new Group($pdo);
 $groups=$gf->GetGroups();
+$cmks=$gf->GetCmks();
 $teachers=$gf->GetTeachers();
+foreach ($teachers as $teacher) {
+	$tArr[$teacher['cmk_id']][] = $teacher;
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,11 +29,24 @@ $teachers=$gf->GetTeachers();
 <body>
 	<div id="ihelpyou" hidden="hidden">
 		<input type="text" list="teachers">
-		<datalist id="teachers">
-			<?php foreach($teachers as $teacher) { ?>
-			<option data-id="<?=$teacher['teacher_id']?>"><?=$teacher['teacher_name']?></option>
-		<?php } ?>
-		</datalist>
+		<!--<datalist id="teachers">
+			<?php
+			foreach($tArr as $cmk) { ?>
+				<option class="optgroup" data-cmk="<?=$cmk[0]['cmk_id']?>" value="<?=$cmk[0]['cmk_name']?>">+</option>
+				<?php foreach($cmk as $teacher) { ?>
+				<option data-cmk="<?=$teacher['cmk_id']?>" data-id="<?=$teacher['teacher_id']?>"><?=$teacher['teacher_name']?></option>
+			<?php } 
+			} ?>
+		</datalist>-->
+		<div class="teachers">
+			<?php
+			foreach($tArr as $cmk) { ?>
+				<p class="optgroup" data-cmk="<?=$cmk[0]['cmk_id']?>"><?=$cmk[0]['cmk_name']?></p>
+				<?php foreach($cmk as $teacher) { ?>
+				<p data-cmk="<?=$teacher['cmk_id']?>" data-id="<?=$teacher['teacher_id']?>"><?=$teacher['teacher_name']?></p>
+			<?php } 
+			} ?>
+		</div>
 	</div>
 	<div id="uploadform">
 		<form action="rups/uploadrup.php" method="post" enctype="multipart/form-data" class="uploadform">
@@ -193,18 +211,27 @@ $teachers=$gf->GetTeachers();
 		    	let d=tr.find('td.pd-td').html()==''?0:parseInt(tr.find('td.pd-td').html(),10);
 		    	let e=tr.find('td.theory-td').html()==''?0:parseInt(tr.find('td.theory-td').html(),10);
 		    	tr.find('td.theory-td').html(a-b-c-d==0?'':a-b-c-d);
+
 		    	let at=tr.find('td.totalrup-td').html()==''?0:parseInt(tr.find('td.totalrup-td').html(),10);
 		    	let bt=tr.find('td.lprrup-td').html()==''?0:parseInt(tr.find('td.lprrup-td').html(),10);
 		    	tr.find('td.theoryrup-td').html(at-bt==0?'':at-bt);
+
 		    	let w1=tr.find('td.week1-td').html()==''?0:parseInt(tr.find('td.week1-td').html(),10);
 		    	let s1=tr.find('td.sem1-td').html()==''?0:parseInt(tr.find('td.sem1-td').html(),10);
 		    	tr.find('td.hoursperweek1-td').html(s1/w1==0?'':Math.floor(s1/w1));
+
 		    	let w2=tr.find('td.week2-td').html()==''?0:parseInt(tr.find('td.week2-td').html(),10);
 		    	let s2=tr.find('td.sem2-td').html()==''?0:parseInt(tr.find('td.sem2-td').html(),10);
 		    	tr.find('td.hoursperweek2-td').html(s2/w2==0?'':Math.floor(s2/w2));
+
+		    	let ex=tr.find('td.examens-td').html()==''?0:parseInt(tr.find('td.examens-td').html(),10);
+		    	let con=tr.find('td.consul-td').html()==''?0:parseInt(tr.find('td.consul-td').html(),10);
+		    	tr.find('td.totalyear-td').html(s1+s2+ex+con==0?'':s1+s2+ex+con);
+
 		    	let x=tr.find('td.totalyear-td').html()==''?0:parseInt(tr.find('td.totalyear-td').html(),10);
 		    	let y=tr.find('td.hourxp-td').html()==''?0:parseInt(tr.find('td.hourxp-td').html(),10);
 		    	tr.find('td.res-td').html(x-y==0?'':x-y);
+
 		    	let totalrup=0;
 		    	let totalyear=0;
 		    	let totalkurs=0;
@@ -215,6 +242,9 @@ $teachers=$gf->GetTeachers();
 		    	let sem1=0;
 		    	let sem2=0;
 		    	let hourxp=0;
+		    	let stdxp=0;
+		    	let examens=0;
+		    	let consul=0;
 		    	let res=0;
 		    	$('td.totalrup-td').each(function(i) {
 		    		totalrup+=$(this).html()==''?0:parseInt($(this).html(),10);
@@ -246,6 +276,15 @@ $teachers=$gf->GetTeachers();
 		    	$('td.hourxp-td').each(function(i) {
 		    		hourxp+=$(this).html()==''?0:parseInt($(this).html(),10);
 		    	});
+		    	$('td.stdxp-td').each(function(i) {
+		    		stdxp+=$(this).html()==''?0:parseInt($(this).html(),10);
+		    	});
+		    	$('td.examens-td').each(function(i) {
+		    		examens+=$(this).html()==''?0:parseInt($(this).html(),10);
+		    	});
+		    	$('td.consul-td').each(function(i) {
+		    		consul+=$(this).html()==''?0:parseInt($(this).html(),10);
+		    	});
 		    	$('td.res-td').each(function(i) {
 		    		res+=$(this).html()==''?0:parseInt($(this).html(),10);
 		    	});
@@ -258,6 +297,9 @@ $teachers=$gf->GetTeachers();
 		    	$('td.itogo-sem1-td').html(sem1==0?'':sem1);
 		    	$('td.itogo-sem2-td').html(sem2==0?'':sem2);
 		    	$('td.itogo-hourxp-td').html(hourxp==0?'':hourxp);
+		    	$('td.itogo-stdxp-td').html(stdxp==0?'':stdxp);
+		    	$('td.itogo-examens-td').html(examens==0?'':examens);
+		    	$('td.itogo-consul-td').html(consul==0?'':consul);
 		    	$('td.itogo-res-td').html(res==0?'':res);
 
 		    	if((b+c+d+e)!=(s1+s2)) {
@@ -299,11 +341,21 @@ $teachers=$gf->GetTeachers();
 				});
 			}
 		});
-		$('table').on('change blur input', 'td.teacherinput input', function() {
+		$('table').on('change blur input focus', 'td.teacherinput input', function() {
 			$(this).parent().parent().attr('class', 'edited');
 			const $this=$(this);
 			var has='';
-			$('#teachers').find('option').each(function(i){
+			/*$('#teachers').find('option').each(function(i){
+				if($(this).html()==$this.val())	{
+					has=$(this).data('id');
+				}
+			});*/
+			$(this).parent().find('.teachers').find('p').not('.optgroup').each(function(i){
+				if($(this).html().toLowerCase().indexOf($this.val().toLowerCase())!=-1) {
+					$(this).show();
+				} else {
+					$(this).hide();
+				}
 				if($(this).html()==$this.val())	{
 					has=$(this).data('id');
 				}
@@ -350,6 +402,20 @@ $teachers=$gf->GetTeachers();
 			$(this).html(sg);
 			$('tr[data-general='+$(this).parent().data('general')+']').addClass('edited');
 			$(this).parent().addClass('edited');
+		});
+
+		/*$('table').on('click', '.teachers p.optgroup', function(){
+			$(this).parent().find('p').not('.optgroup').hide();
+			$(this).parent().find('p[data-cmk='+$(this).data('cmk')+']').show();
+		});*/
+
+		$('table').on('click', '.teachers p:not(.optgroup)', function(){
+			$(this).parent().parent().find('input').val($(this).html());
+			//$(this).parent().parent().attr('data-id', $(this).data('id'));
+			$('td.teacherinput').each(function() {
+				$(this).html($(this).find('input').val());
+			});
+			$(this).parent().parent().find('input').trigger('change');
 		});
 	});
 	</script>

@@ -8,6 +8,7 @@ foreach($subjects as $subject) { ?>
 		<td><?=$subject['subject_index']?></td>
 		<td><?=$subject['subject_name']?></td>
 		<td><?=$subject['type_name']?></td>
+		<td><?=$subject['cmk_name']?></td>
 		<td class="edit" id="<?=$subject['subject_id']?>"><img src="img/writing.svg"></td>
 	</tr>
 <?php } ?>

@@ -12,7 +12,7 @@ class Subject
 	}
 
 	public function GetSubjects() {
-		$res=$this->pdo->query("SELECT * FROM `subjects` LEFT JOIN `types` ON `subjects`.`type_id`=`types`.`type_id` ORDER BY `subjects`.`type_id`");
+		$res=$this->pdo->query("SELECT * FROM `subjects` LEFT JOIN `types` ON `subjects`.`type_id`=`types`.`type_id` LEFT JOIN `cmks` ON `subjects`.`cmk_id`=`cmks`.`cmk_id` ORDER BY `subjects`.`type_id`, `subjects`.`subject_index`");
 		return $res->fetchAll();
 	}
 
@@ -50,14 +50,14 @@ class Subject
 		$res->execute(array($subject));
 	}
 
-	public function Update($name, $index, $pck, $div, $id) {
-		$res=$this->pdo->prepare("UPDATE `subjects` SET `subject_name`=?, `subject_index`=?, `type_id`=?, `divide`=? WHERE `subject_id`=?");
-		$res->execute(array($name, $index, $pck, $div, $id));
+	public function Update($name, $index, $pck, $cmk, $div, $id) {
+		$res=$this->pdo->prepare("UPDATE `subjects` SET `subject_name`=?, `subject_index`=?, `type_id`=?, `cmk_id`=?, `divide`=? WHERE `subject_id`=?");
+		$res->execute(array($name, $index, $pck, $cmk, $div, $id));
 	}
 
-	public function Insert($name, $index, $pck, $div) {
-		$res=$this->pdo->prepare("INSERT INTO `subjects` (`subject_name`, `subject_index`, `type_id`, `divide`) VALUES (?,?,?,?)");
-		$res->execute(array($name, $index, $pck, $div));
+	public function Insert($name, $index, $pck, $cmk, $div) {
+		$res=$this->pdo->prepare("INSERT INTO `subjects` (`subject_name`, `subject_index`, `type_id`, `cmk`, `divide`) VALUES (?,?,?,?,?)");
+		$res->execute(array($name, $index, $pck, $cmk, $div));
 	}
 
 	public function Upload($data, $count) {

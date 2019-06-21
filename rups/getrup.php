@@ -9,8 +9,8 @@ $id=(isset($_GET['group']))?$_GET['group']:1;
 $kurs=(isset($_GET['kurs']))?$_GET['kurs']:'2018-2019';
 $items=$it->GetGroupItems($id, $kurs);
 
-$group=''; $totalrup=0; $theory=0; $lpr=0; $totalkurs=0; $theoryrup=0; $lprrup=0; $sem1=0; $sem2=0;
-$totalyear=0; $hourxp=0; $res=0;
+$group=''; $totalrup=0; $theory=0; $lpr=0; $totalkurs=0; $theoryrup=0; $lprrup=0; $sem1=0; $sem2=0; $examens=0; $consul=0;
+$totalyear=0; $hourxp=0; $stdxp=0; $res=0;
 foreach($items as $item) { 
 	$d=$gf->GetName($item);
 	$totalrup+=intval($item['totalrup']);
@@ -19,11 +19,14 @@ foreach($items as $item) {
 	$lpr+=intval($item['lpr']);
 	$totalkurs+=intval($item['totalkurs']);
 	$lprrup+=intval($item['lprrup']);
-	$totalyear+=intval($item['totalyear']);
+	$totalyear+=intval($item['sem1']+$item['sem2']+$item['examens']+$item['consul']);
 	$hourxp+=intval($item['hourxp']);
-	$res+=intval($item['totalyear'])-intval($item['hourxp']);
+	$stdxp+=intval($item['stdxp']);
+	$res+=intval($item['sem1']+$item['sem2']+$item['examens']+$item['consul']-$item['hourxp']);
 	$sem1+=intval($item['sem1']);
 	$sem1+=intval($item['sem2']);
+	$examens+=intval($item['examens']);
+	$consul+=intval($item['consul']);
 	 ?>
 	<tr id="<?=$item['item_id']?>" data-general="<?=$item['general_id']?>">
 		<td><?=$d?></td>
@@ -50,10 +53,10 @@ foreach($items as $item) {
 		<td class="sem2-td" contenteditable="true"><?=($item['sem2']==0)?'':$item['sem2']?></td>
 		<td class="consul-td" contenteditable="true"><?=($item['consul']==0)?'':$item['consul']?></td>
 		<td class="examens-td" contenteditable="true"><?=($item['examens']==0)?'':$item['examens']?></td>
-		<td class="totalyear-td" contenteditable="true"><?=($item['totalyear']==0)?'':$item['totalyear']?></td>
+		<td class="totalyear-td" contenteditable="true"><?=$item['sem1']+$item['sem2']+$item['examens']+$item['consul']?></td>
 		<td class="stdxp-td" contenteditable="true"><?=($item['stdxp']==0)?'':$item['stdxp']?></td>
 		<td class="hourxp-td" contenteditable="true"><?=($item['hourxp']==0)?'':$item['hourxp']?></td>
-		<td class="res-td"><?=($item['totalyear']-$item['hourxp']==0)?'':$item['totalyear']-$item['hourxp']?></td>
+		<td class="res-td"><?=$item['sem1']+$item['sem2']+$item['examens']+$item['consul']-$item['hourxp']?></td>
 	</tr>
 <?php } ?>
 <tr>
@@ -79,10 +82,10 @@ foreach($items as $item) {
 	<td></td>
 	<td></td>
 	<td class="itogo-sem2-td"><?=$sem2==0?'':$sem2?></td>
-	<td></td>
-	<td></td>
+	<td class="itogo-consul-td"><?=$consul==0?'':$consul?></td>
+	<td class="itogo-examens-td"><?=$examens==0?'':$examens?></td>
 	<td class="itogo-totalyear-td"><?=$totalyear==0?'':$totalyear?></td>
-	<td></td>
+	<td class="itogo-stdxp-td"><?=$stdxp==0?'':$stdxp?></td>
 	<td class="itogo-hourxp-td"><?=$hourxp==0?'':$hourxp?></td>
 	<td class="itogo-res-td"><?=$res==0?'':$res?></td>
 </tr>

@@ -1,13 +1,13 @@
 <?php
 require_once('facecontrol.php');
-require_once('api/group.php');
-$gf=new Group($pdo);
-$teachers=$gf->GetTeachers();
+require_once('api/schedule.php');
+$sf=new Schedule($pdo, 'config.json');
+$cabinets=$sf->GetCabinets();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Расписание преподавателя</title>
+	<title>Расписание кабинетов</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script src="js/jquery-3.3.1.min.js"></script>
@@ -17,9 +17,9 @@ $teachers=$gf->GetTeachers();
 	<script src="js/schedule.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			Load('schedule/forteacher.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&teacher='+$('#teacher').val(), '#schedule');
+			Load('schedule/forcabinet.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&cabinet='+$('#cabinet').val(), '#schedule');
 			$('.filter').change(function(){
-				Load('schedule/forteacher.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&teacher='+$('#teacher').val(), '#schedule');
+				Load('schedule/forcabinet.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&cabinet='+$('#cabinet').val(), '#schedule');
 			});
 		});
 	</script>
@@ -29,16 +29,12 @@ $teachers=$gf->GetTeachers();
 	<div class="container">
 		
 		<div class="main">
-			<h2>Расписание преподавателя</h2>
-			<?php if($user['account_type'] == 'teacher') { ?>
-				<input type="hidden" id="teacher" value="<?=$user['person_id']?>">				
-			<?php } else { ?>
-				<select class="filter" id="teacher">
-					<?php foreach ($teachers as $teacher) { ?>
-						<option value="<?=$teacher['teacher_id']?>"><?=$teacher['teacher_name']?></option>
-					<?php } ?>
-				</select>
-			<?php } ?>
+			<h2>Расписание</h2>
+			<select class="filter" id="cabinet">
+				<?php foreach ($cabinets as $cabinet) { ?>
+					<option value="<?=$cabinet['cabinet_id']?>"><?=$cabinet['cabinet_name']?></option>
+				<?php } ?>
+			</select>
 			<select class="filter" id="courses">
 				<option>2019-2020</option>
 				<option>2018-2019</option>

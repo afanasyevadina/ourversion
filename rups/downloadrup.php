@@ -103,7 +103,7 @@ while($row = $items->fetch()){
     $objPHPExcel->getActiveSheet()->SetCellValue('U'.$rowCount, $row['sem2']);
     $objPHPExcel->getActiveSheet()->SetCellValue('V'.$rowCount, $row['consul']==0?'':$row['consul']);
     $objPHPExcel->getActiveSheet()->SetCellValue('W'.$rowCount, $row['examens']==0?'':$row['examens']);
-    $objPHPExcel->getActiveSheet()->SetCellValue('X'.$rowCount, $row['totalyear']==0?'':$row['totalyear']);
+    $objPHPExcel->getActiveSheet()->SetCellValue('X'.$rowCount, '=R'.$rowCount.'+U'.$rowCount.'+V'.$rowCount.'+W'.$rowCount);
     $objPHPExcel->getActiveSheet()->SetCellValue('Y'.$rowCount, $row['stdxp']==0?'':$row['stdxp']);
     $objPHPExcel->getActiveSheet()->SetCellValue('Z'.$rowCount, $row['hourxp']==0?'':$row['hourxp']);
     $objPHPExcel->getActiveSheet()->SetCellValue('AA'.$rowCount, '=X'.$rowCount.'-Z'.$rowCount);
@@ -122,7 +122,11 @@ $objPHPExcel->getActiveSheet()->SetCellValue('R'.$rowCount, "=SUM(R3:R".($rowCou
 $objPHPExcel->getActiveSheet()->SetCellValue('S'.$rowCount, "=SUM(S3:S".($rowCount-1).")");
 $objPHPExcel->getActiveSheet()->SetCellValue('T'.$rowCount, "=SUM(T3:T".($rowCount-1).")");
 $objPHPExcel->getActiveSheet()->SetCellValue('U'.$rowCount, "=SUM(U3:U".($rowCount-1).")");
+$objPHPExcel->getActiveSheet()->SetCellValue('V'.$rowCount, "=SUM(V3:V".($rowCount-1).")");
+$objPHPExcel->getActiveSheet()->SetCellValue('W'.$rowCount, "=SUM(W3:W".($rowCount-1).")");
 $objPHPExcel->getActiveSheet()->SetCellValue('X'.$rowCount, "=SUM(X3:X".($rowCount-1).")");
+$objPHPExcel->getActiveSheet()->SetCellValue('X'.$rowCount, "=SUM(X3:X".($rowCount-1).")");
+$objPHPExcel->getActiveSheet()->SetCellValue('Y'.$rowCount, "=SUM(Y3:Y".($rowCount-1).")");
 $objPHPExcel->getActiveSheet()->SetCellValue('Z'.$rowCount, "=SUM(Z3:Z".($rowCount-1).")");
 $objPHPExcel->getActiveSheet()->SetCellValue('AA'.$rowCount, "=SUM(AA3:AA".($rowCount-1).")");
 $styleArray = array(
@@ -143,7 +147,9 @@ $objPHPExcel->getActiveSheet()->getStyle('A'.$rowCount.':AA'.$rowCount)->getFont
 $objPHPExcel->getActiveSheet()->getStyle('A1:AA2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 $objPHPExcel->getActiveSheet()->getStyle('A1:AA2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(40);
+$objPHPExcel->getActiveSheet()->getStyle('C1:C'.$objPHPExcel->getActiveSheet()->getHighestRow())
+    ->getAlignment()->setWrapText(true);
 $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel); 
 $file=$group.' ('.$kurs.') РУП.xls';
 $objWriter->save($file);

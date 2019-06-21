@@ -1,8 +1,11 @@
 <?php
 require_once('facecontrol.php');
 require_once('api/subject.php');
-$gf=new Subject($pdo);
-$pcks=$gf->GetTypes();
+require_once('api/group.php');
+$sf=new Subject($pdo);
+$gf=new Group($pdo);
+$pcks=$sf->GetTypes();
+$cmks=$gf->GetCmks();
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,6 +42,16 @@ $pcks=$gf->GetTypes();
 				<select name="pck" id="pck">
 					<?php foreach($pcks as $pck) { ?>
 						<option value="<?=$pck['type_id']?>"><?=$pck['type_name']?></option>
+					<?php } ?>
+				</select>
+			</div>
+			<div>
+				<label for="cmk">Цикловая методическая комиссия</label>
+			</div>
+			<div>
+				<select name="cmk" id="cmk">
+					<?php foreach($cmks as $cmk) { ?>
+						<option value="<?=$cmk['cmk_id']?>"><?=$cmk['cmk_name']?></option>
 					<?php } ?>
 				</select>
 			</div>
@@ -80,6 +93,7 @@ $pcks=$gf->GetTypes();
 						<th>Индекс</th>
 						<th>Название</th>
 						<th>ПЦК</th>
+						<th>ЦМК</th>
 						<th></th>
 					</tr>
 				</thead>

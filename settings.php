@@ -195,6 +195,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 						<th>Описание</th>
 						<th>Вместимость</th>
 						<th>Заблокирован</th>
+						<th>Разрешить наложения</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -206,7 +207,12 @@ $config=json_decode(file_get_contents('config.json'), true);
 							<td class="cab_places" contenteditable="true"><?=$cab['cab_places']?></td>
 							<td>
 								<label class="check_label">
-									<input type="checkbox" <?=$cab['locked'] ? 'checked' : ''?>>
+									<input type="checkbox" id="locked" <?=$cab['locked'] ? 'checked' : ''?>>
+								</label>
+							</td>
+							<td>
+								<label class="check_label">
+									<input type="checkbox" id="match" <?=$cab['allow_match'] ? 'checked' : ''?>>
 								</label>
 							</td>
 							<td class="deletecab" data-id="<?=$cab['cabinet_id']?>"><img src="img/trash.svg"></td>
@@ -241,7 +247,8 @@ $config=json_decode(file_get_contents('config.json'), true);
 			.append("<tr><td class='cab_name' contenteditable='true'></td>"+
 				"<td class='cab_desc' contenteditable='true'></td>"+
 				"<td class='cab_places' contenteditable='true'></td>"+
-				"<td><label class='check_label'><input type='checkbox'></label></td>"+
+				"<td><label class='check_label'><input type='checkbox' id='locked'></label></td>"+
+				"<td><label class='check_label'><input type='checkbox' id='match'></label></td>"+
 				"<td class='deletecab'><img src='img/trash.svg'></td></tr>");
 		});
 
@@ -253,7 +260,8 @@ $config=json_decode(file_get_contents('config.json'), true);
 				temp.push($(this).find('td.cab_name').html());
 				temp.push($(this).find('td.cab_desc').html());
 				temp.push($(this).find('td.cab_places').html());
-				temp.push($(this).find('input').prop('checked') ? 1 :0);
+				temp.push($(this).find('input#locked').prop('checked') ? 1 :0);
+				temp.push($(this).find('input#match').prop('checked') ? 1 :0);
 				res.push(temp);
 				$.ajax({
 					url: 'schedule/savecabinet.php',
@@ -293,7 +301,7 @@ $config=json_decode(file_get_contents('config.json'), true);
 			$(this).parent().addClass('edited');
 		});
 		$('#cabinets tbody').on('change', 'input', function() {
-			$(this).parent().parent().addClass('edited');
+			$(this).parent().parent().parent().addClass('edited');
 		});
 	</script>
 </body>

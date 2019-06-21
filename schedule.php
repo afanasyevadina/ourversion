@@ -53,6 +53,9 @@ if($user['account_type']!='dispetcher') {
 				<option>2</option>
 			</select>
 			<div class="links">
+			    <a href="teacher_schedule.php" class="generate">Расписание преподавателя</a>
+			    <a href="cabinets_schedule.php" class="generate">Расписание кабинетов</a>
+			    <a href="group_schedule.php" class="generate">Расписание групп</a>
 				<a href="#" class="save" id="saverasp">Сохранить</a>
 			</div>
 			<div id="droppable">Убрать</div>
