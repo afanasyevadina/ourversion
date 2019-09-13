@@ -17,6 +17,7 @@ $parts=$rf->GetParts($_GET['id']);
 $items=$rf->GetItems($main['general_id']);
 $roman=['', 'I', 'II', 'III', 'IV'];
 $teachers=array_unique(array_column($items, 'teacher_name'));
+$items = $rf->SanitizeItems($items);
 
 $phpWord = new PhpOffice\PhpWord\PHPWord();
 $phpWord->setDefaultFontSize(13);
@@ -63,7 +64,7 @@ $phpWord->setDefaultFontName('Times New Roman');
 
       $textRun=$section->createTextRun();
       $textRun->addText("Оқытушы/Преподавателя   ");
-      $textRun->addText(implode(', ', $teachers), $underline);
+      $textRun->addText(trim(implode(', ', $teachers), ','), $underline);
       $textRun->addTextBreak(2);
 
       $textRun->addText('"'.$items[0]['subject_name'].'"', $underline);

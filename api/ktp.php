@@ -12,7 +12,7 @@ class Ktp
 	}
 
 	public function GetKtp($id) {
-		$res=$this->pdo->prepare("SELECT * FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id` WHERE `ktps`.`ktp_id`=?");
+		$res=$this->pdo->prepare("SELECT * FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` LEFT JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id` WHERE `ktps`.`ktp_id`=?");
 		$res->execute(array($id));
 		return $res->fetch();
 	}
@@ -55,7 +55,7 @@ class Ktp
 	}
 
 	public function GetKtps($group, $subject) {
-		$res=$this->pdo->prepare("SELECT `ktps`.`ktp_id`, `subjects`.`subject_name`, `groups`.`group_name`, `teachers`.`teacher_name`, `items`.`kurs_num`, `groups`.`year`, `groups`.`base` FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id` WHERE `items`.`group_id`=? AND `subjects`.`subject_name` LIKE ?");
+		$res=$this->pdo->prepare("SELECT `ktps`.`ktp_id`, `subjects`.`subject_name`, `groups`.`group_name`, `teachers`.`teacher_name`, `items`.`kurs_num`, `groups`.`year`, `groups`.`base` FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` LEFT JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id` WHERE `items`.`group_id`=? AND `subjects`.`subject_name` LIKE ?");
 		$res->execute(array($group, '%'.$subject.'%'));
 		return $res->fetchAll();
 	}

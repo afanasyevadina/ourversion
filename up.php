@@ -54,10 +54,12 @@ $list=$gf->GetGroups();
 			</div>
 			<div class="links">
 				<a href="templates/up.xlsx" class="download">Скачать шаблон</a>
-				<a id="upload" href="#">Загрузить из файла</a>
 				<a href="" id="downloadup" class="download">Скачать</a>
-			    <a href="" id="generaterup" class="generate">Сгенерить РУПы</a>
-			    <a href="" id="save" class="save">Сохранить</a>
+				<?php if ($user['account_type']=='admin') { ?>
+					<a id="upload" href="#">Загрузить из файла</a>
+				    <a href="" id="generaterup" class="generate">Сгенерить РУПы</a>
+				    <a href="" id="save" class="save">Сохранить</a>
+				<?php } ?>
 			</div>
 			<div id="success" class="success">
 				<h3>Изменения сохранены.</h3>
@@ -74,7 +76,9 @@ $list=$gf->GetGroups();
 						<th rowspan="5" class="header-center">К-во к/р</th>
 						<th colspan="4" class="header-center">Количество часов</th>
 						<th colspan="8" class="header-center">Распределение по курсам и семестрам</th>
-						<th rowspan="5"></th>
+						<?php if($user['account_type']=='admin') { ?>
+							<th rowspan="5"></th>
+						<?php } ?>
 					</tr>
 					<tr>
 						<th rowspan="4">экзаменов</th>
@@ -131,7 +135,9 @@ $list=$gf->GetGroups();
 					<td class="header-center" >16</td>
 					<td class="header-center" >17</td>
 					<td class="header-center" >18</td>
-					<td class="header-center"></td>
+					<?php if($user['account_type']=='admin') { ?>
+						<td class="header-center"></td>
+					<?php } ?>
 				</tr>
 				<tbody id="uptbody">					
 				</tbody>

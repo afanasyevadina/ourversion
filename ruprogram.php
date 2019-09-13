@@ -15,6 +15,13 @@ $items=$rf->GetItems($main['general_id']);
 
 $roman=['', 'I', 'II', 'III', 'IV'];
 $teachers=array_unique(array_column($items, 'teacher_name'));
+
+$contenteditable = $user['account_type'] == 'admin' ||
+($user['account_type'] == 'teacher' && in_array($user['person_id'], array_column($items, 'teacher_id'))) ?
+'contenteditable="true"' : '';
+
+$items = $rf->SanitizeItems($items);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,7 +39,7 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 		<div class="main">
 			<h2>Рабочая учебная программа</h2>
 			<div class="links">
-				<a href="ktps/generatektp.php?id=<?=$_GET['id']?>" id="generatektp" class="generate">Сгенерить КТП</a>
+				<?php if ($contenteditable) { ?> <a href="ktps/generatektp.php?id=<?=$_GET['id']?>" id="generatektp" class="generate">Сгенерить КТП</a> <?php } ?>
 				<a href="ruprogram/downloadprogram.php?id=<?=$_GET['id']?>" class="download">Скачать РУП</a>
 			</div>
 			<p class="shapka">Қазақстан Республикасының Білім және ғылым мининстрлігі</p>
@@ -41,7 +48,7 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 			<p class="shapka">КГКП "Павлодарский бизнес-колледж"</p>
 			<p class="shapka">Оқу жұмыс бағдарламасы</p>
 			<p class="shapka">Рабочая учебная программа</p>
-			<p>Оқытушы/Преподавателя <u><?=implode(', ', $teachers)?></u></p>
+			<p>Оқытушы/Преподавателя <u><?=trim(implode(', ', $teachers), ',')?></u></p>
 			<p><u>"<?=$items[0]['subject_name']?>"</u> пәні бойынша жұмыс бағдарламасы типтік бағдарлама 2015 ж. "24" тамыз тіркеу №4209 негізінде құрастырылған.</p>
 			<p>Рабочая программа разработана на основании типовой программы по дисциплине <u>"<?=$items[0]['subject_name']?>"</u> регистрационный №4209 от "24" августа 2015 г.</p>
 			<p><?=$items[0]['code']?> "<?=$items[0]['specialization_name']?>" мамандығы үшін</p>
@@ -50,7 +57,7 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 			<p class="center">Оқыту сағаттарын бөлу</p>
 			<p class="center">Распределение учебного времени</p>
 
-			<a href="" id="savetime" class="save">Сохранить</a>
+			<?php if ($contenteditable) { ?> <a href="" id="savetime" class="save">Сохранить</a> <?php } ?>
 			<div id="timesuccess" class="success">
 				<h3>Изменения сохранены.</h3>
 			</div>
@@ -87,14 +94,14 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 					<tr data-item="<?=$item['item_id']?>" class="total_hours" data-first="<?=$item['sem1']?>" data-second="<?=$item['sem2']?>">
 						<td><?=$roman[$kurs]?></td>
 						<td class="kurs_hours"><?=$item['totalkurs']?></td>
-						<td class="sem_hours theory1" contenteditable="true"><?=$item['theory1']==0?'':$item['theory1']?></td>
-						<td class="sem_hours theory2" contenteditable="true"><?=$item['theory2']==0?'':$item['theory2']?></td>
-						<td class="sem_hours lab1" contenteditable="true"><?=$item['lab1']==0?'':$item['lab1']?></td>
-						<td class="sem_hours lab2" contenteditable="true"><?=$item['lab2']==0?'':$item['lab2']?></td>
-						<td class="sem_hours prac1" contenteditable="true"><?=$item['pract1']==0?'':$item['pract1']?></td>
-						<td class="sem_hours prac2" contenteditable="true"><?=$item['pract2']==0?'':$item['pract2']?></td>
-						<td class="sem_hours kurs1" contenteditable="true"><?=$item['kurs1']==0?'':$item['kurs1']==0?></td>
-						<td class="sem_hours kurs2" contenteditable="true"><?=$item['kurs2']==0?'':$item['kurs2']?></td>
+						<td class="sem_hours theory1" <?=$contenteditable?>><?=$item['theory1']==0?'':$item['theory1']?></td>
+						<td class="sem_hours theory2" <?=$contenteditable?>><?=$item['theory2']==0?'':$item['theory2']?></td>
+						<td class="sem_hours lab1" <?=$contenteditable?>><?=$item['lab1']==0?'':$item['lab1']?></td>
+						<td class="sem_hours lab2" <?=$contenteditable?>><?=$item['lab2']==0?'':$item['lab2']?></td>
+						<td class="sem_hours prac1" <?=$contenteditable?>><?=$item['pract1']==0?'':$item['pract1']?></td>
+						<td class="sem_hours prac2" <?=$contenteditable?>><?=$item['pract2']==0?'':$item['pract2']?></td>
+						<td class="sem_hours kurs1" <?=$contenteditable?>><?=$item['kurs1']==0?'':$item['kurs1']==0?></td>
+						<td class="sem_hours kurs2" <?=$contenteditable?>><?=$item['kurs2']==0?'':$item['kurs2']?></td>
 					</tr>
 				<?php } ?>
 			</table>
@@ -125,7 +132,7 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 				<?php } ?>
 			</table>
 			<h4>2. ТЕМАТИЧЕСКИЙ ПЛАН</h4>
-			<a href="" id="save" class="save">Сохранить</a>
+			<?php if ($contenteditable) { ?> <a href="" id="save" class="save">Сохранить</a> <?php } ?>
 
 			<div id="success" class="success">
 				<h3>Изменения сохранены.</h3>
@@ -139,7 +146,7 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 						<th rowspan="2">№ п/п</th>
 						<th rowspan="2">Наименование разделов и тем</th>
 						<th colspan="2">Количество учебного времени</th>
-						<th rowspan="2" class="addpart"><img src="img/add.svg"></th>
+						<?php if ($contenteditable) { ?> <th rowspan="2" class="addpart"><img src="img/add.svg"></th> <?php } ?>
 					</tr>
 					<tr><th>всего</th><th>лпз</th></tr>
 				</thead>
@@ -147,19 +154,19 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 					<?php foreach ($parts as $key => $part) { ?>
 						<tr data-part="<?=$part['part_id']?>" class="partitem">
 							<td class="node hide"><img src="img/minus.svg"></td>
-							<td contenteditable="true" class="part_name" colspan="2"><?=$part['part_name']?></td>
-							<td class="addtopic"><img src="img/add.svg"></td>
-							<td class="deletepart"><img src="img/trash.svg"></td>
+							<td <?=$contenteditable?> class="part_name" colspan="2"><?=$part['part_name']?></td>
+							<?php if ($contenteditable) { ?> <td class="addtopic"><img src="img/add.svg"></td>
+							<td class="deletepart"><img src="img/trash.svg"></td> <?php } ?>
 						</tr>
 						<?php
 						$collection=$rf->GetPartItems($part['part_id']);
 						foreach($collection as $item) {  ?>
 							<tr id="<?=$item['rupitem_id']?>" data-part="<?=$part['part_id']?>" class="item">
 								<td class="itemnum"><?=$item['rupitem_num']?></td>
-								<td contenteditable="true"><?=$item['rupitem_name']?></td>
-								<td class="total" contenteditable="true"><?=$item['item_theory']+$item['item_practice']==0?'':$item['item_theory']+$item['item_practice']?></td>
-								<td class="lpz" contenteditable="true"><?=$item['item_practice']==0?'':$item['item_practice']?></td>
-								<td class="deletetopic"><img src="img/trash.svg"></td>
+								<td <?=$contenteditable?>><?=$item['rupitem_name']?></td>
+								<td class="total" <?=$contenteditable?>><?=$item['item_theory']+$item['item_practice']==0?'':$item['item_theory']+$item['item_practice']?></td>
+								<td class="lpz" <?=$contenteditable?>><?=$item['item_practice']==0?'':$item['item_practice']?></td>
+								<?php if ($contenteditable) { ?> <td class="deletetopic"><img src="img/trash.svg"></td> <?php } ?>
 							</tr>
 						<?php }
 					} ?>
@@ -170,7 +177,7 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 				</tr>
 			</table>
 
-			<a href="" id="saveaims" class="save">Сохранить</a>
+			<?php if ($contenteditable) { ?> <a href="" id="saveaims" class="save">Сохранить</a> <?php } ?>
 			<div id="aimsuccess" class="success">
 				<h3>Изменения сохранены.</h3>
 			</div>
@@ -194,7 +201,7 @@ $teachers=array_unique(array_column($items, 'teacher_name'));
 				</thead>
 			</table>
 			<h4>5. ПЕРЕЧЕНЬ ЛАБОРАТОРНО-ПРАКТИЧЕСКИХ РАБОТ</h4>	
-			<a href="" id="savelprs" class="save">Сохранить</a>
+			<?php if ($contenteditable) { ?> <a href="" id="savelprs" class="save">Сохранить</a> <?php } ?>
 			<div id="lprsuccess" class="success">
 				<h3>Изменения сохранены.</h3>
 			</div>

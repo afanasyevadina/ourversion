@@ -98,11 +98,6 @@ class Clear
         $itemres=$this->pdo->prepare("SELECT * FROM `items` WHERE `general_id`=? ORDER BY `kurs_num`, `totalkurs` DESC");
         $itemres->execute(array($general_id));
         $items=$itemres->fetchAll();
-
-        //удаляем все старое
-        foreach ($items as $key => $item) {
-            $this->ClearLessons($item['item_id']);
-        }
         return $items;
     }
 

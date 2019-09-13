@@ -1,13 +1,13 @@
 var toDelete=[];
 function Modal(text) {
-		$('.modal').html(text);
-		$('.modal').show();
-		setTimeout(function(){
-			$('.modal').hide();
-		}, 5000);
-	}
+	$('.modal').html(text);
+	$('.modal').show();
+	setTimeout(function(){
+		$('.modal').hide();
+	}, 5000);
+}
 
-	function Numerate() {
+function Numerate() {
 		//all schedule
 		$('tbody').each(function(d){
 			//current day
@@ -95,22 +95,30 @@ function Modal(text) {
 				if($(this).find('li').not('.empty').length>1) {
 
 					//if there is an item with the same teacher, remove it
-					if($(this).find('li[data-teacher='+ui.item.data('teacher')+']').length>1) {
+					if(ui.item.data('teacher') && $(this).find('li[data-teacher='+ui.item.data('teacher')+']').length>1) {
+						toDelete.push($(this).find('li[data-teacher='+ui.item.data('teacher')+']').first().data('s_item'));
 						$(this).find('li[data-teacher='+ui.item.data('teacher')+']').first().remove();
 					} 
 
 					//if i moved here an item with full group and here are more than 2 items, remove it
 					if(!ui.item.data('subgroup')&&$(this).find('li').not('.empty').length>2) {
+						toDelete.push($(this).find('li[data-num]').data('s_item'));
 						$(this).find('li[data-num]').remove();
 					}
 					if($(this).find('li[data-subgroup=0]').length>0) {
+						toDelete.push($(this).find('li[data-num]').first().data('s_item'));
 						$(this).find('li[data-num]').first().remove();
 					}
 					if($(this).find('li[data-subgroup=1]').length>=1||$(this).find('li[data-subgroup=2]').length>=1) { //there is some place, but only for subgroup, not for you
 						if(!ui.item.data('subgroup')) {
+							toDelete.push($(this).find('li[data-num]').first().data('s_item'));
 							$(this).find('li[data-num]').first().remove();
 						}
 					}					
+				}
+
+				if(!!ui.item.data('s_item')) {
+					toDelete.push(ui.item.data('s_item'));
 				}
 
 				FillEmpty();
@@ -131,15 +139,15 @@ function Modal(text) {
 			}
 		});
 		$( "#droppable" ).droppable({
-	      drop: function( event, ui ) {
-	      	FillEmpty();
-	      	if(!ui.draggable.hasClass('empty')&&ui.draggable.is('table li')) {
-	      		toDelete.push(ui.draggable.data('s_item'));
-	      		ui.draggable.remove();
-	      		Numerate();
-	      	}	        
-	      }
-	    });
+			drop: function( event, ui ) {
+				FillEmpty();
+				if(!ui.draggable.hasClass('empty')&&ui.draggable.is('table li')) {
+					toDelete.push(ui.draggable.data('s_item'));
+					ui.draggable.remove();
+					Numerate();
+				}	        
+			}
+		});
 		$( "ul, li" ).disableSelection();
 	}
 	$(document).ready(function() {
@@ -152,6 +160,12 @@ function Modal(text) {
 				//add line
 				$(this).parent().find('.list_box').append('<div class="separator"></div>');
 				let ul=$(this).parent().find('.sortable').clone();
+				$(this).parent().find('.sortable li').not('.empty').each(function(){
+					toDelete.push($(this).data('s_item'));
+					$(this).addClass('edited');
+				});
+				$(this).parent().find('.sortable').attr('data-week', '1');
+				ul.attr('data-week', '2');
 				let li=ul.find('li').first().clone();
 				if(!li.hasClass('empty')) {
 					li.addClass('empty');
@@ -166,6 +180,9 @@ function Modal(text) {
 			}	
 			else {
 				//delete line and items after it
+				$(this).parent().find('.separator').nextAll().each(function(){
+					toDelete.push($(this).data('s_item'));
+				});
 				$(this).parent().find('.separator').nextAll().remove();
 				$(this).parent().find('.separator').remove();
 			}	
@@ -252,7 +269,7 @@ function Modal(text) {
 			Load('schedule/loadteachers.php?date='
 				+$('#date').val()
 				+'&num='+$(this).parent().data('num'),
-				 '#teachers_list');
+				'#teachers_list');
 			$('#teachers_list').show();
 		});
 
@@ -264,14 +281,14 @@ function Modal(text) {
 			//loading available cabinets...
 			if($('table').hasClass('changes')) {
 				Load('schedule/cabinets_today.php?date='
-				+$('#date').val()
-				+'&num='+$(this).parent().data('num'),
-				 '#cabs_list');
+					+$('#date').val()
+					+'&num='+$(this).parent().data('num'),
+					'#cabs_list');
 			} else {
 				Load('schedule/main_cabinets.php?day='
-				+$(this).parent().data('day')
-				+'&num='+$(this).parent().data('num'),
-				 '#cabs_list');
+					+$(this).parent().data('day')
+					+'&num='+$(this).parent().data('num'),
+					'#cabs_list');
 			}
 			$('#cabs_list').show();
 		});
@@ -312,5 +329,22 @@ function Modal(text) {
 			//showing name of cabinet
 			$('.teacher.current').html($(this).data('name'));
 			$("#teachers_list").hide();
+		});
+
+		$('#clearrasp').click(function(e) {
+			e.preventDefault();
+			var data = {};
+			data['kurs']=$('#courses').val();
+			data['sem']=$('#sems').val();
+			data['group']=$('#groups').val();
+			$.ajax({
+				url: 'schedule/clear.php',
+				type: 'POST',
+				dataType: 'html',
+				data: JSON.stringify(data),
+				success: function(response) {
+					location.reload();
+				}
+			});			
 		});
 	});

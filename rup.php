@@ -29,15 +29,6 @@ foreach ($teachers as $teacher) {
 <body>
 	<div id="ihelpyou" hidden="hidden">
 		<input type="text" list="teachers">
-		<!--<datalist id="teachers">
-			<?php
-			foreach($tArr as $cmk) { ?>
-				<option class="optgroup" data-cmk="<?=$cmk[0]['cmk_id']?>" value="<?=$cmk[0]['cmk_name']?>">+</option>
-				<?php foreach($cmk as $teacher) { ?>
-				<option data-cmk="<?=$teacher['cmk_id']?>" data-id="<?=$teacher['teacher_id']?>"><?=$teacher['teacher_name']?></option>
-			<?php } 
-			} ?>
-		</datalist>-->
 		<div class="teachers">
 			<?php
 			foreach($tArr as $cmk) { ?>
@@ -95,8 +86,10 @@ foreach ($teachers as $teacher) {
 			</div>
 			<div class="links">
 			    <a href="" id="downloadrup" class="download">Скачать</a>
-			    <a href="" id="sync" class="generate">Синхронизировать с Планом УП</a>
-			    <a href="" id="save" class="save">Сохранить</a>
+			    <?php if ($user['account_type']=='admin') { ?>
+				    <a href="" id="sync" class="generate">Синхронизировать с Планом УП</a>
+				    <a href="" id="save" class="save">Сохранить</a>
+				<?php } ?>
 			</div>
 			<div id="success" class="success">
 				<h3>Изменения сохранены.</h3>

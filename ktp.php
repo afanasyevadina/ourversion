@@ -28,7 +28,9 @@ foreach ($topicsarr as $key => $topic) {
 	$index=array_search($topic['part_id'], $partids);
 	$parts[$index][]=$topic;
 }
-
+$contenteditable = $user['account_type'] == 'admin' ||
+($user['account_type'] == 'teacher' && $item['teacher_id'] == $user['person_id']) ?
+'contenteditable="true"' : '';
 ?>
 <!DOCTYPE html>
 <html>
@@ -86,11 +88,11 @@ foreach ($topicsarr as $key => $topic) {
 				<tr>
 					<td>Семестр басталғанға дейін берілді<br>
 					Дано до начала семестра</td>
-					<td contenteditable="true">-</td>
+					<td <?=$contenteditable?>>-</td>
 					<td>о.і. теор.<br>в т.ч. теор.</td>
-					<td contenteditable="true">-</td>
+					<td <?=$contenteditable?>>-</td>
 					<td>зерт.тәж.<br>лаб.прак.</td>
-					<td contenteditable="true">-</td>
+					<td <?=$contenteditable?>>-</td>
 				</tr>
 				<tr>
 					<td>Осы оқу жылына жоспарланды<br>
@@ -106,18 +108,18 @@ foreach ($topicsarr as $key => $topic) {
 					Планируется на 1 семестр</td>
 					<td><?=$item['sem1']?></td>
 					<td>о.і. теор.<br>в т.ч. теор.</td>
-					<td contenteditable="true"><?=$item['theory1']?></td>
+					<td <?=$contenteditable?>><?=$item['theory1']?></td>
 					<td>зерт.тәж.<br>лаб.прак.</td>
-					<td contenteditable="true"><?=$item['pract1']+$item['lab1']?></td>
+					<td <?=$contenteditable?>><?=$item['pract1']+$item['lab1']?></td>
 				</tr>
 				<tr>
 					<td>2 семестрге жоспарланып отыр<br>
 					Планируется на 2 семестр</td>
 					<td><?=$item['sem2']?></td>
 					<td>о.і. теор.<br>в т.ч. теор.</td>
-					<td contenteditable="true"><?=$item['theory2']?></td>
+					<td <?=$contenteditable?>><?=$item['theory2']?></td>
 					<td>зерт.тәж.<br>лаб.прак.</td>
-					<td contenteditable="true"><?=$item['lab2']+$item['pract2']?></td>
+					<td <?=$contenteditable?>><?=$item['lab2']+$item['pract2']?></td>
 				</tr>
 				<tr>
 					<td>I семестр аяғында<br>На конец 1 семестра</td>
@@ -161,12 +163,12 @@ foreach ($topicsarr as $key => $topic) {
 								<td><?=$topic['rupitem_name']?></td>
 								<td><?=$topic['item_theory']==0?'':$topic['item_theory']?></td>
 								<td><?=$topic['item_practice']==0?'':$topic['item_practice']?></td>
-								<td class="time-td" contenteditable="true"><?=$topic['time']?></td>
-								<td class="type-td" contenteditable="true"><?=$topic['type']==''?(intval($topic['item_practice'])>0?'Лабораторно-практическое занятие':'Комбинированная лекция с элементами беседы'):$topic['type']?></td>
-								<td class="connections-td" contenteditable="true"><?=$topic['connections']?></td>
-								<td class="helpers-td" contenteditable="true"><?=$topic['helpers']?></td>
-								<td class="worktype-td" contenteditable="true"><?=$topic['worktype']?></td>
-								<td class="homework-td" contenteditable="true"><?=$topic['homework']?></td>
+								<td class="time-td" <?=$contenteditable?>><?=$topic['time']?></td>
+								<td class="type-td" <?=$contenteditable?>><?=$topic['type']==''?(intval($topic['item_practice'])>0?'Лабораторно-практическое занятие':'Комбинированная лекция с элементами беседы'):$topic['type']?></td>
+								<td class="connections-td" <?=$contenteditable?>><?=$topic['connections']?></td>
+								<td class="helpers-td" <?=$contenteditable?>><?=$topic['helpers']?></td>
+								<td class="worktype-td" <?=$contenteditable?>><?=$topic['worktype']?></td>
+								<td class="homework-td" <?=$contenteditable?>><?=$topic['homework']?></td>
 							</tr>
 						<?php }
 					} ?>

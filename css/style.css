@@ -153,7 +153,7 @@ input, select {
 	display: flex;
 	padding: 0 10px;
 }
-#new, #upload, #downloadrup, .generate, .download, .save, #newcab {
+#new, #upload, #downloadrup, .generate, .download, .save, #newcab, .clear {
 	display: flex;
 	align-items: center;
 	text-decoration: none;
@@ -176,6 +176,9 @@ input, select {
 }
 .save {
 	background-image: url('../img/save.png');
+}
+.clear {
+	background-image: url('../img/trash.png');
 }
 #generatektp {
 	display: none;
@@ -529,20 +532,22 @@ ul, li {
 	padding-left: 10px;
 	font-family: 'Gothic', sans-serif;
 	font-size: 16px;
+	cursor: pointer;
+	max-width: 500px;
 }
 .draggable li {
 	background-color: #D9DFFC;
 	padding: 10px 30px 10px 10px;
 	position: relative;
-	width: 500px;
 }
 .sortable {
 	background-color: #FCF7D9;
 }
 .sortable li {
-	background-color: #FCF7D9;
-	width: auto !important;
-	height: 35px !important;
+	height: auto !important;
+	min-height: 35px !important;
+	padding-right: 40px;
+	position: relative;
 }
 #droppable {
 	height: 100px;
@@ -595,7 +600,7 @@ li i {
 	margin: 0 20px;
 }
 .table_c {
-	max-height: calc(100% - 200px);
+	max-height: 100vh;
 	overflow-y: auto;
 	margin-left: 20px;
 }
@@ -699,7 +704,8 @@ table.full .sortable {
 .cab_num {
 	height: 100%;
 	width: 70px;
-	margin-right: -80px; 
+	position: absolute;
+	right: -25px; 
 	cursor: pointer;
 	display: flex;
 	justify-content: center;

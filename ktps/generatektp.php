@@ -46,7 +46,7 @@ foreach($items as $item) {
 			}
 		}
 	}
-	if($help[$item['kurs_num']]==$item['teacher_id']&&$max>=$item['totalkurs']) {
+	if($item['teacher_id'] && $help[$item['kurs_num']]==$item['teacher_id']&&$max>=$item['totalkurs']) {
 		continue;
 	}
 	//создаем ктп
@@ -84,47 +84,6 @@ foreach($items as $item) {
 //если набралось, вставляем
 if($count) {
 	$ktpf->InsertItems($ready, $count);
-
-	$ktps=$ktpf->GetGeneralItems($rf->GetProgram($_GET['id'])['general_id']);
-	$students=$gf->GetStudentIds($group);
-	$scount=count($students);
-
-	$teachers=array_column($ktps, 'teacher_id');
-	$courses=array_column($ktps, 'kurs_num');
-
-	$thesame=false;
-	$lessons=[];
-	$lc=0;
-
-	foreach ($ktps as $key => $ktp) {
-		foreach ($courses as $k => $course) {
-			if($ktp['kurs_num']==$course) {
-				if($teachers[$k]==$ktp['teacher_id']) {
-					$thesame=true;
-				}
-			}
-		}
-		$items=$ktpf->GetItems($ktp['ktp_id']);
-		$sincestart=0;
-		foreach($items as $item) {
-			$sem_num= $ktp['sem1']<=$sincestart ? 1 : 2;
-			$lessons=array_merge($lessons, array($ktp['item_id'], $item['rupitem_id'], $ktp['group_id'], $sem_num));
-			$lc++;
-			if($ktp['divide']&&$scount>24&&$thesame&&$item['item_practice']) {
-				$lessons=array_merge($lessons, array($ktp['item_id'], $item['rupitem_id'], $ktp['group_id'], $sem_num));
-				$lc++;
-			}
-			$sincestart+=2;
-		}
-		/*if($ktp['theory']==0&&$ktp['divide']==1&&$count>24&&$thesame) {
-			//additional lessons
-			$lessons=array_merge($lessons, array($ktp['item_id'], $item['rupitem_id'], $ktp['group_id']));
-			$lc++;
-		}*/
-	}
-	if($lc) {
-		$it->CreateLessons($lessons, $lc, $rf->GetProgram($_GET['id'])['general_id'], $students);
-	}
 	
 	//все вставилось, расходимся
 	header('Location: /ktps.php');

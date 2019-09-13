@@ -1,5 +1,5 @@
 <?php
-require_once('../connect.php');
+require_once('../facecontrol.php');
 require_once('../api/group.php');
 require_once('../api/item.php');
 $gf=new Group($pdo);
@@ -9,9 +9,12 @@ $id=(isset($_GET['group']))?$_GET['group']:1;
 $kurs=(isset($_GET['kurs']))?$_GET['kurs']:'2018-2019';
 $items=$it->GetGroupItems($id, $kurs);
 
+$contenteditable = $user['account_type'] == 'admin' ? 'contenteditable="true"' : '';
+
 $group=''; $totalrup=0; $theory=0; $lpr=0; $totalkurs=0; $theoryrup=0; $lprrup=0; $sem1=0; $sem2=0; $examens=0; $consul=0;
 $totalyear=0; $hourxp=0; $stdxp=0; $res=0;
 foreach($items as $item) { 
+	$item['examens'] = $item['examens'] ? $item['examens'] : ($item['exam'] ? 2 : 0);
 	$d=$gf->GetName($item);
 	$totalrup+=intval($item['totalrup']);
 	$theoryrup+=intval($item['theoryrup']);
@@ -33,29 +36,29 @@ foreach($items as $item) {
 		<td <?=$item['subgroup']==0?'':'class="subgroup"'?> ><?=$item['subgroup']==0?'':$item['subgroup']?></td>
 		<td class="teacherinput" data-id="<?=$item['teacher_id']?>"><?=$item['teacher_name']?></td>
 		<td><?=$item['subject_name']?></td>
-		<td class="exam-td" contenteditable="true"><?=($item['exam']==0)?'':$item['exam']?></td>
-		<td class="zachet-td" contenteditable="true"><?=($item['zachet']==0)?'':$item['zachet']?></td>
-		<td class="kursach-td" contenteditable="true"><?=($item['kursach']==0)?'':$item['kursach']?></td>
-		<td class="control-td" contenteditable="true"><?=($item['control']==0)?'':$item['control']?></td>
-		<td class="totalrup-td" contenteditable="true"><?=($item['totalrup']==0)?'':$item['totalrup']?></td>
+		<td class="exam-td" <?=$contenteditable?>><?=($item['exam']==0)?'':$item['exam']?></td>
+		<td class="zachet-td" <?=$contenteditable?>><?=($item['zachet']==0)?'':$item['zachet']?></td>
+		<td class="kursach-td" <?=$contenteditable?>><?=($item['kursach']==0)?'':$item['kursach']?></td>
+		<td class="control-td" <?=$contenteditable?>><?=($item['control']==0)?'':$item['control']?></td>
+		<td class="totalrup-td" <?=$contenteditable?>><?=($item['totalrup']==0)?'':$item['totalrup']?></td>
 		<td class="theoryrup-td"><?=($item['theoryrup']==0)?'':$item['theoryrup']?></td>
-		<td class="lprrup-td" contenteditable="true"><?=($item['lprrup']==0)?'':$item['lprrup']?></td>
-		<td class="totalkurs-td" contenteditable="true"><?=($item['totalkurs']==0)?'':$item['totalkurs']?></td>
-		<td class="pd-td" contenteditable="true"><?=($item['pd']==0)?'':$item['pd']?></td>
+		<td class="lprrup-td" <?=$contenteditable?>><?=($item['lprrup']==0)?'':$item['lprrup']?></td>
+		<td class="totalkurs-td" <?=$contenteditable?>><?=($item['totalkurs']==0)?'':$item['totalkurs']?></td>
+		<td class="pd-td" <?=$contenteditable?>><?=($item['pd']==0)?'':$item['pd']?></td>
 		<td class="theory-td"><?=($item['theory']==0)?'':$item['theory']?></td>
-		<td class="lpr-td" contenteditable="true"><?=($item['lpr']==0)?'':$item['lpr']?></td>
-		<td class="kurs-td" contenteditable="true"><?=($item['kurs']==0)?'':$item['kurs']?></td>
-		<td class="week1-td" contenteditable="true"><?=($item['week1']==0)?'':$item['week1']?></td>
+		<td class="lpr-td" <?=$contenteditable?>><?=($item['lpr']==0)?'':$item['lpr']?></td>
+		<td class="kurs-td" <?=$contenteditable?>><?=($item['kurs']==0)?'':$item['kurs']?></td>
+		<td class="week1-td" <?=$contenteditable?>><?=($item['week1']==0)?'':$item['week1']?></td>
 		<td class="hoursperweek1-td"><?=(($item['week1']==0?0:floor($item['sem1']/$item['week1']))==0)?'':floor($item['sem1']/$item['week1'])?></td>	
-		<td class="sem1-td" contenteditable="true"><?=($item['sem1']==0)?'':$item['sem1']?></td>
-		<td class="week2-td" contenteditable="true"><?=($item['week2']==0)?'':$item['week2']?></td>
+		<td class="sem1-td" <?=$contenteditable?>><?=($item['sem1']==0)?'':$item['sem1']?></td>
+		<td class="week2-td" <?=$contenteditable?>><?=($item['week2']==0)?'':$item['week2']?></td>
 		<td class="hoursperweek2-td"><?=(($item['week2']==0?0:floor($item['sem2']/$item['week2']))==0)?'':floor($item['sem2']/$item['week2'])?></td>	
-		<td class="sem2-td" contenteditable="true"><?=($item['sem2']==0)?'':$item['sem2']?></td>
-		<td class="consul-td" contenteditable="true"><?=($item['consul']==0)?'':$item['consul']?></td>
-		<td class="examens-td" contenteditable="true"><?=($item['examens']==0)?'':$item['examens']?></td>
-		<td class="totalyear-td" contenteditable="true"><?=$item['sem1']+$item['sem2']+$item['examens']+$item['consul']?></td>
-		<td class="stdxp-td" contenteditable="true"><?=($item['stdxp']==0)?'':$item['stdxp']?></td>
-		<td class="hourxp-td" contenteditable="true"><?=($item['hourxp']==0)?'':$item['hourxp']?></td>
+		<td class="sem2-td" <?=$contenteditable?>><?=($item['sem2']==0)?'':$item['sem2']?></td>
+		<td class="consul-td" <?=$contenteditable?>><?=($item['consul']==0)?'':$item['consul']?></td>
+		<td class="examens-td" <?=$contenteditable?>><?=($item['examens']==0)?'':$item['examens']?></td>
+		<td class="totalyear-td" <?=$contenteditable?>><?=$item['sem1']+$item['sem2']+$item['examens']+$item['consul']?></td>
+		<td class="stdxp-td" <?=$contenteditable?>><?=($item['stdxp']==0)?'':$item['stdxp']?></td>
+		<td class="hourxp-td" <?=$contenteditable?>><?=($item['hourxp']==0)?'':$item['hourxp']?></td>
 		<td class="res-td"><?=$item['sem1']+$item['sem2']+$item['examens']+$item['consul']-$item['hourxp']?></td>
 	</tr>
 <?php } ?>

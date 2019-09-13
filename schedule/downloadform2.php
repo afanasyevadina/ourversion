@@ -6,25 +6,16 @@ require_once('../api/teacher.php');
 require_once('../api/schedule.php');
 $sf=new Schedule($pdo, '../config.json');
 $it=new Item($pdo);
-$tf=new Teacher($pdo);
+
+$config=json_decode(file_get_contents('../config.json'), true);
+
 $objPHPExcel = new PHPExcel(); 
 $index=0;
-$kurs=(isset($_GET['kurs']))?$_GET['kurs']:'2018-2019';
+$kurs=(isset($_REQUEST['kurs']))?$_REQUEST['kurs']:'2018-2019';
 $cols=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 	   'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ',
 	   'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK', 'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ'];
-$months=[
-	10 => '09',
-	11 => '10',
-	12 => '11',
-	13 => '12',
-	14 => '01',
-	15 => '02',
-	16 => '03',
-	17 => '04',
-	18 => '05',
-	19 => '06',
-];
+
 //table style
 $styleArray = array(
      'borders' => array(
@@ -45,8 +36,56 @@ $fillArray = array(
             'color' => array('rgb' => '868686')
         )
     );
-$teachers=$tf->GetNames();
-//inerate the list of teachers creating sheets
+
+$items = $it->GetGroupItems($_REQUEST['group']);
+$lessons = $sf->GroupLessons($_REQUEST['group'], $kurs);
+
+foreach ($items as $key => $item) {
+	foreach ($lessons as $key => $lesson) {
+		if($item['item_id'] == $lesson['item_id']) {
+			$item['lessons'][] = $lesson;
+			unset($lessons[$key]);
+		}
+	}
+}
+
+for($i=$config['start1_month'];$i<$config['finish1_month'];$i++) {
+	$objPHPExcel->createSheet($index);
+	$objPHPExcel->setActiveSheetIndex($index);
+	$index++;
+	$objPHPExcel->getActiveSheet()->setTitle($i);    //TODO: create a pretty name of sheet
+
+	foreach ($items as $key => $item) {
+		if($item['sem1']) {
+			$objPHPExcel->getActiveSheet()->setCellValue('A2', 'Министерство образования и науки РК');
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 foreach($teachers as $teacher) {
 	$objPHPExcel->createSheet($index);
 	$objPHPExcel->setActiveSheetIndex($index);

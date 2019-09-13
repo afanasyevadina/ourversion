@@ -57,6 +57,7 @@ if($user['account_type']!='dispetcher') {
 			    <a href="cabinets_schedule.php" class="generate">Расписание кабинетов</a>
 			    <a href="group_schedule.php" class="generate">Расписание групп</a>
 				<a href="#" class="save" id="saverasp">Сохранить</a>
+				<a href="#" class="clear" id="clearrasp">Очистить расписание</a>
 			</div>
 			<div id="droppable">Убрать</div>
 			<div id="success" class="success">

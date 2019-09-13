@@ -19,7 +19,7 @@ class Item
 	}
 
 	public function GetGroupItems($group, $kurs) {
-		$items=$this->pdo->prepare("SELECT * FROM `items` INNER JOIN `subjects` ON `subjects`.`subject_id`=`items`.`subject_id` INNER JOIN `groups` ON `groups`.`group_id`=`items`.`group_id` LEFT JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `items`.`group_id`=? AND `kurs_num`=? ORDER BY `general_id`, `subgroup`");
+		$items=$this->pdo->prepare("SELECT * FROM `items` INNER JOIN `subjects` ON `subjects`.`subject_id`=`items`.`subject_id` INNER JOIN `groups` ON `groups`.`group_id`=`items`.`group_id` LEFT JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` WHERE `items`.`group_id`=? AND `kurs_num`=? ORDER BY `general_id`, `theory` DESC, `subgroup`");
 		$items->execute(array($group, $kurs));
 		return $items->fetchAll();
 	}
@@ -69,16 +69,16 @@ class Item
 	public function CreateAdditional($item, $temp) {
 		$add=$temp;
 		$add['exams']=0;
-		$add['totalrup']=intval($item['practice'])+intval($item['project']);
-		$add['theoryrup']=0;
-		$add['theory']=0;
 		$add['subgroup']=2;
-		if(intval($item['theory'])>0) {
-			$add['totalkurs']=intval($temp2['lpr'])+intval($temp['kurs']);
+		if($item['divide'] == 2) { //divide in practce
+			$add['totalkurs']=intval($temp['lpr'])+intval($temp['kurs']);
 			$add['w1']=0;
 			$add['s1']=0;
 			$add['w2']=0;
 			$add['s2']=0;
+			$add['totalrup']=intval($item['practice'])+intval($item['project']);
+			$add['theoryrup']=0;
+			$add['theory']=0;
 		}
 		return $add;
 	}
@@ -90,31 +90,23 @@ class Item
         //$finally=$this->pdo->query("UPDATE `items` SET  `subgroup`= 0 WHERE `subgroup`=''");
 	}
 
-	public function CreateLessons($lessons, $lc, $general, $students) {
-		$sql="INSERT INTO `lessons` (`item_id`, `rupitem_id`, `group_id`, `sem_num`) VALUES ".str_repeat('(?,?,?,?),', $lc-1)."(?,?,?,?)";
-		$res=$this->pdo->prepare($sql);
-		$res->execute($lessons);
-
-		$lessonres=$this->pdo->prepare("SELECT `lessons`.`lesson_id`, `subjects`.`divide`, `items`.`theory` FROM `items` INNER JOIN `lessons` ON `lessons`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `subjects`.`subject_id`=`items`.`subject_id` WHERE `items`.`general_id`=?");
-		$lessonres->execute(array($general));
-		
-		$ratings=[];
-		$rc=0;
-		while ($lesson=$lessonres->fetch()) {
-			foreach ($students as $key => $student) {
-				$ratings=array_merge($ratings, array($student['student_id'], $lesson['lesson_id']));
-				$rc++;
+	public function CreateLessons($group) {
+		$lessons = [];
+		$params = [];
+		$res = $this->pdo->prepare("SELECT * FROM items WHERE group_id=?");
+		$res->execute(array($group));
+		while($plan = $res->fetch()) {
+			for($i = 0; $i < ceil($plan['sem1'] / 2); $i++) {
+				$lessons = array_merge($lessons, [$plan['item_id'], $plan['group_id'], 1]);
+				$params[] = '(?,?,?)';
+			}		
+			for($i = 0; $i < ceil($plan['sem2'] / 2); $i++) {
+				$lessons = array_merge($lessons, [$plan['item_id'], $plan['group_id'], 2]);
+				$params[] = '(?,?,?)';
 			}
 		}
-		if($rc) {
-			$sql="INSERT INTO `ratings` (`student_id`, `lesson_id`) VALUES ".str_repeat('(?,?),', $rc-1)."(?,?)";
-			$res=$this->pdo->prepare($sql);
-			$res->execute($ratings);
-		}
-	}
-
-	public function Divide($item) {
-		$divide=!$item['theory']&&$item['subgroup']!=0 ? $item['subgroup'] : 0;
-		return $divide;
+		$sql="INSERT INTO `lessons` (`item_id`, `group_id`, `sem_num`) VALUES ".implode(',', $params);
+		$res=$this->pdo->prepare($sql);
+		$res->execute($lessons);		
 	}
 }

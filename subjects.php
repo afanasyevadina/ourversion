@@ -56,7 +56,19 @@ $cmks=$gf->GetCmks();
 				</select>
 			</div>
 			<div>
-				<label><input type="checkbox" name="divide" value="1" id="divide">Формировать подгруппы</label>
+				<label><input type="radio" name="divide" value="0" id="div0" checked>Не формировать подгруппы</label>
+			</div>
+			<div>
+				<label><input type="radio" name="divide" value="1" id="div1">Формировать подгруппы всегда</label>
+			</div>
+			<div>
+				<label><input type="radio" name="divide" value="2" id="div2">Формировать подгруппы на практические занятия</label>
+			</div>
+			<div>
+				<label><input type="radio" name="divide" value="3" id="div3">Формировать подгруппы всегда в группах с русским языком обучения</label>
+			</div>
+			<div>
+				<label><input type="radio" name="divide" value="4" id="div4">Формировать подгруппы всегда в группах с казахским языком обучения</label>
 			</div>
 			<input type="submit" name="submit" value="Сохранить">
 			<a id="deletesubject" class="delete" href="">Удалить</a>
@@ -94,6 +106,7 @@ $cmks=$gf->GetCmks();
 						<th>Название</th>
 						<th>ПЦК</th>
 						<th>ЦМК</th>
+						<th>Деление на подгруппы</th>
 						<th></th>
 					</tr>
 				</thead>

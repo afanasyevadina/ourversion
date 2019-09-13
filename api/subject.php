@@ -5,6 +5,11 @@
 class Subject
 {
 	private $pdo;
+	const DIV_NONE = 0;
+	const DIV_ALL = 1;
+	const DIV_PRAC = 2;
+	const DIV_RUS = 3;
+	const DIV_KAZ = 4;
 	
 	function __construct($pdo)
 	{

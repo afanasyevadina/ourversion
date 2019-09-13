@@ -1,5 +1,5 @@
 <?php
-require_once('../connect.php');
+require_once('../facecontrol.php');
 require_once('../api/group.php');
 require_once('../api/subject.php');
 require_once('../api/general.php');
@@ -9,15 +9,18 @@ $genf=new General($pdo);
 $id=(isset($_GET['group']))?$_GET['group'] :1;
 $group=$gf->About($id);
 $types=$sf->GetTypes();
+
+$contenteditable = $user['account_type'] == 'admin' ? 'contenteditable="true"' : '';
+
 ?>
-<th><?=($group['s1']==0)?'':$group['s1']?><?=($group['lps']==1)?"+ЛПС":""?></th>
-<th><?=($group['s2']==0)?'':$group['s2']?><?=($group['lps']==2)?"+ЛПС":""?></th>
-<th><?=($group['s3']==0)?'':$group['s3']?><?=($group['lps']==3)?"+ЛПС":""?></th>
-<th><?=($group['s4']==0)?'':$group['s4']?><?=($group['lps']==4)?"+ЛПС":""?></th>
-<th><?=($group['s5']==0)?'':$group['s5']?><?=($group['lps']==5)?"+ЛПС":""?></th>
-<th><?=($group['s6']==0)?'':$group['s6']?><?=($group['lps']==6)?"+ЛПС":""?></th>
-<th><?=($group['s7']==0)?'':$group['s7']?><?=($group['lps']==7)?"+ЛПС":""?></th>
-<th><?=($group['s8']==0)?'':$group['s8']?><?=($group['lps']==8)?"+ЛПС":""?></th>
+<th><?=$gf->WeeksCount($group['s1start'], $group['s1finish'])?></th>
+<th><?=$gf->WeeksCount($group['s2start'], $group['s2finish'])?></th>
+<th><?=$gf->WeeksCount($group['s3start'], $group['s3finish'])?></th>
+<th><?=$gf->WeeksCount($group['s4start'], $group['s4finish'])?></th>
+<th><?=$gf->WeeksCount($group['s5start'], $group['s5finish'])?></th>
+<th><?=$gf->WeeksCount($group['s6start'], $group['s6finish'])?></th>
+<th><?=$gf->WeeksCount($group['s7start'], $group['s7finish'])?></th>
+<th><?=$gf->WeeksCount($group['s8start'], $group['s8finish'])?></th>
 <?php
 echo "separator";
 $totalitogo=0; $theoryitogo=0; $practiceitogo=0; $projectitogo=0; $s1itogo=0; $s2itogo=0; $s3itogo=0; $s4itogo=0; $s5itogo=0; $s6itogo=0; $s7itogo=0; $s8itogo=0;
@@ -31,17 +34,17 @@ foreach($types as $type) {
 		$kursach+=$item['kursach']?1:0;
 		$control+=$item['control']==''?0:$item['control'];
 	 	$total+=$item['theory']+$item['practice']+$item['project']==0?'':intval($item['theory']+$item['practice']+$item['project']);
-		$theory+=$item['theory']==''?:intval($item['theory']);
-		$practice+=$item['practice']==''?:intval($item['practice']);
-		$project+=$item['project']==''?:intval($item['project']);
-		$s1+=$item['s1']==''?:intval($item['s1']);
-		$s2+=$item['s2']==''?:intval($item['s2']);
-		$s3+=$item['s3']==''?:intval($item['s3']);
-		$s4+=$item['s4']==''?:intval($item['s4']);
-		$s5+=$item['s5']==''?:intval($item['s5']);
-		$s6+=$item['s6']==''?:intval($item['s6']);
-		$s7+=$item['s7']==''?:intval($item['s7']);
-		$s8+=$item['s8']==''?:intval($item['s8']);
+		$theory+=$item['theory']==''?'':intval($item['theory']);
+		$practice+=$item['practice']==''?'':intval($item['practice']);
+		$project+=$item['project']==''?'':intval($item['project']);
+		$s1+=$item['s1']==''?'':intval($item['s1']);
+		$s2+=$item['s2']==''?'':intval($item['s2']);
+		$s3+=$item['s3']==''?'':intval($item['s3']);
+		$s4+=$item['s4']==''?'':intval($item['s4']);
+		$s5+=$item['s5']==''?'':intval($item['s5']);
+		$s6+=$item['s6']==''?'':intval($item['s6']);
+		$s7+=$item['s7']==''?'':intval($item['s7']);
+		$s8+=$item['s8']==''?'':intval($item['s8']);
 	} ?>
 	<tr class="itog" id="part<?=$type['type_id']?>">
 		<td><?=$type['short_name']?></td>
@@ -62,7 +65,9 @@ foreach($types as $type) {
 		<td><?=$s6==0?'':$s6?></td>
 		<td><?=$s7==0?'':$s7?></td>
 		<td><?=$s8==0?'':$s8?></td>
-		<td class="additem_up"><img src="img/add.svg"></td>
+		<?php if($contenteditable) { ?>
+			<td class="additem_up"><img src="img/add.svg"></td>
+		<?php } ?>	
 	</tr>
 	<?php
 
@@ -71,23 +76,25 @@ foreach($types as $type) {
 		<tr id="<?=$item['general_id']?>" data-part="<?=$type['type_id']?>">
 			<td class="subject_index"><?=$item['subject_index']?></td>
 			<td data-id="<?=$item['subject_id']?>" class="subjectinput"><?=$item['subject_name']?></td>
-			<td class="exams-td" contenteditable="true"><?=($item['exams']==0)?'':$item['exams']?></td>
-			<td class="zachet-td" contenteditable="true"><?=($item['zachet']==0)?'':$item['zachet']?></td>
-			<td class="kursach-td" contenteditable="true"><?=($item['kursach']==0)?'':$item['kursach']?></td>
-			<td class="control-td" contenteditable="true"><?=($item['control']==0)?'':$item['control']?></td>
+			<td class="exams-td" <?=$contenteditable?>><?=($item['exams']==0)?'':$item['exams']?></td>
+			<td class="zachet-td" <?=$contenteditable?>><?=($item['zachet']==0)?'':$item['zachet']?></td>
+			<td class="kursach-td" <?=$contenteditable?>><?=($item['kursach']==0)?'':$item['kursach']?></td>
+			<td class="control-td" <?=$contenteditable?>><?=($item['control']==0)?'':$item['control']?></td>
 			<td class="total-td"><?=($item['theory']+$item['practice']+$item['project']==0)?'':$item['theory']+$item['practice']+$item['project']?></td>
-			<td class="theory-td" contenteditable="true"><?=($item['theory']==0)?'':$item['theory']?></td>
-			<td class="practice-td" contenteditable="true"><?=($item['practice']==0)?'':$item['practice']?></td>
-			<td class="project-td" contenteditable="true"><?=($item['project']==0)?'':$item['project']?></td>
-			<td class="s1-td" contenteditable="true"><?=($item['s1']==0)?'':$item['s1']?></td>
-			<td class="s2-td" contenteditable="true"><?=($item['s2']==0)?'':$item['s2']?></td>
-			<td class="s3-td" contenteditable="true"><?=($item['s3']==0)?'':$item['s3']?></td>
-			<td class="s4-td" contenteditable="true"><?=($item['s4']==0)?'':$item['s4']?></td>
-			<td class="s5-td" contenteditable="true"><?=($item['s5']==0)?'':$item['s5']?></td>
-			<td class="s6-td" contenteditable="true"><?=($item['s6']==0)?'':$item['s6']?></td>
-			<td class="s7-td" contenteditable="true"><?=($item['s7']==0)?'':$item['s7']?></td>
-			<td class="s8-td" contenteditable="true"><?=($item['s8']==0)?'':$item['s8']?></td>
-			<td class="deleteitem_up"><img src="img/trash.svg"></td>
+			<td class="theory-td" <?=$contenteditable?>><?=($item['theory']==0)?'':$item['theory']?></td>
+			<td class="practice-td" <?=$contenteditable?>><?=($item['practice']==0)?'':$item['practice']?></td>
+			<td class="project-td" <?=$contenteditable?>><?=($item['project']==0)?'':$item['project']?></td>
+			<td class="s1-td" <?=$contenteditable?>><?=($item['s1']==0)?'':$item['s1']?></td>
+			<td class="s2-td" <?=$contenteditable?>><?=($item['s2']==0)?'':$item['s2']?></td>
+			<td class="s3-td" <?=$contenteditable?>><?=($item['s3']==0)?'':$item['s3']?></td>
+			<td class="s4-td" <?=$contenteditable?>><?=($item['s4']==0)?'':$item['s4']?></td>
+			<td class="s5-td" <?=$contenteditable?>><?=($item['s5']==0)?'':$item['s5']?></td>
+			<td class="s6-td" <?=$contenteditable?>><?=($item['s6']==0)?'':$item['s6']?></td>
+			<td class="s7-td" <?=$contenteditable?>><?=($item['s7']==0)?'':$item['s7']?></td>
+			<td class="s8-td" <?=$contenteditable?>><?=($item['s8']==0)?'':$item['s8']?></td>
+			<?php if($contenteditable) { ?>
+				<td class="deleteitem_up"><img src="img/trash.svg"></td>
+			<?php } ?>	
 	</tr><?php } 
 	$totalitogo+=$total;
 	$theoryitogo+=$theory;

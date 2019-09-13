@@ -33,7 +33,7 @@ class Schedule
 
 	//what is by main schedule
 	public function GetMain($group, $kurs, $sem) {
-		$res=$this->pdo->prepare("SELECT `schedule_items`.*, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `items`.`theory`, `items`.`totalkurs`, `items`.`sem1`, `items`.`sem2`, `cabinets`.* FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` LEFT JOIN `cabinets` ON `cabinets`.`cabinet_id`=`schedule_items`.`cab_num` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? ORDER BY `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks`");
+		$res=$this->pdo->prepare("SELECT `schedule_items`.*, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `items`.`theory`, `items`.`totalkurs`, `items`.`sem1`, `items`.`sem2`, `cabinets`.* FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` LEFT JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` LEFT JOIN `cabinets` ON `cabinets`.`cabinet_id`=`schedule_items`.`cab_num` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? ORDER BY `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks`");
 		$res->execute(array($group, $kurs, $sem));
 		return $res->fetchAll();
 	}
@@ -100,8 +100,20 @@ class Schedule
 	}
 
 	public function TeacherLessons($teacher, $kurs) {
-		$res=$this->pdo->prepare("SELECT `lessons`.*, `rupitems`.`item_theory`, `rupitems`.`item_practice` FROM `lessons` INNER JOIN `rupitems` ON `lessons`.`rupitem_id`=`rupitems`.`rupitem_id` INNER JOIN `items` ON `items`.`item_id`=`lessons`.`item_id` WHERE `items`.`teacher_id`=? AND `lessons`.`teacher_id`=? AND `items`.`kurs_num`=?");
+		$res=$this->pdo->prepare("SELECT `lessons`.*, `rupitems`.`item_theory`, `rupitems`.`item_practice` FROM `lessons` INNER JOIN `rupitems` ON `lessons`.`rupitem_id`=`rupitems`.`rupitem_id` INNER JOIN `items` ON `items`.`item_id`=`lessons`.`item_id` WHERE `items`.`teacher_id`=? AND `lessons`.`teacher_id`=? AND `items`.`kurs_num`=? ORDER BY `lessons`.`lesson_date`");
 		$res->execute(array($teacher, $teacher, $kurs));
+		return $res->fetchAll();
+	}
+
+	public function ReplacedLessons($teacher, $kurs) {
+		$res=$this->pdo->prepare("SELECT `lessons`.*, `rupitems`.`item_theory`, `rupitems`.`item_practice` FROM `lessons` INNER JOIN `rupitems` ON `lessons`.`rupitem_id`=`rupitems`.`rupitem_id` INNER JOIN `items` ON `items`.`item_id`=`lessons`.`item_id` WHERE `items`.`teacher_id` <> ? AND `lessons`.`teacher_id`=? AND `items`.`kurs_num`=?");
+		$res->execute(array($teacher, $teacher, $kurs));
+		return $res->fetchAll();
+	}
+
+	public function GroupLessons($group, $kurs) {
+		$res=$this->pdo->prepare("SELECT `lessons`.*, `rupitems`.`item_theory`, `rupitems`.`item_practice` FROM `lessons` INNER JOIN `rupitems` ON `lessons`.`rupitem_id`=`rupitems`.`rupitem_id` WHERE `lessons`.`group_id`=? AND `items`.`kurs_num`=? ORDER BY `lessons`.`item_id`, `lessons`.`lesson_date`");
+		$res->execute(array($group, $kurs));
 		return $res->fetchAll();
 	}
 
@@ -198,5 +210,10 @@ class Schedule
 		$res=$this->pdo->prepare("SELECT `cabinets`.* FROM `cabinets` INNER JOIN `schedule_items` ON `schedule_items`.`cab_num`=`cabinets`.`cabinet_id` WHERE `schedule_items`.`item_id`=?");
 		$res->execute(array($item));
 		return $res->fetch();
+	}
+
+	public function Clear($data) {
+		$res = $this->pdo->prepare("DELETE FROM schedule_items WHERE group_id=:group AND kurs_num=:kurs AND sem_num=:sem");
+		$res->execute($data);
 	}
 }

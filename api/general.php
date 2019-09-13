@@ -19,7 +19,7 @@ class General
 	}
 
 	public function GetGeneral($group) {
-		$res=$this->pdo->prepare("SELECT * FROM `general` WHERE `group_id`=?");
+		$res=$this->pdo->prepare("SELECT * FROM `general` INNER JOIN subjects ON subjects.subject_id = general.subject_id WHERE `group_id`=?");
 		$res->execute(array($group));
 		return $res->fetchAll();
 	}

@@ -5,6 +5,8 @@
 class Group
 {
 	private $pdo;
+	const LANG_RUS = 0;
+	const LANG_KAZ = 1;
 	
 	function __construct($pdo)
 	{
@@ -16,7 +18,7 @@ class Group
 	}
 
 	public function Insert($data) {
-		$res=$this->pdo->prepare("INSERT INTO `groups` (`group_name`, `specialization_id`, `base`, `s1`, `s2`, `s3`, `s4`, `s5`, `s6`, `s7`, `s8`, `lps`, `year`, `count`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		$res=$this->pdo->prepare("INSERT INTO `groups` (`group_name`, `specialization_id`, `base`, `count`, `lang`) VALUES (?,?,?,?,?)");
 		$res->execute($data);
 	}
 
@@ -99,7 +101,7 @@ class Group
 	}
 
 	public function Update($data) {
-		$res=$this->pdo->prepare("UPDATE `groups` SET `group_name`=?, `specialization_id`=?, `base`=?, `s1`=?, `s2`=?, `s3`=?, `s4`=?, `s5`=?, `s6`=?, `s7`=?, `s8`=?, `lps`=?, `year`=?, `count`=? WHERE `group_id`=?");
+		$res=$this->pdo->prepare("UPDATE `groups` SET `group_name`=?, `specialization_id`=?, `base`=?, `year`=?, `lang`=? WHERE `group_id`=?");
 		$res->execute($data);
 	}
 
@@ -168,5 +170,10 @@ class Group
 			$res->execute(array($group, $subgroup));
 		}
 		return $res->fetchAll();
+	}
+
+	public function WeeksCount($start, $finish) {
+		$diff = strtotime($finish) - strtotime($start);
+		return ceil($diff/604800);
 	}
 }

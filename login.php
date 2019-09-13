@@ -36,7 +36,7 @@ if(!empty($_POST)) {
 		<form action="login.php" method="post">
 			<p class="login-header">Авторизация</p>
 			<p class="warning"><?=$warning?></p>
-			<input type="text" name="login" id="login" placeholder="Login" autocomplete="off">
+			<input type="text" name="login" id="login" placeholder="Login" autocomplete="off" autofocus>
 			<input type="password" name="password" id="password" placeholder="Password">
 			<input type="submit" value="Войти">
 		</form>
