@@ -1,5 +1,6 @@
 <?php
-require_once('facecontrol.php');
+$title = 'РУПЫ';
+require_once('layout.php');
 require_once('api/group.php');
 $gf=new Group($pdo);
 $groups=$gf->GetGroups();
@@ -8,25 +9,7 @@ $teachers=$gf->GetTeachers();
 foreach ($teachers as $teacher) {
 	$tArr[$teacher['cmk_id']][] = $teacher;
 }
-
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>РУПЫ</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/script.js"></script>
-	<style type="text/css">
-		.main {
-			width: 100%;
-			margin: 0;
-		}
-	</style>
-</head>
-<body>
 	<div id="ihelpyou" hidden="hidden">
 		<input type="text" list="teachers">
 		<div class="teachers">
@@ -65,9 +48,8 @@ foreach ($teachers as $teacher) {
 	        </div>
 	    </form>
 	</div>
-	<?php require_once('layout.php'); ?>
 	<div class="container">
-		<div class="main">
+		<div class="main" style="width: 100%;margin: 0;">
 			<h2>Рабочий учебный план</h2>
 			<div class="options">
 					<select id="groupselect">

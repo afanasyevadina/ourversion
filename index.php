@@ -1,5 +1,6 @@
 <?php
-require_once('facecontrol.php');
+$title = 'Главная';
+require_once('layout.php');
 switch ($user['account_type']) {
 	case 'student':
 		require_once('student_index.php');
@@ -12,23 +13,6 @@ switch ($user['account_type']) {
 		break;
 }
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Главная</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<style type="text/css">
-		body {
-			background-color: #ddd;
-		}
-		.main {
-			padding: 0;
-		}
-	</style>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div class="container">
 		<div class="main">
 			<section class="section">

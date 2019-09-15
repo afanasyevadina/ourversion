@@ -1,22 +1,11 @@
 <?php
-require_once('facecontrol.php');
+$title = 'Настройки';
+require_once('layout.php');
 require_once('api/schedule.php');
 $sf=new Schedule($pdo, 'config.json');
 $cabs=$sf->GetCabinets();
 $config=json_decode(file_get_contents('config.json'), true);
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Настройки</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/script.js"></script>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div class="container">
 		
 		<div class="main">

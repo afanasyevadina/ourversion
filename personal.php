@@ -1,29 +1,12 @@
 <?php
-require_once('facecontrol.php');
+$title = 'Нагрузка преподавателя';
+require_once('layout.php');
 require_once('api/group.php');
 $gf=new Group($pdo);
 $teachers=$gf->GetTeachers();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Нагрузка преподавателя</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/script.js"></script>
-	<style type="text/css">
-		.main {
-			width: 100%;
-			margin: 0;
-		}
-	</style>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div class="container">
-		<div class="main">
+		<div class="main" style="width: 100%;margin: 0;">
 			<h2>Нагрузка преподавателя</h2>
 			<div class="options">
 				<select id="teacherselect">

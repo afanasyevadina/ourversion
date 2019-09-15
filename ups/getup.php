@@ -1,5 +1,5 @@
 <?php
-require_once('../facecontrol.php');
+require_once('../connect.php');
 require_once('../api/group.php');
 require_once('../api/subject.php');
 require_once('../api/general.php');

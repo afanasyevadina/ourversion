@@ -1,31 +1,10 @@
 <?php
-require_once('facecontrol.php');
+$title = 'Расписание преподавателя';
+require_once('layout.php');
 require_once('api/group.php');
 $gf=new Group($pdo);
 $teachers=$gf->GetTeachers();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Расписание преподавателя</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/jquery-ui.js"></script>		
-	<script src="js/script.js"></script>
-	<script src="js/schedule.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			Load('schedule/forteacher.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&teacher='+$('#teacher').val(), '#schedule');
-			$('.filter').change(function(){
-				Load('schedule/forteacher.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&teacher='+$('#teacher').val(), '#schedule');
-			});
-		});
-	</script>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div class="container">
 		
 		<div class="main">
@@ -55,5 +34,13 @@ $teachers=$gf->GetTeachers();
 		</div>
 	</div>
 	<footer></footer>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			Load('schedule/forteacher.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&teacher='+$('#teacher').val(), '#schedule');
+			$('.filter').change(function(){
+				Load('schedule/forteacher.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&teacher='+$('#teacher').val(), '#schedule');
+			});
+		});
+	</script>
 </body>
 </html>

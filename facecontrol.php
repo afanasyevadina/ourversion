@@ -37,4 +37,11 @@ if(isset($_COOKIE['user'])) {
 else {
 	header('Location: login.php');
 }
+$res = $pdo->prepare("SELECT * FROM permissions WHERE role=? OR role='*'");
+$res->execute(array($user['account_type']));
+$permissions = $res->fetchAll();
+if(!in_array('*', array_column($permissions, 'route')) && 
+	!in_array(basename($_SERVER['SCRIPT_NAME']), array_column($permissions, 'route'))) {
+	header('Location: /');
+}
 ?>

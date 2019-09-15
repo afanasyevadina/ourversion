@@ -534,6 +534,7 @@ ul, li {
 	font-size: 16px;
 	cursor: pointer;
 	max-width: 500px;
+	min-width: 500px;
 }
 .draggable li {
 	background-color: #D9DFFC;
@@ -548,6 +549,7 @@ ul, li {
 	min-height: 35px !important;
 	padding-right: 40px;
 	position: relative;
+	margin-right: -50px;
 }
 #droppable {
 	height: 100px;
@@ -579,7 +581,7 @@ table div.separator {
 	padding: 20px;
 	background-color: #FCDD9E;
 	display: none;
-	z-index: 674;
+	z-index: 1674;
 }
 li span {
 	position: absolute;
@@ -687,7 +689,7 @@ table.full .sortable {
 	background-color: #fff;
 	box-shadow: 0 0 4px #666;
 	height: calc(100% - 50px);
-	z-index: 45;
+	z-index: 1001;
 	display: none;
 	overflow: auto;
 }

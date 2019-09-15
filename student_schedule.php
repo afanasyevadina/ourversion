@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Расписание</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/jquery-ui.js"></script>		
-	<script src="js/script.js"></script>
-	<script src="js/schedule.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			Load('schedule/forstudent.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#schedule');
-			$('.filter').change(function(){
-				Load('schedule/forstudent.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#schedule');
-			});
-		});
-	</script>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
+<?php 
+$title = 'Расписание';
+require_once('layout.php'); ?>
+<?php if($user['account_type'] == 'student') {
+	require_once 'api/group.php';
+	$gf = new Group($pdo);
+	$group = $gf->AboutStudent($user['person_id'])['group_id'];
+}
+?>
 	<div class="container">
 		
 		<div class="main">
@@ -40,5 +27,14 @@
 		</div>
 	</div>
 	<footer></footer>
+	<input type="hidden" id="group" value="<?=@$group?>">
+	<script type="text/javascript">
+		$(document).ready(function() {
+			Load('schedule/forgroup.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val() + '&group='+$('#group').val(), '#schedule');
+			$('.filter').change(function(){
+				Load('schedule/forgroup.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val() + '&group='+$('#group').val(), '#schedule');
+			});
+		});
+	</script>
 </body>
 </html>

@@ -1,5 +1,4 @@
 <?php
-require_once('facecontrol.php');
 require_once('api/journal.php');
 require_once('api/schedule.php');
 $jf=new Journal($pdo);
@@ -18,23 +17,6 @@ foreach ($subjects as $subject) {
 	}
 }
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Главная</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<style type="text/css">
-		body {
-			background-color: #ddd;
-		}
-		.main {
-			padding: 0;
-		}
-	</style>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div class="container">
 		<div class="main">
 			<section class="section">

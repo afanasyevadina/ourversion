@@ -1,5 +1,5 @@
 <?php
-require_once('../facecontrol.php');
+require_once('../connect.php');
 require_once('../api/group.php');
 $config=json_decode(file_get_contents('../config.json'), true);
 $gf=new Group($pdo);

@@ -1,10 +1,10 @@
 <?php
-require_once('../facecontrol.php');
+require_once('../connect.php');
 require_once('../api/group.php');
 require_once('../api/schedule.php');
 require_once('../api/item.php');
+require_once('../api/subject.php');
 $sf=new Schedule($pdo, '../config.json');
-//$teacher=$user['person_id'];
 $it=new Item($pdo);
 $items=$sf->CabinetSchedule($_REQUEST['cabinet'], $_REQUEST['kurs'], $_REQUEST['sem']);
 $index=0;
@@ -27,8 +27,7 @@ for($i=1;$i<=6; $i++) { ?>
 						<?php 
 						$count=0;
 						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i&&$items[$index]['weeks']==1) {
-						$divide = $it->Divide($items[$index]);
-						$subgroup=$divide ? $items[$index]['subgroup'].' подгруппа' : ''; ?>
+						$subgroup=$item['subgroup'] && $item['divide'] != Subject::DIV_PRAC ? $item['subgroup'].' подгруппа' : '';?>
 						<li class="inner_lesson">
 							<?=$items[$index]['subject_name'].' '.$items[$index]['group_name'].' '.$subgroup?> 
 							<i><?=$items[$index]['teacher_name']?></i>
@@ -47,8 +46,7 @@ for($i=1;$i<=6; $i++) { ?>
 						<?php 
 						$count=0;
 						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i&&$items[$index]['weeks']==2) {
-						$divide = $it->Divide($items[$index]);
-						$subgroup=$divide ? $items[$index]['subgroup'].' подгруппа' : ''; ?>
+						$subgroup=$item['subgroup'] && $item['divide'] != Subject::DIV_PRAC ? $item['subgroup'].' подгруппа' : '';?>
 						<li class="inner_lesson">
 							<?=$items[$index]['subject_name'].' '.$items[$index]['group_name'].' '.$subgroup?> 
 							<i><?=$items[$index]['teacher_name']?></i>
@@ -69,8 +67,7 @@ for($i=1;$i<=6; $i++) { ?>
 						<?php 
 						$count=0; 
 						while($items[$index]['num_of_lesson']==$j&&$items[$index]['day_of_week']==$i) {
-						$divide = $it->Divide($items[$index]);
-						$subgroup=$divide ? $items[$index]['subgroup'].' подгруппа' : ''; ?>
+						$subgroup=$item['subgroup'] && $item['divide'] != Subject::DIV_PRAC ? $item['subgroup'].' подгруппа' : '';?>
 						<li class="inner_lesson">
 							<?=$items[$index]['subject_name'].' '.$items[$index]['group_name'].' '.$subgroup?> 
 							<i><?=$items[$index]['teacher_name']?></i>

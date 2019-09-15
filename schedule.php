@@ -1,36 +1,10 @@
 <?php
-require_once('facecontrol.php');
+$title = 'Расписание';
+require_once('layout.php');
 require_once('api/group.php');
 $gf=new Group($pdo);
 $groups=$gf->GetGroups();
-if($user['account_type']!='dispetcher') {
-	//header('Location: /');
-}
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Расписание</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/jquery-ui.js"></script>		
-	<script src="js/script.js"></script>
-	<script src="js/schedule.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			Load('schedule/list.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#subjects_list');
-			Load('schedule/loadmain.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '.schedule_table');
-			$('.filter').change(function(){
-				Load('schedule/list.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#subjects_list');
-				Load('schedule/loadmain.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '.schedule_table');
-			});
-		});
-	</script>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div class="modal"></div>
 	<div id="cabs_list"></div>
 	<div class="container">		
@@ -77,5 +51,17 @@ if($user['account_type']!='dispetcher') {
 		</div>
 	</div>
 	<footer></footer>
+	<script src="js/jquery-ui.js"></script>
+	<script src="js/schedule.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			Load('schedule/list.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#subjects_list');
+			Load('schedule/loadmain.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '.schedule_table');
+			$('.filter').change(function(){
+				Load('schedule/list.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#subjects_list');
+				Load('schedule/loadmain.php?group='+$('#groups').val()+'&kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '.schedule_table');
+			});
+		});
+	</script>
 </body>
 </html>

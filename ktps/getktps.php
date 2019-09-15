@@ -1,5 +1,5 @@
 <?php
-require_once('../facecontrol.php');
+require_once('../connect.php');
 require_once('../api/ktp.php');
 require_once('../api/group.php');
 $ktpf=new Ktp($pdo);

@@ -1,18 +1,7 @@
 <?php
-require_once('facecontrol.php');
+$title = 'Журналы';
+require_once('layout.php');
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Журналы</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/script.js"></script>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div class="container">
 		<div class="main">
 			<h2>Журналы</h2>
@@ -26,7 +15,6 @@ require_once('facecontrol.php');
 			<div id="journals"></div>
 		</div>
 	</div>
-	<footer></footer>
 	<script type="text/javascript">
 		Load('journal/getjournal.php?kurs='+$('#courses').val(), '#journals');
 		$('#courses').change(function() {

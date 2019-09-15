@@ -1,37 +1,10 @@
 <?php
-require_once('facecontrol.php');
+$title = 'Изменения в расписании';
+require_once('layout.php');
 require_once('api/group.php');
 $gf=new Group($pdo);
-if($user['account_type']!='dispetcher') {
-	//header('Location: /');
-}
 $groups=$gf->GetGroups();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Изменения в расписании</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/jquery-ui.js"></script>	
-	<script src="js/script.js"></script>
-	<script src="js/schedule.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			document.getElementById("date").valueAsDate = new Date();
-			Load('schedule/loadsubjects.php?group='+$('#groups').val()+'&date='+$('#date').val(), '#subjects_list');
-			Load('schedule/loadchanges.php?group='+$('#groups').val()+'&date='+$('#date').val(), '.schedule_table');
-			$('.filter').change(function(){
-				Load('schedule/loadsubjects.php?group='+$('#groups').val()+'&date='+$('#date').val(), '#subjects_list');
-				Load('schedule/loadchanges.php?group='+$('#groups').val()+'&date='+$('#date').val(), '.schedule_table');
-			});
-		});
-	</script>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div class="modal"></div>
 	<div id="teachers_list"></div>
 	<div id="cabs_list"></div>
@@ -72,5 +45,18 @@ $groups=$gf->GetGroups();
 		</div>
 	</div>
 	<footer></footer>
+	<script src="js/jquery-ui.js"></script>	
+	<script src="js/schedule.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			document.getElementById("date").valueAsDate = new Date();
+			Load('schedule/loadsubjects.php?group='+$('#groups').val()+'&date='+$('#date').val(), '#subjects_list');
+			Load('schedule/loadchanges.php?group='+$('#groups').val()+'&date='+$('#date').val(), '.schedule_table');
+			$('.filter').change(function(){
+				Load('schedule/loadsubjects.php?group='+$('#groups').val()+'&date='+$('#date').val(), '#subjects_list');
+				Load('schedule/loadchanges.php?group='+$('#groups').val()+'&date='+$('#date').val(), '.schedule_table');
+			});
+		});
+	</script>
 </body>
 </html>

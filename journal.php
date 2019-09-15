@@ -1,8 +1,6 @@
 <?php
-require_once('facecontrol.php');
-if($user['account_type']!='teacher') {
-	//header('Location: /');
-}
+$title = 'Журнал';
+require_once('layout.php');
 $itemres=$pdo->prepare("SELECT `items`.`group_id`, `items`.`teacher_id`, `items`.`item_id`, `subjects`.`subject_name` FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` AND `ktps`.`ktp_id`=?");
 $itemres->execute(array($_GET['id']));
 $item=$itemres->fetch();
@@ -12,18 +10,6 @@ $lessonres=$pdo->prepare("SELECT `lessons`.`lesson_date`, `rupitems`.`item_pract
 $lessonres->execute(array($item['item_id']));
 $lessons=$lessonres->fetchAll();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Журнал</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/script.js"></script>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div class="container">		
 		<div class="main">
 			<h2>Журнал <?=$item['subject_name']?></h2>

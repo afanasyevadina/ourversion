@@ -1,24 +1,10 @@
 <?php
-require_once('facecontrol.php');
+$title = 'Студенты';
+require_once('layout.php');
 require_once('api/group.php');
 $gf=new Group($pdo);
-if($user['account_type']!='admin') {
-	header('Location: /');
-}
 $groups=$gf->GetGroups();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Студенты</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/script.js"></script>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div id="fon"></div>
 	<div id="add">
 		<form action="students/savestudent.php" method="post" id="studentform" class="addform small">

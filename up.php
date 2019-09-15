@@ -1,20 +1,10 @@
 <?php
-require_once('facecontrol.php');
+$title = 'План УП';
+require_once('layout.php');
 require_once('api/group.php');
 $gf=new Group($pdo);
 $list=$gf->GetGroups();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>План УП</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/script.js"></script>
-</head>
-<body>
 	<div id="fon"></div>
 	<div id="uploadform">
 		<form action="ups/uploadup.php" method="post" enctype="multipart/form-data" class="uploadform">
@@ -41,7 +31,6 @@ $list=$gf->GetGroups();
 	        </div>
 	    </form>
 	</div>
-	<?php require_once('layout.php'); ?>
 	<div class="container">
 		<div class="main">
 			<h2>План учебного процесса</h2>

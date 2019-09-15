@@ -1,5 +1,6 @@
 <?php
-require_once('facecontrol.php');
+$title = 'Календарно-тематический план';
+require_once('layout.php');
 require_once('api/ktp.php');
 require_once('api/group.php');
 $ktpf=new Ktp($pdo);
@@ -32,18 +33,6 @@ $contenteditable = $user['account_type'] == 'admin' ||
 ($user['account_type'] == 'teacher' && $item['teacher_id'] == $user['person_id']) ?
 'contenteditable="true"' : '';
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Календарно-тематический план</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/script.js"></script>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
 	<div class="container">
 		<div class="main">
 			<h2>Календарно-тематический план</h2>

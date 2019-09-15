@@ -1,5 +1,5 @@
 <?php
-require_once('../facecontrol.php');
+require_once('../connect.php');
 require_once('../api/journal.php');
 require_once('../api/group.php');
 $jf=new Journal($pdo);

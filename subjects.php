@@ -1,5 +1,6 @@
 <?php
-require_once('facecontrol.php');
+$title = 'Предметы';
+require_once('layout.php');
 require_once('api/subject.php');
 require_once('api/group.php');
 $sf=new Subject($pdo);
@@ -7,17 +8,6 @@ $gf=new Group($pdo);
 $pcks=$sf->GetTypes();
 $cmks=$gf->GetCmks();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Предметы</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/script.js"></script>
-</head>
-<body>
 	<div id="fon"></div>
 	<div id="add">
 		<form action="subjects/savesubject.php" method="post" id="subjectform" class="addform">
@@ -90,7 +80,6 @@ $cmks=$gf->GetCmks();
 	        </div>
 	    </form>
 	</div>
-	<?php require_once('layout.php'); ?>
 	<div class="container">
 		<div class="main">
 			<h2>Предметы</h2>

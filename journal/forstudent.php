@@ -1,5 +1,5 @@
 <?php
-require_once('../facecontrol.php');
+require_once('../connect.php');
 require_once('../api/journal.php');
 $jf=new Journal($pdo);
 $student=$user['person_id'];

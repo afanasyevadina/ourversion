@@ -1,5 +1,5 @@
 <?php
-require_once('../facecontrol.php');
+require_once('../connect.php');
 require_once('../api/ruprogram.php');
 $rf=new Ruprogram($pdo);
 $items=$rf->GetParts($_POST['id']);

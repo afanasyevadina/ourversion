@@ -1,33 +1,10 @@
-<?php
-require_once('facecontrol.php');
+<?php 
+$title = 'Расписание кабинетов';
+require_once('layout.php');
 require_once('api/schedule.php');
 $sf=new Schedule($pdo, 'config.json');
-$cabinets=$sf->GetCabinets();
-?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Расписание кабинетов</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="js/jquery-3.3.1.min.js"></script>
-	<script src="js/jquery.form.min.js"></script>
-	<script src="js/jquery-ui.js"></script>		
-	<script src="js/script.js"></script>
-	<script src="js/schedule.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			Load('schedule/forcabinet.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&cabinet='+$('#cabinet').val(), '#schedule');
-			$('.filter').change(function(){
-				Load('schedule/forcabinet.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&cabinet='+$('#cabinet').val(), '#schedule');
-			});
-		});
-	</script>
-</head>
-<body>
-	<?php require_once('layout.php'); ?>
-	<div class="container">
-		
+$cabinets=$sf->GetCabinets(); ?>
+	<div class="container">		
 		<div class="main">
 			<h2>Расписание</h2>
 			<select class="filter" id="cabinet">
@@ -51,5 +28,13 @@ $cabinets=$sf->GetCabinets();
 		</div>
 	</div>
 	<footer></footer>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			Load('schedule/forcabinet.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&cabinet='+$('#cabinet').val(), '#schedule');
+			$('.filter').change(function(){
+				Load('schedule/forcabinet.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&cabinet='+$('#cabinet').val(), '#schedule');
+			});
+		});
+	</script>
 </body>
 </html>
