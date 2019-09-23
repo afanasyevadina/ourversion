@@ -10,9 +10,11 @@ $teachers=$gf->GetTeachers();
 			<h2>Нагрузка преподавателя</h2>
 			<div class="options">
 				<select id="teacherselect">
-					<?php foreach($teachers as $teacher) { ?>}
-					<option value="<?=$teacher['teacher_id']?>"><?=$teacher['teacher_name']?></option>
-				<?php } ?>
+					<?php foreach($teachers as $teacher) { 
+						if($user['account_type'] != 'teacher' || $user['person_id'] == $teacher['teacher_id']) {?>
+							<option value="<?=$teacher['teacher_id']?>"><?=$teacher['teacher_name']?></option>
+						<?php } 
+					}?>
 				</select>
 				<select id="tkursselect">
 					<option>2019-2020</option>

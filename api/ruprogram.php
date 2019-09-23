@@ -37,7 +37,7 @@ class Ruprogram
 	}
 
 	public function GetPrograms($group, $subject) {
-		$res=$this->pdo->prepare("SELECT `ruprograms`.`program_id`, `subjects`.`subject_name`, `groups`.`group_name` FROM `ruprograms` INNER JOIN `general` ON `ruprograms`.`general_id`=`general`.`general_id` INNER JOIN `groups` ON `general`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `general`.`subject_id`=`subjects`.`subject_id` WHERE `general`.`group_id`=? AND `subjects`.`subject_name` LIKE ?");
+		$res=$this->pdo->prepare("SELECT `ruprograms`.`program_id`, `subjects`.`subject_name`, `groups`.`group_name`, general.general_id FROM `ruprograms` INNER JOIN `general` ON `ruprograms`.`general_id`=`general`.`general_id` INNER JOIN `groups` ON `general`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `general`.`subject_id`=`subjects`.`subject_id` WHERE `general`.`group_id`=? AND `subjects`.`subject_name` LIKE ?");
 		$res->execute(array($group, '%'.$subject.'%'));
 		return $res->fetchAll();
 	}

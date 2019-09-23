@@ -2,19 +2,28 @@
 require_once('../connect.php');
 require_once('../api/schedule.php');
 $sf=new Schedule($pdo, '../config.json');
-$week=date('W', strtotime($_REQUEST['date']));
-$changes=$sf->LessonsToday($_REQUEST['group'], $_REQUEST['date']);
-if(empty($changes)) {
-	$items=$sf->MainToday($_REQUEST['group'], $_REQUEST['date']);
+$date = isset($_REQUEST['date']) ? $_REQUEST['date'] : date('d.m.Y');
+$week=date('N', strtotime($date));
+if(isset($_REQUEST['group'])) {
+	$changes=$sf->LessonsToday($_REQUEST['group'], $date);
+	if(empty($changes)) {
+		$items=$sf->MainToday($_REQUEST['group'], $date);
+	}
+}
+if(isset($_REQUEST['teacher'])) {
+	$changes=$sf->LessonsToday($_REQUEST['teacher'], $date, false);
+	if(empty($changes)) {
+		$items=$sf->MainToday($_REQUEST['teacher'], $date, false);
+	}
 }
 $days=['Понедельник','Вторник','Среда','Четверг','Пятница', 'Суббота'];
 $chindex=0;
 $index=0;
 ?>
-	<tbody data-day="<?=date('N', strtotime($_REQUEST['date']))?>" class="day">
+	<tbody data-day="<?=$week?>" class="day">
 		<tr class="separator">
 			<th>№</th>
-			<th><?=$days[date('N', strtotime($_REQUEST['date']))-1]?></th>
+			<th><?=$days[$week-1]?></th>
 			<th>каб.</th>
 		</tr>
 	<?php for($j=1;$j<=7;$j++) {
@@ -26,7 +35,9 @@ $index=0;
 					<?php 
 					while ($changes[$chindex]['lesson_num']==$j) { ?>
 						<li data-id="<?=$changes[$chindex]['item_id']?>" data-num="<?=$j?>" data-teacher="<?=$changes[$chindex]['teacher_id']?>" data-cab="<?=$changes[$chindex]['cabinet_id']?>" class="inner_lesson">
-						<?=$changes[$chindex]['subject_name']?> <i class="teacher"><?=$changes[$chindex]['teacher_name']?></i>		
+						<?=$changes[$chindex]['subject_name']?> 
+							<i class="teacher">
+							<?=isset($_REQUEST['group']) ? $changes[$chindex]['teacher_name'] : $changes[$chindex]['group_name']?></i>		
 							<div class="cab_num"><?=$changes[$chindex]['cabinet_name']?></div>								
 						</li>
 						<?php 
@@ -38,7 +49,9 @@ $index=0;
 						while($items[$index]['num_of_lesson']==$j) {
 							if(!$items[$index]['weeks']||$items[$index]['weeks']==$week%2+1) { ?>
 								<li data-id="<?=$items[$index]['item_id']?>" data-num="<?=$j?>" data-teacher="<?=$items[$index]['teacher_id']?>" data-cab="<?=$items[$index]['cabinet_id']?>" class="inner_lesson">
-									<?=$items[$index]['subject_name']?> <i class="teacher"><?=$items[$index]['teacher_name']?></i>	
+									<?=$items[$index]['subject_name']?> 
+									<i class="teacher">
+									<?=isset($_REQUEST['group']) ? $items[$index]['teacher_name'] : $items[$index]['group_name']?></i>	
 									<div class="cab_num"><?=$items[$index]['cabinet_name']?></div>									
 								</li>
 							<?php 

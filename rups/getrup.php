@@ -2,6 +2,7 @@
 require_once('../connect.php');
 require_once('../api/group.php');
 require_once('../api/item.php');
+require_once('../api/subject.php');
 $gf=new Group($pdo);
 $it=new Item($pdo);
 
@@ -33,7 +34,8 @@ foreach($items as $item) {
 	 ?>
 	<tr id="<?=$item['item_id']?>" data-general="<?=$item['general_id']?>">
 		<td><?=$d?></td>
-		<td <?=$item['subgroup']==0?'':'class="subgroup"'?> ><?=$item['subgroup']==0?'':$item['subgroup']?></td>
+		<td <?=$item['subgroup']==0 || $item['divide']==Subject::DIV_PRAC?'':'class="subgroup"'?> >
+			<?=$item['subgroup']==0?'':$item['subgroup']?></td>
 		<td class="teacherinput" data-id="<?=$item['teacher_id']?>"><?=$item['teacher_name']?></td>
 		<td><?=$item['subject_name']?></td>
 		<td class="exam-td" <?=$contenteditable?>><?=($item['exam']==0)?'':$item['exam']?></td>

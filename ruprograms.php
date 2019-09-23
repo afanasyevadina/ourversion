@@ -19,10 +19,11 @@ $groups=$gf->GetGroups();
 		</div>
 	</div>
 	<footer></footer>
+	<input type="hidden" id="id" value="<?=$user['account_type'] == 'teacher' ? $user['person_id'] : ''?>">
 	<script type="text/javascript">
-		Load('ruprogram/getprograms.php?group='+$('#groups').val()+'&subject='+$('#search').val(), '#ruprograms');
+		Load('ruprogram/getprograms.php?group='+$('#groups').val()+'&subject='+$('#search').val()+'&id='+$('#id').val(), '#ruprograms');
 		$('.filterpr').on('change input', function(){
-			Load('ruprogram/getprograms.php?group='+$('#groups').val()+'&subject='+$('#search').val(), '#ruprograms');
+			Load('ruprogram/getprograms.php?group='+$('#groups').val()+'&subject='+$('#search').val()+'&id='+$('#id').val(), '#ruprograms');
 		});		
 	</script>
 </body>

@@ -16,7 +16,7 @@ require_once('layout.php'); ?>
 				<option>1</option>
 				<option>2</option>
 			</select>
-			<table border="1" id="rating" class="journal">
+			<table border="1">
 				<thead>
 					<thead>
 						<th>Предмет</th>
@@ -24,15 +24,17 @@ require_once('layout.php'); ?>
 						<th>Экзамен</th>
 					</thead>
 				</thead>
+				<tbody id="rating"></tbody>
 			</table>
 		</div>
 	</div>
 	<footer></footer>
+	<input type="hidden" id="student" value="<?=$user['person_id']?>">
 	<script type="text/javascript">
 		$(document).ready(function() {
-			Load('journal/forstudent.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#rating');
+			Load('journal/forstudent.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&student='+$('#student').val(), '#rating');
 			$('.filter').change(function(){
-				Load('journal/forstudent.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val(), '#rating');
+				Load('journal/forstudent.php?kurs='+$('#courses').val()+'&sem='+$('#sems').val()+'&student='+$('#student').val(), '#rating');
 			});
 		});
 	</script>

@@ -15,10 +15,11 @@ $menu = [
 	"schedule.php" => 'Редактор расписания',
 	"changes.php" => 'Редактор изменений',
 	"settings.php" => 'Настройки',
-	"student_schedule.php" => 'Мое расписание',
+	"group_schedule.php" => 'Расписание групп',
 	"public_changes.php" => 'Изменения в расписании',
 	"myrating.php" => 'Мои оценки',
 	"teacher_schedule.php" => 'Мое расписание',
+	"myexams.php" => 'Мои экзамены',
 ]
 ?>
 <!DOCTYPE html>

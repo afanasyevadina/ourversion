@@ -4,9 +4,6 @@ require_once('../api/group.php');
 $config=json_decode(file_get_contents('../config.json'), true);
 $gf=new Group($pdo);
 $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
-if($user['account_type']!='admin') {
-	header('Location: /');
-}
 $students=$gf->GetStudents($_REQUEST['group'], $_REQUEST['subgroup']);
 $i=0;
 echo $gf->StudentsCount($_REQUEST['group']) >= $config['students_count'];

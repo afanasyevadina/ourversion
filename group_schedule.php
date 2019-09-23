@@ -4,20 +4,19 @@ require_once('layout.php');
 require_once('api/group.php');
 $gf=new Group($pdo);
 $groups=$gf->GetGroups();
+$id = $user['account_type'] == 'student' ? $gf->AboutStudent($user['person_id'])['group_id'] : 0;
 ?>
 	<div class="container">
 		
 		<div class="main">
-			<h2>Расписание преподавателя</h2>
-			<?php if($user['account_type'] == 'student') { ?>
-				<input type="hidden" id="group" value="<?=$gf->AboutStudent($user['person_id'])['group_id']?>">				
-			<?php } else { ?>
-				<select class="filter" id="group">
-					<?php foreach ($groups as $group) { ?>
-						<option value="<?=$group['group_id']?>"><?=$group['group_name']?></option>
-					<?php } ?>
-				</select>
-			<?php } ?>
+			<h2>Расписание группы</h2>
+			<select class="filter" id="group">
+				<?php foreach ($groups as $group) { ?>
+					<option value="<?=$group['group_id']?>" <?=$id == $group['group_id'] ? 'selected': ''?>>
+						<?=$group['group_name']?>							
+					</option>
+				<?php } ?>
+			</select>
 			<select class="filter" id="courses">
 				<option>2019-2020</option>
 				<option>2018-2019</option>

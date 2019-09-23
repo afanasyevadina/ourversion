@@ -1,14 +1,25 @@
 <?php
 $title = 'Журнал';
 require_once('layout.php');
-$itemres=$pdo->prepare("SELECT `items`.`group_id`, `items`.`teacher_id`, `items`.`item_id`, `subjects`.`subject_name` FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` AND `ktps`.`ktp_id`=?");
-$itemres->execute(array($_GET['id']));
-$item=$itemres->fetch();
-$students=$pdo->prepare("SELECT * FROM `students` WHERE `students`.`group_id`=?");
-$students->execute(array($item['group_id']));
-$lessonres=$pdo->prepare("SELECT `lessons`.`lesson_date`, `rupitems`.`item_practice` FROM `lessons` INNER JOIN `rupitems` ON `rupitems`.`rupitem_id`=`lessons`.`rupitem_id` WHERE `lessons`.`item_id`=? GROUP BY `rupitems`.`rupitem_num`");
-$lessonres->execute(array($item['item_id']));
-$lessons=$lessonres->fetchAll();
+$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
+require_once 'api/item.php';
+require_once 'api/group.php';
+require_once 'api/journal.php';
+require_once 'api/subject.php';
+$if = new Item($pdo);
+$gf = new Group($pdo);
+$jf = new Journal($pdo);
+$item=$if->About($_GET['id']);
+$students=$gf->GetStudents($item['group_id'], ($item['divide'] != Subject::DIV_PRAC) ? $item['subgroup']: 0);
+$lessons=$jf->GetLessons($_GET['id']);
+$journal = [];
+foreach($students as $student) {
+	$ratings = $jf->GetJournal($_GET['id'], $student['student_id']);
+	if(empty($ratings)) $jf->CreateJournal($lessons, $student['student_id']);
+	$ratings = $jf->GetJournal($_GET['id'], $student['student_id']);
+	$journal[$student['student_id']] = $ratings;
+}
+
 ?>
 	<div class="container">		
 		<div class="main">
@@ -34,13 +45,11 @@ $lessons=$lessonres->fetchAll();
 						</tr>
 					</thead>
 					<tbody>
-						<?php while ($student=$students->fetch()) { ?>
+						<?php foreach($students as $student) { ?>
 							<tr>
 								<td><?=$student['student_name']?></td>
 								<?php
-								$ratings=$pdo->prepare("SELECT * FROM `ratings` INNER JOIN `lessons` ON `ratings`.`lesson_id`=`lessons`.`lesson_id` WHERE `ratings`.`student_id`=? AND `lessons`.`item_id`=?");
-								$ratings->execute(array($student['student_id'], $item['item_id']));
-								while ($rating=$ratings->fetch()) { ?>
+								foreach($journal[$student['student_id']] as $rating) { ?>
 									<td contenteditable="<?=$rating['lesson_date']?'true':'false'?>" id="<?=$rating['rating_id']?>"><?=$rating['rating_value']?></td>
 								<?php } ?>
 							</tr>

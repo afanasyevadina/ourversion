@@ -372,7 +372,7 @@ foreach ($teachers as $teacher) {
 		});
 
 		$('table').on('click', '.subgroup', function(){
-			let sg=$(this).html()=='1'?'2':'1';
+			let sg=$(this).html().trim()=='1'?'2':'1';
 			$('tr[data-general='+$(this).parent().data('general')+']').find('.subgroup').html($(this).html());
 			$(this).html(sg);
 			$('tr[data-general='+$(this).parent().data('general')+']').addClass('edited');

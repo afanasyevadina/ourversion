@@ -1,25 +1,3 @@
-<?php
-require_once('api/journal.php');
-require_once('api/schedule.php');
-require_once 'api/group.php';
-$jf=new Journal($pdo);
-$sf=new Schedule($pdo, 'config.json');
-$gf = new Group($pdo);
-$group = $gf->AboutStudent($user['person_id'])['group_id'];
-$data=$sf->CurrentKurs(date('d.m.Y'));
-$subjects=$jf->StudentSubjects($user['person_id'], $data['kurs'], $data['sem']);
-$was=[];
-foreach ($subjects as $subject) {
-	$rat=$jf->GetRating($user['person_id'], $subject['item_id']);
-	$was[$subject['general_id']]['subject_name']=$subject['subject_name'];
-	$temp=$was[$subject['general_id']]['rat'];
-	if($temp) {
-		$was[$subject['general_id']]['rat']=($temp+$rat['avg'])/2;
-	} else {
-		$was[$subject['general_id']]['rat']=$rat['avg'];
-	}
-}
-?>
 	<div class="container">
 		<div class="main" style="width: calc(100% - 300px)">			
 			<section class="section">
@@ -34,23 +12,6 @@ foreach ($subjects as $subject) {
 					<table border="1" class="schedule_table full">		
 					</table>
 				</div>
-			</section>
-			<section class="section">
-			<h2>Средний балл по предметам</h2>
-			<div class="rating_section">
-				<div class="arrow to_left"><img src="img/back.svg" alt="left"></div>
-				<div class="rating_wrap">
-					<?php foreach ($was as $key => $subject) { ?>
-						<div class="rating_item">
-							<div class="gistogram">
-								<div class="level" style="height: <?=$subject['rat']*20?>%"><?=round($subject['rat'], 2)?></div>
-							</div>
-							<div class="legend"><?=$subject['subject_name']?></div>
-						</div>
-					<?php } ?>
-				</div>
-				<div class="arrow to_right"><img src="img/back.svg" alt="right"></div>
-			</div>
 			</section>
 			<section class="section">
 				<h1 class="section_title">Что умеет данная АИС?</h1>
@@ -81,7 +42,7 @@ foreach ($subjects as $subject) {
 		</div>
 	</div>
 	<footer></footer>
-	<input type="hidden" id="group" value="<?=@$group?>">
+	<input type="hidden" id="teacher" value="<?=@$user['person_id']?>">
 	<script src="js/jquery-3.3.1.min.js"></script>
 	<script src="js/jquery.form.min.js"></script>
 	<script src="js/jquery-ui.js"></script>		
@@ -89,13 +50,7 @@ foreach ($subjects as $subject) {
 	<script src="js/schedule.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			Load('schedule/loadchanges.php?group='+$('#group').val(), '.schedule_table');
-		});
-		$('.to_left').click(function(){
-			$('.rating_wrap').animate({'scrollLeft': $('.rating_wrap').scrollLeft()-440},600);
-		});
-		$('.to_right').click(function(){
-			$('.rating_wrap').animate({'scrollLeft': $('.rating_wrap').scrollLeft()+440},600);
+			Load('schedule/loadchanges.php?teacher='+$('#teacher').val(), '.schedule_table');
 		});
 	</script>
 </body>

@@ -7,7 +7,7 @@ switch ($user['account_type']) {
 		exit;
 		break;
 	
-	case 'student':
+	case 'teacher':
 		require_once('teacher_index.php');
 		exit;
 		break;

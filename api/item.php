@@ -109,4 +109,10 @@ class Item
 		$res=$this->pdo->prepare($sql);
 		$res->execute($lessons);		
 	}
+
+	public function About($item) {
+		$res=$this->pdo->prepare("SELECT `items`.`group_id`, `items`.`teacher_id`, `items`.`item_id`, items.subgroup, `subjects`.`subject_name`,  subjects.divide FROM `items` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `items`.`item_id`=?");
+		$res->execute(array($item));
+		return $res->fetch();
+	}
 }

@@ -189,7 +189,7 @@ table {
 	margin-bottom: 30px;
 }
 table:not(.journal):not(#cabinets) {
-	min-width: 100%;
+	min-width: calc(100% - 10px);
 }
 table.rup {
 	font-size: 0.6em;
@@ -551,6 +551,9 @@ ul, li {
 	position: relative;
 	margin-right: -50px;
 }
+.full .sortable li {
+	max-width: unset;
+}
 #droppable {
 	height: 100px;
 	display: flex;
@@ -604,7 +607,7 @@ li i {
 .table_c {
 	max-height: 100vh;
 	overflow-y: auto;
-	margin-left: 20px;
+	margin: 0 20px;
 }
 .subgroup {
 	user-select: none;
@@ -666,9 +669,16 @@ form.settings input, form.settings select {
 .rating_item .gistogram {
 	height: 200px;
 	width: 50px;	
+	display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 .rating_item .gistogram .level {
 	background: #535;
+	color: #fff;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
 }
 .rating_item .legend {
 	padding: 20px 0;

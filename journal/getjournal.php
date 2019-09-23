@@ -1,14 +1,16 @@
 <?php
 require_once('../connect.php');
-require_once('../api/journal.php');
+require_once('../api/item.php');
 require_once('../api/group.php');
-$jf=new Journal($pdo);
+require_once('../api/subject.php');
+$if=new Item($pdo);
 $gf=new Group($pdo);
-//if($user['account_type']=='teacher') {
-	$items=$jf->GetJournals($user['person_id'], $_REQUEST['kurs']);
-//}
+$items=$if->GetGroupItems($_REQUEST['group'], $_REQUEST['kurs']);
 foreach ($items as $item) {
-				$d=$gf->GetName($item);
-				?>
-				<p><a class="listitem" href="journal.php?id=<?=$item['ktp_id']?>"><?=$item['subject_name']?> <?=$d?>, <?=$item['teacher_name']?></p>
-			<?php } ?>
+	//if($item['subgroup'] != 2 || $item['divide'] != Subject::DIV_PRAC) {
+	if(!$_REQUEST['id'] || $item['teacher_id'] == $_REQUEST['id']) {
+		$d=$gf->GetName($item);
+		?>
+		<p><a class="listitem" href="journal.php?id=<?=$item['item_id']?>"><?=$item['subject_name']?> <?=$d?>, <?=$item['teacher_name']?></p>
+<?php }
+} ?>

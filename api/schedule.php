@@ -51,12 +51,16 @@ class Schedule
 	}
 
 	//what will be in current day by main schedule
-	public function MainToday($group, $date) {
+	public function MainToday($who, $date, $forGroup = true) {
 		$kurs=$this->CurrentKurs($date)['kurs'];
 		$sem=$this->CurrentKurs($date)['sem'];
 		$weekday=date('N', strtotime($date));
-		$res=$this->pdo->prepare("SELECT `items`.`item_id`, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `schedule_items`.`day_of_week`, `schedule_items`.`num_of_lesson`, `schedule_items`.`weeks`, `cabinets`.`cabinet_name`  FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` LEFT JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` LEFT JOIN `cabinets` ON `cabinets`.`cabinet_id`=`schedule_items`.`cab_num` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `schedule_items`.`day_of_week`=?");
-		$res->execute(array($group, $kurs, $sem, $weekday));
+		if($forGroup) {
+			$res=$this->pdo->prepare("SELECT `items`.`item_id`, `subjects`.`subject_name`, `teachers`.`teacher_name`, `items`.`teacher_id`, `schedule_items`.*, `cabinets`.* FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` LEFT JOIN `teachers` ON `teachers`.`teacher_id`=`items`.`teacher_id` LEFT JOIN `cabinets` ON `cabinets`.`cabinet_id`=`schedule_items`.`cab_num` WHERE `items`.`group_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `schedule_items`.`day_of_week`=?");
+		} else {
+			$res=$this->pdo->prepare("SELECT `items`.`item_id`, `subjects`.`subject_name`, `items`.`teacher_id`, `schedule_items`.*, `cabinets`.*, groups.group_name FROM `schedule_items` INNER JOIN `items` ON `schedule_items`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` LEFT JOIN `cabinets` ON `cabinets`.`cabinet_id`=`schedule_items`.`cab_num` INNER JOIN groups ON items.group_id=groups.group_id WHERE `items`.`teacher_id`=? AND `items`.`kurs_num`=? AND `schedule_items`.`sem_num`=? AND `schedule_items`.`day_of_week`=?");
+		}
+		$res->execute(array($who, $kurs, $sem, (int)$weekday));
 		return $res->fetchAll();
 	}
 
@@ -93,9 +97,13 @@ class Schedule
 	}
 
 	//what have been set to certain day
-	public function LessonsToday($group, $date) {
-		$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`,`teachers`.`teacher_name`, `groups`.`group_name`, `items`.`item_id`, `items`.`teacher_id`, `cabinets`.*, `lessons`.* FROM `lessons` INNER JOIN `items` ON `lessons`.`item_id`=`items`.`item_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `lessons`.`teacher_id`=`teachers`.`teacher_id` LEFT JOIN `cabinets` ON `cabinets`.`cabinet_id`=`lessons`.`cab_num` WHERE `lessons`.`group_id`=? AND `lessons`.`lesson_date`=?");
-		$res->execute(array($group, $date));
+	public function LessonsToday($who, $date, $forGroup = true) {
+		if($forGroup) {
+			$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`,`teachers`.`teacher_name`, `groups`.`group_name`, `items`.`item_id`, `items`.`teacher_id`, `cabinets`.*, `lessons`.* FROM `lessons` INNER JOIN `items` ON `lessons`.`item_id`=`items`.`item_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `lessons`.`teacher_id`=`teachers`.`teacher_id` LEFT JOIN `cabinets` ON `cabinets`.`cabinet_id`=`lessons`.`cab_num` WHERE `lessons`.`group_id`=? AND `lessons`.`lesson_date`=? ORDER BY lessons.lesson_num");
+		} else {
+			$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`, `groups`.`group_name`, `items`.`item_id`, `items`.`teacher_id`, `cabinets`.*, `lessons`.*, groups.group_name FROM `lessons` INNER JOIN `items` ON `lessons`.`item_id`=`items`.`item_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` LEFT JOIN `cabinets` ON `cabinets`.`cabinet_id`=`lessons`.`cab_num` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` WHERE `lessons`.`teacher_id`=? AND `lessons`.`lesson_date`=? ORDER BY lessons.lesson_num");
+		}
+		$res->execute(array($who, $date));
 		return $res->fetchAll();
 	}
 
@@ -193,7 +201,7 @@ class Schedule
 			while ($group=$groups->fetch()) {
 				$lesnres=$this->pdo->prepare("SELECT COUNT(*) FROM `lessons` WHERE `group_id`=? AND `lesson_date`=?");
 				$lesnres->execute(array($group['group_id'], $date));
-				if($lesnres->fetchColumn()) {
+				if(!$lesnres->fetchColumn()) {
 					return false;
 				}
 			}

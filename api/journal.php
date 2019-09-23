@@ -42,17 +42,43 @@ class Journal
 		}
 	}
 
-	public function GetJournals($teacher, $kurs) {
-		/*$res=$this->pdo->prepare("SELECT `ktps`.`ktp_id`, `subjects`.`subject_name`, `groups`.`group_name`, `teachers`.`teacher_name`, `items`.`kurs_num`, `groups`.`year`, `groups`.`base` FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id` WHERE `items`.`teacher_id`=? AND `items`.`kurs_num`=?");
-		$res->execute(array($teacher, $kurs));*/
-		$res=$this->pdo->prepare("SELECT `ktps`.`ktp_id`, `subjects`.`subject_name`, `groups`.`group_name`, `teachers`.`teacher_name`, `items`.`kurs_num`, `groups`.`year`, `groups`.`base` FROM `ktps` INNER JOIN `items` ON `ktps`.`item_id`=`items`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` INNER JOIN `teachers` ON `items`.`teacher_id`=`teachers`.`teacher_id` INNER JOIN `groups` ON `items`.`group_id`=`groups`.`group_id` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id` WHERE `items`.`kurs_num`=?");
-		$res->execute(array($kurs));
-		return $res->fetchAll();
-	}
-
 	public function GetLast($student) {
 		$res=$this->pdo->prepare("SELECT `subjects`.`subject_name`, `ratings`.`rating_value`, `lessons`.`lesson_date` FROM `ratings` INNER JOIN `lessons` ON `ratings`.`lesson_id`=`lessons`.`lesson_id` INNER JOIN `items` ON `items`.`item_id`=`lessons`.`item_id` INNER JOIN `subjects` ON `items`.`subject_id`=`subjects`.`subject_id` WHERE `ratings`.`student_id`=? AND `lessons`.`lesson_date`>= CURDATE() - INTERVAL 7 DAY");
 		$res->execute(array($student));
+		return $res->fetchAll();
+	}
+
+	public function GetLessons($item) {
+		$res=$this->pdo->prepare("SELECT `lessons`.*, `rupitems`.`item_practice` FROM `lessons` LEFT JOIN `rupitems` ON `rupitems`.`rupitem_id`=`lessons`.`rupitem_id` WHERE `lessons`.`item_id`=?");
+		$res->execute(array($item));
+		return $res->fetchAll();
+	}
+
+	public function GetJournal($item, $student) {
+		$res=$this->pdo->prepare("SELECT * FROM `ratings` INNER JOIN `lessons` ON `ratings`.`lesson_id`=`lessons`.`lesson_id` WHERE `ratings`.`student_id`=? AND `lessons`.`item_id`=?");
+		$res->execute(array($student, $item));
+		return $res->fetchAll();
+	}
+
+	public function CreateJournal($lessons, $student) {
+		$ready = [];
+		$params = [];
+		foreach($lessons as $lesson) {
+			$ready[] = $lesson['lesson_id'];
+			$ready[] = $student;
+			$params[] = '(?, ?)';
+		}
+		$sql = "INSERT INTO ratings (lesson_id, student_id) VALUES ".implode(', ', $params);
+		$res = $this->pdo->prepare($sql);
+		$res->execute($ready);
+	}
+
+	public function GetExams($student) {
+		$gres=$this->pdo->prepare("SELECT `group_id` FROM `students` WHERE `student_id`=?");
+		$gres->execute(array($student));
+		$group=$gres->fetchColumn();
+		$res = $this->pdo->prepare("SELECT subjects.subject_name, items.exam, teachers.teacher_name FROM items INNER JOIN subjects ON items.subject_id = subjects.subject_id LEFT JOIN teachers ON items.teacher_id = teachers.teacher_id WHERE exam > 0 AND items.group_id=? AND items.kurs_num=?");
+		$res->execute(array($group, date('m') >= 9 ? date('Y').'-'.(date('Y')+1) : (date('Y') -1).'-'.date('Y')));
 		return $res->fetchAll();
 	}
 }
