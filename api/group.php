@@ -18,7 +18,7 @@ class Group
 	}
 
 	public function Insert($data) {
-		$res=$this->pdo->prepare("INSERT INTO `groups` (`group_name`, `specialization_id`, `base`, `count`, `lang`) VALUES (?,?,?,?,?)");
+		$res=$this->pdo->prepare("INSERT INTO `groups` (`group_name`, `specialization_id`, `base`, `count`, `lang`, `kurator`) VALUES (?,?,?,?,?,?)");
 		$res->execute($data);
 	}
 
@@ -62,7 +62,7 @@ class Group
 	}
 
 	public function GetFull() {
-		$res=$this->pdo->query("SELECT * FROM `groups` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id`");
+		$res=$this->pdo->query("SELECT * FROM `groups` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id` LEFT JOIN teachers ON groups.kurator = teachers.teacher_id");
 		return $res->fetchAll();
 	}
 
@@ -77,7 +77,7 @@ class Group
 	}
 
 	public function About($group) {
-		$res=$this->pdo->prepare("SELECT * FROM `groups` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id` WHERE `groups`.`group_id`=?");
+		$res=$this->pdo->prepare("SELECT * FROM `groups` INNER JOIN `specializations` ON `groups`.`specialization_id`=`specializations`.`specialization_id` LEFT JOIN teachers ON groups.kurator = teachers.teacher_id WHERE `groups`.`group_id`=?");
 		$res->execute(array($group));
 		return $res->fetch();
 	}
@@ -101,7 +101,7 @@ class Group
 	}
 
 	public function Update($data) {
-		$res=$this->pdo->prepare("UPDATE `groups` SET `group_name`=?, `specialization_id`=?, `base`=?, `year`=?, `lang`=? WHERE `group_id`=?");
+		$res=$this->pdo->prepare("UPDATE `groups` SET `group_name`=?, `specialization_id`=?, `base`=?, `year`=?, `lang`=?, `kurator`=? WHERE `group_id`=?");
 		$res->execute($data);
 	}
 

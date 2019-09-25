@@ -11,5 +11,5 @@ else {*/
 	$items=$ktpf->GetKtps($_REQUEST['group'], $_REQUEST['subject']);
 //}
 foreach ($items as $item) { ?>
-	<p><a class="listitem" href="ktp.php?id=<?=$item['ktp_id']?>"><?=$item['subject_name']?> <?=$gf->GetName($item)?>, <?=$item['teacher_name']?></p>
+	<p class="searchable"><a class="listitem" href="ktp.php?id=<?=$item['ktp_id']?>"><?=$item['subject_name']?> <?=$gf->GetName($item)?>, <?=$item['teacher_name']?></p>
 <?php } ?>

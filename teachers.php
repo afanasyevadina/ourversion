@@ -46,6 +46,7 @@ $cmks=$gf->Getcmks();
 					<input type="submit" class="generate" value="Сгенерировать данные для входа">				
 				</form>
 			</div>
+			<input type="text" placeholder="Поиск..." class="query" style="margin-bottom: 10px">
 
 			<table id="teachers" border="1">
 				<thead id="headgroup">
@@ -66,6 +67,7 @@ $cmks=$gf->Getcmks();
 		</div>
 	</div>
 	<footer></footer>
+	<script src="js/search.js"></script>
 	<script type="text/javascript">
 		Load('teachers/getteachers.php', '#teachers tbody');
 	</script>

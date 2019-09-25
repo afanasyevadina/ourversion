@@ -108,25 +108,10 @@ $(document).ready(function(){
 				$('#id').val(result.group_id);
 				$('#name').val(result.group_name);
 				$('#lang').val(result.lang);
+				$('#kurator').val(result.kurator);
 				if(result.base==9) { $('#base9').attr('checked', 'checked'); }
 				if(result.base==11) { $('#base11').attr('checked', 'checked'); }
 				$('#specialization').val(result.specialization_id);
-				$('#s1start').val(result.s1start);
-				$('#s2start').val(result.s2start);
-				$('#s3start').val(result.s3start);
-				$('#s4start').val(result.s4start);
-				$('#s5start').val(result.s5start);
-				$('#s6start').val(result.s6start);
-				$('#s7start').val(result.s7start);
-				$('#s8start').val(result.s8start);
-				$('#s1finish').val(result.s1finish);
-				$('#s2finish').val(result.s2finish);
-				$('#s3finish').val(result.s3finish);
-				$('#s4finish').val(result.s4finish);
-				$('#s5finish').val(result.s5finish);
-				$('#s6finish').val(result.s6finish);
-				$('#s7finish').val(result.s7finish);
-				$('#s8finish').val(result.s8finish);
 				$('#year').val(result.year);
 				$('#count').html(result.count);
 				$('#groupform').attr('action', 'groups/editgroup.php');

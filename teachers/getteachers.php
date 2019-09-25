@@ -4,7 +4,7 @@ require_once('../api/group.php');
 $sf=new Group($pdo);
 $teachers=$sf->GetTeachers();
 foreach($teachers as $teacher) { ?>
-<tr>
+<tr class="searchable">
 	<td>
 		<label class="check_label">
 			<input type="checkbox" form="loginform" name="name[]" value="<?=$teacher['teacher_id']?>">

@@ -9,7 +9,7 @@ $i=0;
 echo $gf->StudentsCount($_REQUEST['group']) >= $config['students_count'];
 echo "endcount";
 foreach($students as $student) { ?>
-	<tr>
+	<tr class="searchable">
 		<td>
 			<label class="check_label">
 				<input type="checkbox" form="loginform" name="name[]" value="<?=$student['student_id']?>">

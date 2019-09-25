@@ -2,8 +2,11 @@
 $title = 'Группы';
 require_once('layout.php');
 require_once('api/group.php');
+require_once('api/teacher.php');
 $gf=new Group($pdo);
+$tf=new Teacher($pdo);
 $specializations=$gf->GetSpecializations();
+$teachers=$tf->GetNames();
 ?>
 	<div id="fon"></div>
 			<div id="add">
@@ -45,6 +48,14 @@ $specializations=$gf->GetSpecializations();
 					<div class="inline">
 						<label for="count">Количество учащихся: </label><span id="count"></span>
 					</div>
+					<div><label for="kurator">Куратор</label></div>
+					<div>
+						<select name="kurator" id="kurator">
+							<?php foreach($teachers as $teacher) { ?>
+								<option value="<?=$teacher['teacher_id']?>"><?=$teacher['teacher_name']?></option>
+							<?php } ?>
+						</select>
+					</div>
 
 					<input type="submit" name="submit" value="Сохранить">
 					<a id="deletegroup" class="delete" href="">Удалить</a>
@@ -57,12 +68,15 @@ $specializations=$gf->GetSpecializations();
 			<div class="links">
 				<a href="#" id="new">Добавить</a>
 			</div>
+			<input type="text" placeholder="Поиск..." class="query" style="margin-bottom: 10px">
+
 			<table id="groups" border="1">
 				<thead id="headgroup">
 					<tr>
 					<th>Название</th>
 					<th>База</th>
 					<th>Язык обучения</th>
+					<th>Куратор</th>
 					<th></th>
 				</tr>
 				</thead>
@@ -72,6 +86,7 @@ $specializations=$gf->GetSpecializations();
 		</div>
 	</div>
 	<footer></footer>
+	<script src="js/search.js"></script>
 	<script type="text/javascript">
 		Load('groups/getgroups.php', '#groups tbody');
 	</script>

@@ -14,17 +14,15 @@ $groups=$gf->GetGroups();
 					<option value="<?=$group['group_id']?>"><?=$group['group_name']?></option>
 				<?php } ?>
 			</select>
-			<input type="text" id="search" placeholder="Поиск..." class="filterpr" autocomplete="off">
+			<input type="text" id="search" placeholder="Поиск..." class="query" autocomplete="off">
 			<div id="ruprograms"></div>			
 		</div>
 	</div>
 	<footer></footer>
 	<input type="hidden" id="id" value="<?=$user['account_type'] == 'teacher' ? $user['person_id'] : ''?>">
+	<script src="js/search.js"></script>
 	<script type="text/javascript">
 		Load('ruprogram/getprograms.php?group='+$('#groups').val()+'&subject='+$('#search').val()+'&id='+$('#id').val(), '#ruprograms');
-		$('.filterpr').on('change input', function(){
-			Load('ruprogram/getprograms.php?group='+$('#groups').val()+'&subject='+$('#search').val()+'&id='+$('#id').val(), '#ruprograms');
-		});		
 	</script>
 </body>
 </html>

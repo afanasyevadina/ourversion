@@ -8,6 +8,7 @@ if(isset($_POST['submit'])) {
 	 $_POST['base'], 
 	 $_POST['year'], 
 	 $_POST['lang'], 
+	 $_POST['kurator'], 
 	 $_POST['id']));
 }
 ?>

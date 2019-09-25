@@ -14,16 +14,14 @@ $groups=$gf->GetGroups();
 					<option value="<?=$group['group_id']?>"><?=$group['group_name']?></option>
 				<?php } ?>
 			</select>
-			<input type="text" id="search" placeholder="Поиск..." class="filterpr">
+			<input type="text" id="search" placeholder="Поиск..." class="query">
 			<div id="ktps"></div>
 		</div>
 	</div>
 	<footer></footer>
+	<script src="js/search.js"></script>
 	<script type="text/javascript">
 		Load('ktps/getktps.php?group='+$('#groups').val()+'&subject='+$('#search').val(), '#ktps');
-		$('.filterpr').on('change input', function(){
-			Load('ktps/getktps.php?group='+$('#groups').val()+'&subject='+$('#search').val(), '#ktps');
-		});		
 	</script>
 </body>
 </html>

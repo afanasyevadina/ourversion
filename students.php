@@ -91,6 +91,7 @@ $groups=$gf->GetGroups();
 					<input type="submit" class="generate" value="Сгенерировать данные для входа" style="display: none;">				
 				</form>
 			</div>
+			<input type="text" placeholder="Поиск..." class="query" style="margin-bottom: 10px">
 			<table id="students" border="1">
 				<thead id="headgroup">
 					<tr>
@@ -110,6 +111,7 @@ $groups=$gf->GetGroups();
 			</table>
 		</div>
 	</div>
+	<script src="js/search.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$.ajax({
